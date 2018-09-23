@@ -232,6 +232,262 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://shengfq.github.io/2018/09/23/遗留系统的异常处理办法/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="盛富强">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="shengfq's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/09/23/遗留系统的异常处理办法/" itemprop="url">遗留系统的异常处理办法</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-23T19:43:27+08:00">
+                2018-09-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>###遗留系统的异常处理办法</p>
+<p>#####背景<br>OA7.0是一个跨度较大的版本，拷贝了客户生产环境的webapp/resources/data 就可以在本地搭建其测试环境。<br>根据客户的二开策略，我修改了数据源等个性化配置信息后遇到了些问题：<br>1.启动报各种异常导致无法启动成功<br>2.启动成功后，使用用户名和密码都无法登录成功<br>在这种情形下，就要进入具体的报错点，熟悉类的加载过程。</p>
+<pre>java.lang.NoClassDefFoundError: Could not initialize class org.springside.core.Constants<pre>
+<pre>
+Oracle 的解释是：
+Thrown if the Java Virtual Machine or a ClassLoader instance tries to load in the definition of a class (as part of a normal method call or as part of creating a new instance using the new expression) and no definition of the class could be found.
+The searched-for class definition existed when the currently executing class was compiled, but the definition can no longer be found.
+
+当java虚拟机或者类加载器实例尝试加载定义的类时，却没有找到该类的定义。
+</pre>
+
+<p>#####解决思路<br>注释法<br>类会先加载static块，采用二分法的方式注释一部分方法调用，看问题是否存在。<br>日志法<br>生产环境的问题无法debug，但是可以通过详细的日志调用，知道执行了哪些问题。<br>反编译法<br>因为jar包里面的代码无法打断点，可以将类反编译出来，jdk会优先调用classes目录的字节码。<br>异常定位法<br>既然是抛出了异常导致启动不成功，那么异常是哪里引起的，可以通过增加try…catch来捕获异常，定位异常点，记录异常信息。</p>
+<p>#####最终解决<br>原来是Constants类调用了Lisences.jar里面的方法导致抛出异常而没有处理，导致程序异常中断，static块没有执行完成，类加载器无法<br>初始化Constants实例。所以遗留系统里面的问题就是写了大量的没有异常处理机制的代码，既没有自主处理异常，也没有抛出异常，告知调用者<br>可能会出现的异常，通过上述的四个方法基本上可以找到问题点，解决之。</p>
+</pre></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://shengfq.github.io/2018/08/28/2011我的项目管理之旅/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="盛富强">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="shengfq's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/08/28/2011我的项目管理之旅/" itemprop="url">socket客户端监控案例</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-08-28T19:43:27+08:00">
+                2018-08-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>2011年进入我第二家公司邦德瑞科技，我就有预感，未来的职业发展道路很好走，因为我是被领导从工厂里带出来创业的。<br>我的上司就是我的老师，在我第一年上班的时候看上了我，带我去他的公司创业，继续做楼宇暖通自动化应用软件。一时自己<br>还没有其他的打算，二就是觉得自己兴趣也在，老师也信任，就是没经验，经验都是从经历中学到的，当时就觉得不做会后悔。</p>
+<p>进入创业公司，同事基本是原来工厂的同事，我们软件组三个人，两个女生，重担自然落在我身上，责无旁贷，我负责产品研发项目<br>管理，当时我是个毕业一年的小伙子，没有任何项目管理的基础，老师也没有让我直接当司令负责发号施令，而是把我打发到了我们的<br>项目现场，第一个项目就是广州方圆酒店的温控器联网。我们的产品在当时还没有地图监控，只有楼宇结构监控，组控和定时控。我到了<br>现场之前，第一件事就是把项目的图纸全部打印出来，进行末端设备组网编号。过去现场调试联网1个月左右，软件准备上线，我们的经销商看了<br>我们的软件后觉得不够直观，最好能用颜色来区分不同状态的设备，如离线，开机，关机，制冷，制热。当时经销商都提了很多需求，用户只有<br>物业的监控人员，所以他们基本不会提什么需求，只要会用就行。但我们还是奔着要把软件做好的想法，利用项目上的机会不断优化，<br>于是我把我开发的同事叫到了项目现场，我们把需求分期执行，一段一段的更新交付使用，我负责需求整理成文档，建立业务领域模型，与开发<br>同事一起进行底层面向对象的数据表建模和程序功能规划，她开发，我检修测试，这样直到可以交付使用后，我通知物业方进行软件验收和培训。<br>通过这次项目，我们收集的产品功能需求是很大的，回去之后，我们就开会，把当时临时改的代码进行重构和修复bug。这样，我们的第一套BAS楼宇<br>末端设备监控软件就依靠项目的使用经验不断的完善代码和功能，每次版本更新我都会更新到我们的ftp服务器上，文档也会更新，项目部同事必须学<br>会使用，而且给客户的安装光盘都是最新版本。</p>
+<p>2012年，我的上司提出了更高的目标和期望，要做末端计费系统，因为中央空调末端的计费模式太老按面积收费不合理，要通过设备科学计量收费是趋势。<br>瞄向的是未来新的楼宇建筑节能减排项目和旧有楼宇改造项目。当时我们接了武汉一个小区的项目就开始做了，先做硬件计量表计，再调试实施联网，后续是上线<br>监控计费软件，培训客户使用。但我们手里的东西只有一套BAS系统，于是结合第一套系统，我们摈弃了第一套的不足，设计监控端和服务端分离模式，通过udp心跳维持<br>通讯，跟设备通讯网关也是采用udp广播寻址，udp心跳维持在线的方式（这套通讯是我当时提出来的，就是用到了协议的优点为我们系统服务）。<br>项目进行到下半年后，两女生有私事要离开深圳，这对于我们这个项目来说是非常大的损失，很可能就会夭折。当时我领导找到我，不要怕，没人开发咱们可以招人，只要<br>你还有信心，就可以带起来，因为你的经验是最丰富的，当时我也不甘心就这样算了，没人咱们可以招，而我是非常自信能带好团队干成这件事的，于是就跟老师去人才市场<br>招聘两个.net的毕业生开干，我根据一本《走出软件作坊》边学边实践，我自己有产品经验的底子，也有开发的底子，那么按照成事的原则，业务，技术，团队三要素具备其二就能<br>成，我们具备了业务和技术两个，团队可以慢慢带起来，于是就搭建svn项目，我就规划了三期的产品目标，分别指明了需要达到的功能条件，而不是想到一处就是一处，比如<br>前端后端分离，前端的功能规划，后端的后台任务规划，控制网关的数据提供，抄表，通讯，达到能注册设备，监控设备的第一期需求，第二期就是结算，账单，第三期就是收费，单据，报表。<br>然后根据开发同事的实际兴趣爱好和擅长点进行任务认领，当时我的想法是激励为主，自主认领任务，我来负责协调资源和功能验收。我们的开发团队五个人。<br>到了2013年底，要出差调试，我也是主动请缨去客户现场熟悉业务，指导现场施工人员安装设备联网，指导物业的维修和客服进行系统的操作，把她们遇到的问题一一记录下来，系统的bug也<br>都记录下来反馈给我的同事，在进行设备注册的时候，忙不过来，运营方要求在夏季结束前必须完成所有用户的注册，找来了4个临时工作人员给我，安排他们分工协作来使用系统，自己<br>负责重点的系统漏洞和业务漏洞的报告和方案思考，重复的事情交给他们做。曾经因为一个设计缺陷导致关联的数据没有联系，只能将注册的资料重新通过导数据的方式，客户现场工地<br>睡了2个月，终于在2013年底，我们的软件系统可以做到实时监控，按日抄表，按月结算出账单，没有成功的可以手动结算录入，有抄表错误的住户可以查到历史报表，得到用户的空调<br>使用报表记录，为此，公司还给我发了一个大红包鼓励。</p>
+<p>2014年，我们的计费项目越来越多，销售同事和各地的经销商都来看，公司参加了两届制冷展，推出品牌系统。给我们带来了很大的压力和挑战，站在国内水平线上，都只有几家有这样的系统。<br>不同的项目，需求也不一样，但是我们开发人员不能疲于奔波修复各种需求和bug，于是我做出了调整。根据开发同事的水平和兴趣，使用项目管理系统规范化项目协同作业，规范测试提单，产品提需求，开发人员开发完成和bug修复。能力强的负责重要业务的重构和大bug的修复。能力弱点的负责新需求的开发和简单bug的处理，尽量按模块来分配，一般我们客户端比较简单，服务端性能问题比较严重，分开开发，做前端的Ui熟悉，做后端的并发性能问题解决。这样我们这套系统才从开发模式上慢慢走向日常，而不是前期的救火状态。</p>
+<p>项目管理其实是一项综合性的学科，涉及参与者有产品，开发，测试。如果还有客户参与进来还包括客户服务和实施规划。不论是多少人参与，每个角色的定义边界项目经理要清晰，就算是一个人维护，也要分清楚哪些是产品角色，开发角色，测试角色该做的事情，而不是眉毛胡子一把抓。人多的时候也只是扩充了角色人员，提升了多任务效率。<br>做项目管理前，可以先做项目助理，深入到客户第一线，体验产品功能带来的体验和不足，有了一定的产品认知也就能对产品人员提的需求有一个自主的判断和筛选。其实每个角色深入下去都是一个非常关键的岗位，但是前期是项目经理牵头，任务下来了，第一步就是理清楚上下文关系，确定好问题的重点，纠结点集中优势力量解决或者放弃。先完成后完善，推动项目按照预定的里程碑在deadline前完成交付才是一个优秀项目经理的首要工作。<br></p><p></p>
+<p>写于2018-8-28夜</p>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://shengfq.github.io/2018/05/26/socket客户端监控案例/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -666,7 +922,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
