@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zn-han">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="###转载:顾彬, 冯晨, 和 乔彬2012 年 8 月 13 日发布 最初，XML 语言仅仅是意图用来作为 HTML 语言的替代品而出现的，但是随着该语言的不断发展和完善，人们越来越发现它所具有的优点：例如标记语言可扩展，严格的语法规定，可使用有意义的标记，内容存储和表现分离等等优势注定了该语言从诞生之日起就会走向辉煌。 XML 语言在成为 W3C 标准之后进入到了一个快速发展的时期，当然它本身">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java 处理 XML 的三种主流技术及介绍">
+<meta property="og:url" content="https://shengfq.github.io/2018/10/23/Java 处理 XML 的三种主流技术及介绍/index.html">
+<meta property="og:site_name" content="shengfq&#39;s blog">
+<meta property="og:description" content="###转载:顾彬, 冯晨, 和 乔彬2012 年 8 月 13 日发布 最初，XML 语言仅仅是意图用来作为 HTML 语言的替代品而出现的，但是随着该语言的不断发展和完善，人们越来越发现它所具有的优点：例如标记语言可扩展，严格的语法规定，可使用有意义的标记，内容存储和表现分离等等优势注定了该语言从诞生之日起就会走向辉煌。 XML 语言在成为 W3C 标准之后进入到了一个快速发展的时期，当然它本身">
+<meta property="og:locale" content="zn-han">
+<meta property="og:updated_time" content="2019-03-10T14:31:04.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java 处理 XML 的三种主流技术及介绍">
+<meta name="twitter:description" content="###转载:顾彬, 冯晨, 和 乔彬2012 年 8 月 13 日发布 最初，XML 语言仅仅是意图用来作为 HTML 语言的替代品而出现的，但是随着该语言的不断发展和完善，人们越来越发现它所具有的优点：例如标记语言可扩展，严格的语法规定，可使用有意义的标记，内容存储和表现分离等等优势注定了该语言从诞生之日起就会走向辉煌。 XML 语言在成为 W3C 标准之后进入到了一个快速发展的时期，当然它本身">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://shengfq.github.io/2018/10/23/Java 处理 XML 的三种主流技术及介绍/"/>
+
+
+
+
+
+  <title>Java 处理 XML 的三种主流技术及介绍 | shengfq's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zn-han">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">shengfq's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">an developer using java</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://shengfq.github.io/2018/10/23/Java 处理 XML 的三种主流技术及介绍/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="盛富强">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="shengfq's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java 处理 XML 的三种主流技术及介绍</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-10-23T00:00:00+08:00">
+                2018-10-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>###转载:顾彬, 冯晨, 和 乔彬<br>2012 年 8 月 13 日发布</p>
+<p>最初，XML 语言仅仅是意图用来作为 HTML 语言的替代品而出现的，但是随着该语言的不断发展和完善，人们越来越发现它所具有的优点：例如标记语言可扩展，严格的语法规定，可使用有意义的标记，内容存储和表现分离等等优势注定了该语言从诞生之日起就会走向辉煌。 XML 语言在成为 W3C 标准之后进入到了一个快速发展的时期，当然它本身所具有的一系列优点和优势也注定了各大技术厂商对它的偏爱，Java 作为软件行业的一种开发技术也迅速作出了反应，出现了多种对 XML 支持的工具，本文将会从这个角度对 Java 处理 XML 的几种主流技术进行介绍，希望能对您有所帮助。在这篇文章中，您将会得到以下信息：</p>
+<p>Java 提供了哪些优秀的类库及工具便于程序员对 XML 进行处理 ?<br>有了 DOM 了，其它工具类库还有必要么 ?<br>几个小例程带你快速了解这三种解析方式<br>Java 有哪些优秀的类库及工具便于程序员对 XML 进行处理 ?</p>
+<p>大名鼎鼎的 DOM</p><br><p>绿色环保的 SAX</p><br><p>默默无闻的 Digester</p>
+
+<p></p><h4>XML 三种解析方式简介</h4><br>大名鼎鼎的 DOM<p></p>
+<p>说它大名鼎鼎可是一点不为过，DOM 是 W3C 处理 XML 的标准 API，它是许多其它与 XML 处理相关的标准的基础，不仅是 Java，其它诸如 Javascript，PHP，MS .NET 等等语言都实现了该标准， 成为了应用最为广泛的 XML 处理方式。当然，为了能提供更多更加强大的功能，Java 对于 DOM 直接扩展工具类有很多，比如很多 Java 程序员耳熟能详的 JDOM，DOM4J 等等， 它们基本上属于对 DOM 接口功能的扩充，保留了很多 DOM API 的特性，许多原本的 DOM 程序员甚至都没有任何障碍就熟练掌握了另外两者的使用，直观、易于操作的方式使它深受广大 Java 程序员的喜爱。</p>
+<p>绿色环保的 SAX</p>
+<p>SAX 的应运而生有它特殊的需要，为什么说它绿色环保呢，这是因为 SAX 使用了最少的系统资源和最快速的解析方式对 XML 处理提供了支持。 但随之而来繁琐的查找方式也给广大程序员带来许多困扰，常常令人头痛不已，同时它对 XPath 查询功能的支持，令人们对它又爱又恨。</p>
+<p>默默无闻的 Digester：XML 的 JavaBean 化</p>
+<p>Digester 是 apache 基金组织下的一个开源项目，笔者对它的了解源于对 Struts 框架的研究，是否有很多程序员想要一解各大开源框架的设计甚至想要自己写一个功能强大的框架时会碰到这样一个难题： 这些形形色色的用 XML 语言标记的框架配置文件，框架底层是用什么技术来解析呢？ DOM 解析耗费时间，SAX 解析又过于繁琐，况且每次解析系统开销也会过大， 于是，大家想到需要用与 XML 结构相对应的 JavaBean 来装载这些信息，由此 Digester 应运而生。它的出现为 XML 转换为 JavaBean 对象的需求带来了方便的操作接口，使得更多的类似需求得到了比较完美的解决方法， 不再需要程序员自己实现此类繁琐的解析程序了。与此同时 SUN 也推出了 XML 和 JavaBean 转换工具类 JAXB，有兴趣的读者可以自行了解。</p>
+<p>三种解析方式比较<br><br>DOM</p>
+<p>优缺点：实现 W3C 标准，有多种编程语言支持这种解析方式，并且这种方法本身操作上简单快捷，十分易于初学者掌握。其处理方式是将 XML 整个作为类似树结构的方式读入内存中以便操作及解析，因此支持应用程序对 XML 数据的内容和结构进行修改，但是同时由于其需要在处理开始时将整个 XML 文件读入到内存中去进行分析，因此其在解析大数据量的 XML 文件时会遇到类似于内存泄露以及程序崩溃的风险，请对这点多加注意。</p>
+<p>适用范围：小型 XML 文件解析、需要全解析或者大部分解析 XML、需要修改 XML 树内容以生成自己的对象模型</p>
+<p>SAX</p>
+<p>SAX 从根本上解决了 DOM 在解析 XML 文档时产生的占用大量资源的问题。其实现是通过类似于流解析的技术，通读整个 XML 文档树，通过事件处理器来响应程序员对于 XML 数据解析的需求。由于其不需要将整个 XML 文档读入内存当中，它对系统资源的节省是十分显而易见的，它在一些需要处理大型 XML 文档以及性能要求较高的场合有起了十分重要的作用。支持 XPath 查询的 SAX 使得开发人员更加灵活，处理起 XML 来更加的得心应手。但是同时，其仍然有一些不足之处也困扰广大的开发人员：首先是它十分复杂的 API 接口令人望而生畏，其次由于其是属于类似流解析的文件扫描方式，因此不支持应用程序对于 XML 树内容结构等的修改，可能会有不便之处。</p>
+<p>适用范围：大型 XML 文件解析、只需要部分解析或者只想取得部分 XML 树内容、有 XPath 查询需求、有自己生成特定 XML 树对象模型的需求</p>
+<p>Digester/JAXB</p>
+<p>优缺点 : 由于其是在上述两者的基础上衍生出来的工具类，为的是满足将 XML 转换为 JavaBean 的特殊需求，故而没有什么特别明显的优缺点。作为大名鼎鼎的开源框架 Struts 的 XML 解析工具 Digester，为我们带来了将 XML 转换为 JavaBean 的可靠方法。</p>
+<p>适用范围 : 有将 XML 文档直接转换为 JavaBean 需求。</p>
+<p>应用示例<br>下面给出一段用于解析的 XML 片段：</p>
+<p>清单 1. XML 片段</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt; </span><br><span class="line">&lt;books&gt; </span><br><span class="line">  &lt;book id=&quot;001&quot;&gt; </span><br><span class="line">     &lt;title&gt;Harry Potter&lt;/title&gt; </span><br><span class="line">     &lt;author&gt;J K. Rowling&lt;/author&gt; </span><br><span class="line">  &lt;/book&gt; </span><br><span class="line">  &lt;book id=&quot;002&quot;&gt; </span><br><span class="line">     &lt;title&gt;Learning XML&lt;/title&gt; </span><br><span class="line">     &lt;author&gt;Erik T. Ray&lt;/author&gt; </span><br><span class="line">  &lt;/book&gt; </span><br><span class="line">&lt;/books&gt;</span><br></pre></td></tr></table></figure>
+<p>DOM 解析 XML</p>
+<p>Java 中的 DOM 接口简介： JDK 中的 DOM API 遵循 W3C DOM 规范，其中 org.w3c.dom 包提供了 Document、DocumentType、Node、NodeList、Element 等接口， 这些接口均是访问 DOM 文档所必须的。我们可以利用这些接口创建、遍历、修改 DOM 文档。</p>
+<p>javax.xml.parsers 包中的 DoumentBuilder 和 DocumentBuilderFactory 用于解析 XML 文档生成对应的 DOM Document 对象。</p>
+<p>javax.xml.transform.dom 和 javax.xml.transform.stream 包中 DOMSource 类和 StreamSource 类，用于将更新后的 DOM 文档写入 XML 文件。</p>
+<p>下面给出一个运用 DOM 解析 XML 的例子：</p>
+<p>清单 2. DOM 解析 XML</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">import java.io.File; </span><br><span class="line">import java.io.IOException; </span><br><span class="line">import javax.xml.parsers.DocumentBuilder; </span><br><span class="line">import javax.xml.parsers.DocumentBuilderFactory; </span><br><span class="line">import javax.xml.parsers.ParserConfigurationException; </span><br><span class="line">import org.w3c.dom.Document; </span><br><span class="line">import org.w3c.dom.Element; </span><br><span class="line">import org.w3c.dom.Node; </span><br><span class="line">import org.w3c.dom.NodeList; </span><br><span class="line">import org.xml.sax.SAXException; </span><br><span class="line"> </span><br><span class="line">public class DOMParser &#123; </span><br><span class="line">  DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance(); </span><br><span class="line">  //Load and parse XML file into DOM </span><br><span class="line">  public Document parse(String filePath) &#123; </span><br><span class="line">     Document document = null; </span><br><span class="line">     try &#123; </span><br><span class="line">        //DOM parser instance </span><br><span class="line">        DocumentBuilder builder = builderFactory.newDocumentBuilder(); </span><br><span class="line">        //parse an XML file into a DOM tree </span><br><span class="line">        document = builder.parse(new File(filePath)); </span><br><span class="line">     &#125; catch (ParserConfigurationException e) &#123; </span><br><span class="line">        e.printStackTrace();  </span><br><span class="line">     &#125; catch (SAXException e) &#123; </span><br><span class="line">        e.printStackTrace(); </span><br><span class="line">     &#125; catch (IOException e) &#123; </span><br><span class="line">        e.printStackTrace(); </span><br><span class="line">     &#125; </span><br><span class="line">     return document; </span><br><span class="line">  &#125; </span><br><span class="line">    </span><br><span class="line">  public static void main(String[] args) &#123; </span><br><span class="line">        DOMParser parser = new DOMParser(); </span><br><span class="line">        Document document = parser.parse(&quot;books.xml&quot;); </span><br><span class="line">        //get root element </span><br><span class="line">        Element rootElement = document.getDocumentElement(); </span><br><span class="line"> </span><br><span class="line">        //traverse child elements </span><br><span class="line">        NodeList nodes = rootElement.getChildNodes(); </span><br><span class="line">        for (int i=0; i &lt; nodes.getLength(); i++) </span><br><span class="line">        &#123; </span><br><span class="line">           Node node = nodes.item(i); </span><br><span class="line">           if (node.getNodeType() == Node.ELEMENT_NODE) &#123;   </span><br><span class="line">              Element child = (Element) node; </span><br><span class="line">              //process child element </span><br><span class="line">           &#125; </span><br><span class="line">        &#125; </span><br><span class="line"> </span><br><span class="line">        NodeList nodeList = rootElement.getElementsByTagName(&quot;book&quot;); </span><br><span class="line">        if(nodeList != null) </span><br><span class="line">        &#123; </span><br><span class="line">           for (int i = 0 ; i &lt; nodeList.getLength(); i++) </span><br><span class="line">           &#123; </span><br><span class="line">              Element element = (Element)nodeList.item(i); </span><br><span class="line">              String id = element.getAttribute(&quot;id&quot;); </span><br><span class="line">           &#125; </span><br><span class="line">        &#125; </span><br><span class="line">  &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在上面的例子中，DOMParser 的 Parse() 方法负责解析 XML 文件并生成对应的 DOM Document 对象。其中 DocumentBuilderFactory 用于生成 DOM 文档解析器以便解析 XML 文档。 在获取了 XML 文件对应的 Document 对象之后，我们可以调用一系列的 API 方便的对文档对象模型中的元素进行访问和处理。 需要注意的是调用 Element 对象的 getChildNodes() 方法时将返回其下所有的子节点，其中包括空白节点，因此需要在处理子 Element 之前对节点类型加以判断。</p>
+<p>可以看出 DOM 解析 XML 易于开发，只需要通过解析器建立起 XML 对应的 DOM 树型结构后便可以方便的使用 API 对节点进行访问和处理，支持节点的删除和修改等。 但是 DOM 解析 XML 文件时会将整个 XML 文件的内容解析成树型结构存放在内存中，因此不适合用 DOM 解析很大的 XML 文件。</p>
+<p>SAX 解析 XML</p>
+<p>与 DOM 建立树形结构的方式不同，SAX 采用事件模型来解析 XML 文档，是解析 XML 文档的一种更快速、更轻量的方法。 利用 SAX 可以对 XML 文档进行有选择的解析和访问，而不必像 DOM 那样加载整个文档，因此它对内存的要求较低。 但 SAX 对 XML 文档的解析为一次性读取，不创建任何文档对象，很难同时访问文档中的多处数据。</p>
+<p>下面是一个 SAX 解析 XML 的例子：</p>
+<p>清单 3. SAX 解析 XML</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line">import org.xml.sax.Attributes; </span><br><span class="line">import org.xml.sax.SAXException; </span><br><span class="line">import org.xml.sax.XMLReader; </span><br><span class="line">import org.xml.sax.helpers.DefaultHandler; </span><br><span class="line">import org.xml.sax.helpers.XMLReaderFactory; </span><br><span class="line"> </span><br><span class="line">public class SAXParser &#123; </span><br><span class="line"> </span><br><span class="line">  class BookHandler extends DefaultHandler &#123; </span><br><span class="line">     private List&lt;String&gt; nameList; </span><br><span class="line">     private boolean title = false; </span><br><span class="line">   </span><br><span class="line">     public List&lt;String&gt; getNameList() &#123; </span><br><span class="line">        return nameList; </span><br><span class="line">     &#125; </span><br><span class="line">     // Called at start of an XML document </span><br><span class="line">     @Override </span><br><span class="line">     public void startDocument() throws SAXException &#123; </span><br><span class="line">        System.out.println(&quot;Start parsing document...&quot;); </span><br><span class="line">        nameList = new ArrayList&lt;String&gt;(); </span><br><span class="line">     &#125; </span><br><span class="line">     // Called at end of an XML document </span><br><span class="line">     @Override </span><br><span class="line">     public void endDocument() throws SAXException &#123;  </span><br><span class="line">        System.out.println(&quot;End&quot;);  </span><br><span class="line">     &#125; </span><br><span class="line">      </span><br><span class="line">     /** </span><br><span class="line">      * Start processing of an element. </span><br><span class="line">      * @param namespaceURI  Namespace URI </span><br><span class="line">      * @param localName  The local name, without prefix </span><br><span class="line">      * @param qName  The qualified name, with prefix </span><br><span class="line">      * @param atts  The attributes of the element </span><br><span class="line">      */ </span><br><span class="line">     @Override </span><br><span class="line">     public void startElement(String uri, String localName, String qName, </span><br><span class="line">        Attributes atts) throws SAXException &#123; </span><br><span class="line">        // Using qualified name because we are not using xmlns prefixes here. </span><br><span class="line">        if (qName.equals(&quot;title&quot;)) &#123; </span><br><span class="line">           title = true; </span><br><span class="line">        &#125; </span><br><span class="line">     &#125; </span><br><span class="line">   </span><br><span class="line">     @Override </span><br><span class="line">     public void endElement(String namespaceURI, String localName, String qName) </span><br><span class="line">        throws SAXException &#123; </span><br><span class="line">        // End of processing current element </span><br><span class="line">        if (title) &#123; </span><br><span class="line">           title = false; </span><br><span class="line">        &#125; </span><br><span class="line">     &#125; </span><br><span class="line">            </span><br><span class="line">     @Override </span><br><span class="line">     public void characters(char[] ch, int start, int length) &#123; </span><br><span class="line">        // Processing character data inside an element </span><br><span class="line">        if (title) &#123; </span><br><span class="line">           String bookTitle = new String(ch, start, length); </span><br><span class="line">           System.out.println(&quot;Book title: &quot; + bookTitle); </span><br><span class="line">           nameList.add(bookTitle); </span><br><span class="line">        &#125; </span><br><span class="line">     &#125; </span><br><span class="line">            </span><br><span class="line">  &#125; </span><br><span class="line">    </span><br><span class="line">  public static void main(String[] args) throws SAXException, IOException &#123; </span><br><span class="line">     XMLReader parser = XMLReaderFactory.createXMLReader(); </span><br><span class="line">     BookHandler bookHandler = (new SAXParser()).new BookHandler(); </span><br><span class="line">     parser.setContentHandler(bookHandler); </span><br><span class="line">     parser.parse(&quot;books.xml&quot;); </span><br><span class="line">     System.out.println(bookHandler.getNameList()); </span><br><span class="line">  &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>SAX 解析器接口和事件处理器接口定义在 org.xml.sax 包中。主要的接口包括 ContentHandler、DTDHandler、EntityResolver 及 ErrorHandler。 其中 ContentHandler 是主要的处理器接口，用于处理基本的文档解析事件；DTDHandler 和 EntityResolver 接口用于处理与 DTD 验证和实体解析相关的事件； ErrorHandler 是基本的错误处理接口。DefaultHandler 类实现了上述四个事件处理接口。上面的例子中 BookHandler 继承了 DefaultHandler 类， 并覆盖了其中的五个回调方法 startDocument()、endDocument()、startElement()、endElement() 及 characters() 以加入自己的事件处理逻辑。</p>
+<p>Digester 解析 XML</p>
+<p>为了满足将 XML 转换为 JavaBean 的特殊需求，Apache 旗下的一个名为 Digester 的工具为我们提供了这么一个选择。由于最终是将 XML 转化为 JavaBean 存储在内存当中， 故而解析性能等方面其实与使用者并没有多大关系。解析的关键在于用以匹配 XML 的模式以及规则等，由于该工具较为复杂，限于篇幅，作者只能给予简单的介绍。</p>
+<p>下面是一个 Digester 解析 XML 的例子片段：</p>
+<p>清单 4. Digester 解析 XML</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">// 定义要解析的 XML 的路径，并初始化工具类</span><br><span class="line">File input = new File(&quot;books.xml&quot;); </span><br><span class="line">Digester digester = new Digester(); </span><br><span class="line"> </span><br><span class="line">// 如果碰到了 &lt;books&gt; 这个标签，应该初始化 test.myBean.Books 这个 JavaBean 并填装相关内容</span><br><span class="line">digester.addObjectCreate(&quot;books&quot;, &quot;test.myBean.Books&quot;); </span><br><span class="line">digester.addSetProperties(&quot;books&quot;); </span><br><span class="line">// 如果碰到了 &lt;books/book&gt; 这个标签，同上初始化 test.myBean.Book 这个 JavaBean </span><br><span class="line">digester.addObjectCreate(&quot;books/book&quot;, &quot;test.myBean.Book&quot;); </span><br><span class="line">digester.addSetProperties(&quot;books/book&quot;); </span><br><span class="line">// 通过调用上面已经初始化过的 JavaBean 的 addBook() 方法来把多个 &lt;books/book&gt; 加到一个集合中</span><br><span class="line">digester.addSetNext(&quot;books/book&quot;, &quot;addBook&quot;, &quot;test.myBean.Book&quot;); </span><br><span class="line"> </span><br><span class="line">// 定义好了上面的解析规则后，就可以开始进行解析工作了</span><br><span class="line">Books books = (Books) digester.parse(input);</span><br></pre></td></tr></table></figure>
+<p>上述代码简单的向读者展示了 Digester 处理 XML 的一些要点，主要是说明了一些模式以及规则的匹配。 简言之，Digester 就是一种用来把一个 XML 转化为一个与该 XML 结构类似的 JavaBean。你可以把 XML 根元素想象成一个 JavaBean， 该根元素的 attribute 就是这个 JavaBean 的各种 Field，当该根元素有其他子 tag 时，又要把这个子 tag 想象成一个个新的 XML，将其视为一个新的 JavaBean， 并作为一个 Field 加入到父 Bean 当中，然后以此类推，通过循环的方式将整个 XML 进行解析。</p>
+<p>结束语<br><br>本文介绍了 Java 解析 XML 的三种常用技术，其中 DOM 易于上手，程序易于理解，但缺点在于占用内存大，不适合于解析较大的 XML 文件； SAX 基于事件模型占用系统资源少，能够胜任较大的 XML 文件解析，但解析过程较为繁琐查找元素不方便； Digester/JAXB 基于上述两种技术衍生而来。文中的实例向读者展示了三种 API 的基本使用方法， 在实际开发过程中使用那种技术解析 XML 更好要依据各自的优缺点视具体情况而定。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/28/开发部培训-盛富强-2018年-10月/" rel="next" title="">
+                <i class="fa fa-chevron-left"></i> 
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/10/23/axis2开发webservice之-二进制文件传输/" rel="prev" title="">
+                 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">盛富强</p>
+              <p class="site-description motion-element" itemprop="description">blogs and research</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/shengfq" target="_blank" title="github">
+                      
+                        <i class="fa fa-fw fa-globe"></i>github</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">XML 三种解析方式简介</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">盛富强</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
