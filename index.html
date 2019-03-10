@@ -232,6 +232,152 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://shengfq.github.io/2018/11/20/JUC-Java实现生产者消费者模型/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="盛富强">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="shengfq's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/11/20/JUC-Java实现生产者消费者模型/" itemprop="url">JUC系列-Java实现生产者消费者模型</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-20T00:00:00+08:00">
+                2018-11-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>本文转载:<a href="https://monkeysayhi.github.io/2017/10/08/Java%E5%AE%9E%E7%8E%B0%E7%94%9F%E4%BA%A7%E8%80%85-%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%9E%8B/" target="_blank" rel="noopener">原文</a></p>
+<h3>JUC系列-Java实现生产者-消费者模型</h3><br>有如下考点:<br><br>1.对java并发模型的理解<br><br>2.对并发编程接口的熟练程度<br><br><code>jdk: oracle java 1.8.0_102</code><br><br>本文主要归纳了3种写法，阅读后，最好在白板上练习几遍，检查自己是否掌握。这4种写法或者编程接口不同，或者并发粒度不同，但本质是相同的——都是在使用或实现BlockingQueue。<br><br><h3>生产者-消费者模型</h3><br>网上有很多生产者-消费者模型的定义和实现。本文研究最常用的有界生产者-消费者模型，简单概括如下：<br><br><em>生产者持续生产，直到缓冲区满，阻塞；缓冲区不满后，继续生产
+</em>消费者持续消费，直到缓冲区空，阻塞；缓冲区不空后，继续消费<br><em>生产者可以有多个，消费者也可以有多个
+</em>可通过如下条件验证模型实现的正确性：<br><em>同一产品的消费行为一定发生在生产行为之后
+</em>任意时刻，缓冲区大小不小于0，不大于限制容量<br>*该模型的应用和变种非常多，不赘述。<br><br>几种写法<br><h4>准备</h4><br>关键部分需要实现，如AbstractConsumer。<br><br><br><br>下面会涉及多种生产者-消费者模型的实现，可以先抽象出关键的接口，并实现一些抽象类<br><br><pre><br><br>public interface Consumer {<br>  void consume() throws InterruptedException;<br>}<br><br><br>public interface Producer {<br>  void produce() throws InterruptedException;<br>}<br><br>abstract class AbstractConsumer implements Consumer, Runnable {<br>  @Override<br>  public void run() {<br>    while (true) {<br>      try {<br>        consume();<br>      } catch (InterruptedException e) {<br>        e.printStackTrace();<br>        break;<br>      }<br>    }<br>  }<br>}<br><br>abstract class AbstractProducer implements Producer, Runnable {<br>  @Override<br>  public void run() {<br>    while (true) {<br>      try {<br>        produce();<br>      } catch (InterruptedException e) {<br>        e.printStackTrace();<br>        break;<br>      }<br>    }<br>  }<br>}<br><br></pre><br><br>不同的模型实现中，生产者、消费者的具体实现也不同，所以需要为模型定义抽象工厂方法：<br><br><pre><br><br>public interface Model {<br>  Runnable newRunnableConsumer();<br>  Runnable newRunnableProducer();<br>}<br><br>我们将Task作为生产和消费的单位<br>public class Task {<br>  public int no;<br>  public Task(int no) {<br>    this.no = no;<br>  }<br>}<br><br></pre><br><br>如果需求还不明确（这符合大部分工程工作的实际情况），建议边实现边抽象，不要“面向未来编程”。<br><br><h3>实现一：BlockingQueue</h3>
+
+<p>BlockingQueue的写法最简单。核心思想是，把并发和容量控制封装在缓冲区中。而BlockingQueue的性质天生满足这个要求。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">public class BlockingQueueModel implements Model &#123;</span><br><span class="line">  private final BlockingQueue&lt;Task&gt; queue;</span><br><span class="line">  private final AtomicInteger increTaskNo = new AtomicInteger(0);</span><br><span class="line">  public BlockingQueueModel(int cap) &#123;</span><br><span class="line">    // LinkedBlockingQueue 的队列不 init，入队时检查容量；ArrayBlockingQueue 在创建时 init</span><br><span class="line">    this.queue = new LinkedBlockingQueue&lt;&gt;(cap);</span><br><span class="line">  &#125;</span><br><span class="line">  @Override</span><br><span class="line">  public Runnable newRunnableConsumer() &#123;</span><br><span class="line">    return new ConsumerImpl();</span><br><span class="line">  &#125;</span><br><span class="line">  @Override</span><br><span class="line">  public Runnable newRunnableProducer() &#123;</span><br><span class="line">    return new ProducerImpl();</span><br><span class="line">  &#125;</span><br><span class="line">  private class ConsumerImpl extends AbstractConsumer implements Consumer, Runnable &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void consume() throws InterruptedException &#123;</span><br><span class="line">      Task task = queue.take();</span><br><span class="line">      // 固定时间范围的消费，模拟相对稳定的服务器处理过程</span><br><span class="line">      Thread.sleep(500 + (long) (Math.random() * 500));</span><br><span class="line">      System.out.println(&quot;consume: &quot; + task.no);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  private class ProducerImpl extends AbstractProducer implements Producer, Runnable &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void produce() throws InterruptedException &#123;</span><br><span class="line">      // 不定期生产，模拟随机的用户请求</span><br><span class="line">      Thread.sleep((long) (Math.random() * 1000));</span><br><span class="line">      Task task = new Task(increTaskNo.getAndIncrement());</span><br><span class="line">      System.out.println(&quot;produce: &quot; + task.no);</span><br><span class="line">      queue.put(task);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  public static void main(String[] args) &#123;</span><br><span class="line">    Model model = new BlockingQueueModel(3);</span><br><span class="line">    for (int i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">      new Thread(model.newRunnableConsumer()).start();</span><br><span class="line">    &#125;</span><br><span class="line">    for (int i = 0; i &lt; 5; i++) &#123;</span><br><span class="line">      new Thread(model.newRunnableProducer()).start();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">截取前面的一部分输出：</span><br><span class="line">produce: 0</span><br><span class="line">produce: 4</span><br><span class="line">produce: 2</span><br><span class="line">produce: 3</span><br><span class="line">produce: 5</span><br><span class="line">consume: 0</span><br><span class="line">produce: 1</span><br><span class="line">consume: 4</span><br><span class="line">produce: 7</span><br><span class="line">consume: 2</span><br><span class="line">produce: 8</span><br><span class="line">consume: 3</span><br><span class="line">produce: 6</span><br><span class="line">consume: 5</span><br><span class="line">produce: 9</span><br><span class="line">consume: 1</span><br><span class="line">produce: 10</span><br><span class="line">consume: 7</span><br></pre></td></tr></table></figure>
+<p></p><h3>##验证条件</h3><br>由于操作“出队/入队+日志输出”不是原子的，所以上述日志的绝对顺序与实际的出队/入队顺序有出入，但对于同一个任务号task.no，其consume日志一定出现在其produce日志之后，即：同一任务的消费行为一定发生在生产行为之后。缓冲区的容量留给读者验证。符合两个验证条件。<p></p>
+<p>BlockingQueue写法的核心只有两行代码，并发和容量控制都封装在了BlockingQueue中，正确性由BlockingQueue保证。</p>
+<p></p><h3>实现二：wait &amp;&amp; notify</h3><br>如果不能将并发与容量控制都封装在缓冲区中，就只能由消费者与生产者完成。最简单的方案是使用朴素的<code>wait &amp;&amp; notify</code>机制。<p></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">public class WaitNotifyModel implements Model &#123;</span><br><span class="line">  private final Object BUFFER_LOCK = new Object();</span><br><span class="line">  private final Queue&lt;Task&gt; buffer = new LinkedList&lt;&gt;();</span><br><span class="line">  private final int cap;</span><br><span class="line">  private final AtomicInteger increTaskNo = new AtomicInteger(0);</span><br><span class="line">  public WaitNotifyModel(int cap) &#123;</span><br><span class="line">    this.cap = cap;</span><br><span class="line">  &#125;</span><br><span class="line">  @Override</span><br><span class="line">  public Runnable newRunnableConsumer() &#123;</span><br><span class="line">    return new ConsumerImpl();</span><br><span class="line">  &#125;</span><br><span class="line">  @Override</span><br><span class="line">  public Runnable newRunnableProducer() &#123;</span><br><span class="line">    return new ProducerImpl();</span><br><span class="line">  &#125;</span><br><span class="line">  private class ConsumerImpl extends AbstractConsumer implements Consumer, Runnable &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void consume() throws InterruptedException &#123;</span><br><span class="line">      synchronized (BUFFER_LOCK) &#123;</span><br><span class="line">        while (buffer.size() == 0) &#123;</span><br><span class="line">          BUFFER_LOCK.wait();</span><br><span class="line">        &#125;</span><br><span class="line">        Task task = buffer.poll();</span><br><span class="line">        assert task != null;</span><br><span class="line">        // 固定时间范围的消费，模拟相对稳定的服务器处理过程</span><br><span class="line">        Thread.sleep(500 + (long) (Math.random() * 500));</span><br><span class="line">        System.out.println(&quot;consume: &quot; + task.no);</span><br><span class="line">        BUFFER_LOCK.notifyAll();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  private class ProducerImpl extends AbstractProducer implements Producer, Runnable &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void produce() throws InterruptedException &#123;</span><br><span class="line">      // 不定期生产，模拟随机的用户请求</span><br><span class="line">      Thread.sleep((long) (Math.random() * 1000));</span><br><span class="line">      synchronized (BUFFER_LOCK) &#123;</span><br><span class="line">        while (buffer.size() == cap) &#123;</span><br><span class="line">          BUFFER_LOCK.wait();</span><br><span class="line">        &#125;</span><br><span class="line">        Task task = new Task(increTaskNo.getAndIncrement());</span><br><span class="line">        buffer.offer(task);</span><br><span class="line">        System.out.println(&quot;produce: &quot; + task.no);</span><br><span class="line">        BUFFER_LOCK.notifyAll();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  public static void main(String[] args) &#123;</span><br><span class="line">    Model model = new WaitNotifyModel(3);</span><br><span class="line">    for (int i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">      new Thread(model.newRunnableConsumer()).start();</span><br><span class="line">    &#125;</span><br><span class="line">    for (int i = 0; i &lt; 5; i++) &#123;</span><br><span class="line">      new Thread(model.newRunnableProducer()).start();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p></p><h3>实现三：简单的Lock &amp;&amp; Condition</h3><br>我们要保证理解wait &amp;&amp; notify机制。实现时可以使用Object类提供的wait()方法与notifyAll()方法，但更推荐的方式是使用java.util.concurrent包提供的Lock &amp;&amp; Condition。<p></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">public class LockConditionModel1 implements Model &#123;</span><br><span class="line">  private final Lock BUFFER_LOCK = new ReentrantLock();</span><br><span class="line">  private final Condition BUFFER_COND = BUFFER_LOCK.newCondition();</span><br><span class="line">  private final Queue&lt;Task&gt; buffer = new LinkedList&lt;&gt;();</span><br><span class="line">  private final int cap;</span><br><span class="line">  private final AtomicInteger increTaskNo = new AtomicInteger(0);</span><br><span class="line">  public LockConditionModel1(int cap) &#123;</span><br><span class="line">    this.cap = cap;</span><br><span class="line">  &#125;</span><br><span class="line">  @Override</span><br><span class="line">  public Runnable newRunnableConsumer() &#123;</span><br><span class="line">    return new ConsumerImpl();</span><br><span class="line">  &#125;</span><br><span class="line">  @Override</span><br><span class="line">  public Runnable newRunnableProducer() &#123;</span><br><span class="line">    return new ProducerImpl();</span><br><span class="line">  &#125;</span><br><span class="line">  private class ConsumerImpl extends AbstractConsumer implements Consumer, Runnable &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void consume() throws InterruptedException &#123;</span><br><span class="line">      BUFFER_LOCK.lockInterruptibly();</span><br><span class="line">      try &#123;</span><br><span class="line">        while (buffer.size() == 0) &#123;</span><br><span class="line">          BUFFER_COND.await();</span><br><span class="line">        &#125;</span><br><span class="line">        Task task = buffer.poll();</span><br><span class="line">        assert task != null;</span><br><span class="line">        // 固定时间范围的消费，模拟相对稳定的服务器处理过程</span><br><span class="line">        Thread.sleep(500 + (long) (Math.random() * 500));</span><br><span class="line">        System.out.println(&quot;consume: &quot; + task.no);</span><br><span class="line">        BUFFER_COND.signalAll();</span><br><span class="line">      &#125; finally &#123;</span><br><span class="line">        BUFFER_LOCK.unlock();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  private class ProducerImpl extends AbstractProducer implements Producer, Runnable &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void produce() throws InterruptedException &#123;</span><br><span class="line">      // 不定期生产，模拟随机的用户请求</span><br><span class="line">      Thread.sleep((long) (Math.random() * 1000));</span><br><span class="line">      BUFFER_LOCK.lockInterruptibly();</span><br><span class="line">      try &#123;</span><br><span class="line">        while (buffer.size() == cap) &#123;</span><br><span class="line">          BUFFER_COND.await();</span><br><span class="line">        &#125;</span><br><span class="line">        Task task = new Task(increTaskNo.getAndIncrement());</span><br><span class="line">        buffer.offer(task);</span><br><span class="line">        System.out.println(&quot;produce: &quot; + task.no);</span><br><span class="line">        BUFFER_COND.signalAll();</span><br><span class="line">      &#125; finally &#123;</span><br><span class="line">        BUFFER_LOCK.unlock();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  public static void main(String[] args) &#123;</span><br><span class="line">    Model model = new LockConditionModel1(3);</span><br><span class="line">    for (int i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">      new Thread(model.newRunnableConsumer()).start();</span><br><span class="line">    &#125;</span><br><span class="line">    for (int i = 0; i &lt; 5; i++) &#123;</span><br><span class="line">      new Thread(model.newRunnableProducer()).start();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>该写法的思路与实现二的思路完全相同，仅仅将锁与条件变量换成了Lock和Condition。</p>
+<p></p><h3>总结</h3><br>方法1最简单,线程的并发同步和容量控制全部交给了LinkedBlockingQueue实现,自然美观,封装了复杂度.<p></p>
+<p>方法2和方法3是相同的原理,使用了手动控制并发同步,锁和竞争条件的运用.这对于我深入到阻塞队列实现的阻塞原理有了更加客观的认识.</p>
+<p>如果还有其他的实现方式,欢迎补充探讨,再次感谢阅读并指正.</p>
+<hr>
+<pre>
+author:shengfq
+qq:1085748383
+email: 1085748383@qq.com
+date:2019-03-10
+</pre>
+
+<hr>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://shengfq.github.io/2018/11/19/JUC-ArrayBlockingQueue源码分析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1218,7 +1364,7 @@ The searched-for class definition existed when the currently executing class was
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
