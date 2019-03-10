@@ -303,166 +303,16 @@
       
         
           
-            <p>##JUC多线程系列-ArrayBlockingQueue源码分析</p>
-<p>####背景<br>最近在项目中应用到后台异步任务并发应用,干脆系统的撸一遍JUC,然后应用到项目中实战.</p>
-<p></p><p>使用阻塞队列实现生产者消费者模式</p><br>优点:阻塞队列实现生产者消费者模式超级简单，它提供开箱即用支持阻塞的方法put()和take()，开发者不需要写困惑的wait-nofity代码去实现通信。BlockingQueue 一个接口，Java5提供了不同的现实，如ArrayBlockingQueue和LinkedBlockingQueue，两者都是先进先出（FIFO）顺序。而ArrayLinkedQueue是自然有界的，LinkedBlockingQueue可选的边界。下面这是一个完整的生产者消费者代码例子，对比传统的wait、nofity代码，它更易于理解。<p></p>
-<p>####目录</p>
-<ol>
-<li>ArrayBlockingQueue介绍</li>
-<li>ArrayBlockingQueue原理和数据结构</li>
-<li>ArrayBlockingQueue函数列表</li>
-<li>ArrayBlockingQueue源码分析(JDK1.8版本)</li>
-<li>ArrayBlockingQueue示例</li>
-</ol>
-<hr>
-<p>####正文</p>
-<p>###1.ArrayBlockingQueue介绍<br><br>ArrayBlockingQueue是数组实现的线程安全的有界的阻塞队列。<br>线程安全是指，ArrayBlockingQueue内部通过“互斥锁”保护竞争资源，实现了多线程对竞争资源的互斥访问。而有界，则是指ArrayBlockingQueue对应的数组是有界限的。 阻塞队列，是指多线程访问竞争资源时，当竞争资源已被某线程获取时，其它要获取该资源的线程需要阻塞等待；而且，ArrayBlockingQueue是按 FIFO（先进先出）原则对元素进行排序，元素都是从尾部插入到队列，从头部开始返回。</p>
-<p><a>注意：ArrayBlockingQueue不同于ConcurrentLinkedQueue，ArrayBlockingQueue是数组实现的，并且是有界限的；而ConcurrentLinkedQueue是链表实现的，是无界限的。<br></a></p>
-<p>###2.ArrayBlockingQueue原理和数据结构<br></p>
-<ol>
-<li>ArrayBlockingQueue继承于AbstractQueue，并且它实现了BlockingQueue接口。<br></li>
-<li>ArrayBlockingQueue内部是通过Object[]数组保存数据的，也就是说ArrayBlockingQueue本质上是通过数组实现的。ArrayBlockingQueue的大小，即数组的容量是创建ArrayBlockingQueue时指定的。<br></li>
-<li>ArrayBlockingQueue与ReentrantLock是组合关系，ArrayBlockingQueue中包含一个ReentrantLock对象(lock)。ReentrantLock是可重入的互斥锁，ArrayBlockingQueue就是根据该互斥锁实现“多线程对竞争资源的互斥访问”。而且，ReentrantLock分为公平锁和非公平锁，关于具体使用公平锁还是非公平锁，在创建ArrayBlockingQueue时可以指定；而且，ArrayBlockingQueue默认会使用非公平锁。<br></li>
-<li>ArrayBlockingQueue与Condition是组合关系，ArrayBlockingQueue中包含两个Condition对象(notEmpty和notFull)。</li>
-</ol>
-<p>###3.ArrayBlockingQueue函数列表</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">//api</span><br><span class="line"> private ArrayBlockingQueue&lt;Integer&gt; queue=new ArrayBlockingQueue&lt;Integer&gt;(size);</span><br><span class="line">// 将指定的元素插入到此队列的尾部（如果立即可行且不会超过该队列的容量），在成功时返回 true，如果此队列已满，则抛出 IllegalStateException。</span><br><span class="line">    private boolean add(Integer num)&#123;</span><br><span class="line">       return queue.add(num);</span><br><span class="line">    &#125;</span><br><span class="line">// 将指定的元素插入到此队列的尾部（如果立即可行且不会超过该队列的容量），在成功时返回 true，如果此队列已满，则返回 false。</span><br><span class="line">    private boolean offer(Integer num)&#123;</span><br><span class="line">        return queue.offer(num);</span><br><span class="line">    &#125;</span><br><span class="line">/ 创建一个带有给定的（固定）容量和默认访问策略的 ArrayBlockingQueue。</span><br><span class="line">ArrayBlockingQueue(int capacity)</span><br><span class="line">// 创建一个具有给定的（固定）容量和指定访问策略的 ArrayBlockingQueue。</span><br><span class="line">ArrayBlockingQueue(int capacity, boolean fair)</span><br><span class="line">// 创建一个具有给定的（固定）容量和指定访问策略的 ArrayBlockingQueue，它最初包含给定 collection 的元素，并以 collection 迭代器的遍历顺序添加元素。</span><br><span class="line">ArrayBlockingQueue(int capacity, boolean fair, Collection&lt;? extends E&gt; c)</span><br><span class="line"></span><br><span class="line">    //TODO 将指定的元素插入此队列的尾部，如果该队列已满，则等待可用的空间。</span><br><span class="line">    private void put(Integer num) throws InterruptedException &#123;</span><br><span class="line">         queue.put(num);</span><br><span class="line">    &#125;</span><br><span class="line">    // 获取但不移除此队列的头；如果此队列为空，则返回 null。</span><br><span class="line">    private Integer peek()&#123;</span><br><span class="line">       return queue.peek();</span><br><span class="line">    &#125;</span><br><span class="line">    // 获取并移除此队列的头，如果此队列为空，则返回 null。</span><br><span class="line">    private Integer poll()&#123;</span><br><span class="line">        return queue.poll();</span><br><span class="line">    &#125;</span><br><span class="line">    //TODO 获取并移除此队列的头部，在元素变得可用之前一直等待（如果有必要）。</span><br><span class="line">    private Integer take() throws InterruptedException&#123;</span><br><span class="line">        return queue.take();</span><br><span class="line">    &#125;</span><br><span class="line">    // 从此队列中移除指定元素的单个实例（如果存在）</span><br><span class="line">    private boolean remove(Integer num)&#123;</span><br><span class="line">        return queue.remove(num);</span><br><span class="line">    &#125;</span><br><span class="line">    // 返回此队列中元素的数量。</span><br><span class="line">    private int getSize()&#123;</span><br><span class="line">      return queue.size();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>###4.源码分析</p>
-<p>####创建<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public ArrayBlockingQueue(int capacity, boolean fair) &#123;</span><br><span class="line">        if (capacity &lt;= 0)</span><br><span class="line">            throw new IllegalArgumentException();</span><br><span class="line">        this.items = new Object[capacity];//存放数组</span><br><span class="line">        lock = new ReentrantLock(fair); //互斥锁</span><br><span class="line">        notEmpty = lock.newCondition();//竞争条件</span><br><span class="line">        notFull =  lock.newCondition();//竞争条件</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
-<p>####添加<br>   offer() //队列满了返回false<br>   add() //队列满了抛出异常<br>   put() //队列慢了,阻塞线程</p>
-<p>####取出<br>   poll()//获取并移除此队列的头，如果此队列为空，则返回 null。<br>   remove()//获取并移除此队列的头，如果为空,返回false<br>   take() //获取并移除此队列的头部，在元素变得可用之前一直等待（如果有必要）。</p>
-<p>####遍历<br>   iterator()//</p>
-<p>###总结<br>    这些API都不需要记忆,因为编程的时候,你可以查看API的实现原理.重点是要花时间把他看懂,知道为什么实现的.</p>
-<p>###5.思考题ArrayBlockingQueue示例<br>   一个线程打印1-52,一个线程打印A-Z<br>   要求控制台输出A12B34C56….Z5152</p>
+            <h2>JUC多线程系列-ArrayBlockingQueue源码分析</h2><br><h3>背景</h3><br>最近在项目中应用到后台异步任务并发应用,干脆系统的撸一遍JUC,然后应用到项目中实战.<br><br><p>使用阻塞队列实现生产者消费者模式</p><br>优点:阻塞队列实现生产者消费者模式超级简单，它提供开箱即用支持阻塞的方法put()和take()，开发者不需要写困惑的wait-nofity代码去实现通信。BlockingQueue 一个接口，Java5提供了不同的现实，如ArrayBlockingQueue和LinkedBlockingQueue，两者都是先进先出（FIFO）顺序。而ArrayLinkedQueue是自然有界的，LinkedBlockingQueue可选的边界。下面这是一个完整的生产者消费者代码例子，对比传统的wait、nofity代码，它更易于理解。<br><br><br><h3>目录</h3><br><ol><br><li> ArrayBlockingQueue介绍</li><br><li>ArrayBlockingQueue原理和数据结构</li><br><li> ArrayBlockingQueue函数列表</li><br><li> ArrayBlockingQueue源码分析(JDK1.8版本)</li><br><li>ArrayBlockingQueue示例</li><br></ol><br><br><h2>正文</h2><br><h2>1.ArrayBlockingQueue介绍</h2><br>ArrayBlockingQueue是数组实现的线程安全的有界的阻塞队列。<br>线程安全是指，ArrayBlockingQueue内部通过“互斥锁”保护竞争资源，实现了多线程对竞争资源的互斥访问。而有界，则是指ArrayBlockingQueue对应的数组是有界限的。 阻塞队列，是指多线程访问竞争资源时，当竞争资源已被某线程获取时，其它要获取该资源的线程需要阻塞等待；而且，ArrayBlockingQueue是按 FIFO（先进先出）原则对元素进行排序，元素都是从尾部插入到队列，从头部开始返回。<br><br><br><br><a>注意：ArrayBlockingQueue不同于ConcurrentLinkedQueue，ArrayBlockingQueue是数组实现的，并且是有界限的；而ConcurrentLinkedQueue是链表实现的，是无界限的。<br></a><br><br><h2>2.ArrayBlockingQueue原理和数据结构</h2><br><ol><br><li> ArrayBlockingQueue继承于AbstractQueue，并且它实现了BlockingQueue接口。</li><br><li>  ArrayBlockingQueue内部是通过Object[]数组保存数据的，也就是说ArrayBlockingQueue本质上是通过数组实现的。ArrayBlockingQueue的大小，即数组的容量是创建ArrayBlockingQueue时指定的。</li><br><li>  ArrayBlockingQueue与ReentrantLock是组合关系，ArrayBlockingQueue中包含一个ReentrantLock对象(lock)。ReentrantLock是可重入的互斥锁，ArrayBlockingQueue就是根据该互斥锁实现“多线程对竞争资源的互斥访问”。而且，ReentrantLock分为公平锁和非公平锁，关于具体使用公平锁还是非公平锁，在创建ArrayBlockingQueue时可以指定；而且，ArrayBlockingQueue默认会使用非公平锁。</li><br><li>  ArrayBlockingQueue与Condition是组合关系，ArrayBlockingQueue中包含两个Condition对象(notEmpty和notFull)。<br></li><br></ol><br><br><h2>3.ArrayBlockingQueue函数列表</h2>
 
-          
-        
-      
-    </div>
-    
-    
-    
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"> private ArrayBlockingQueue&lt;Integer&gt; queue=new ArrayBlockingQueue&lt;Integer&gt;(size);</span><br><span class="line">// 将指定的元素插入到此队列的尾部（如果立即可行且不会超过该队列的容量），在成功时返回 true，如果此队列已满，则抛出 IllegalStateException。</span><br><span class="line">    private boolean add(Integer num)&#123;</span><br><span class="line">       return queue.add(num);</span><br><span class="line">    &#125;</span><br><span class="line">// 将指定的元素插入到此队列的尾部（如果立即可行且不会超过该队列的容量），在成功时返回 true，如果此队列已满，则返回 false。</span><br><span class="line">    private boolean offer(Integer num)&#123;</span><br><span class="line">        return queue.offer(num);</span><br><span class="line">    &#125;</span><br><span class="line">/ 创建一个带有给定的（固定）容量和默认访问策略的 ArrayBlockingQueue。</span><br><span class="line">ArrayBlockingQueue(int capacity)</span><br><span class="line">// 创建一个具有给定的（固定）容量和指定访问策略的 ArrayBlockingQueue。</span><br><span class="line">ArrayBlockingQueue(int capacity, boolean fair)</span><br><span class="line">// 创建一个具有给定的（固定）容量和指定访问策略的 ArrayBlockingQueue，它最初包含给定 collection 的元素，并以 collection 迭代器的遍历顺序添加元素。</span><br><span class="line">ArrayBlockingQueue(int capacity, boolean fair, Collection&lt;? extends E&gt; c)</span><br><span class="line"></span><br><span class="line">    //TODO 将指定的元素插入此队列的尾部，如果该队列已满，则等待可用的空间。</span><br><span class="line">    private void put(Integer num) throws InterruptedException &#123;</span><br><span class="line">         queue.put(num);</span><br><span class="line">    &#125;</span><br><span class="line">    // 获取但不移除此队列的头；如果此队列为空，则返回 null。</span><br><span class="line">    private Integer peek()&#123;</span><br><span class="line">       return queue.peek();</span><br><span class="line">    &#125;</span><br><span class="line">    // 获取并移除此队列的头，如果此队列为空，则返回 null。</span><br><span class="line">    private Integer poll()&#123;</span><br><span class="line">        return queue.poll();</span><br><span class="line">    &#125;</span><br><span class="line">    //TODO 获取并移除此队列的头部，在元素变得可用之前一直等待（如果有必要）。</span><br><span class="line">    private Integer take() throws InterruptedException&#123;</span><br><span class="line">        return queue.take();</span><br><span class="line">    &#125;</span><br><span class="line">    // 从此队列中移除指定元素的单个实例（如果存在）</span><br><span class="line">    private boolean remove(Integer num)&#123;</span><br><span class="line">        return queue.remove(num);</span><br><span class="line">    &#125;</span><br><span class="line">    // 返回此队列中元素的数量。</span><br><span class="line">    private int getSize()&#123;</span><br><span class="line">      return queue.size();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p></p><h2>4.源码分析</h2><p></p>
+<h3>创建</h3>
 
-    
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">public ArrayBlockingQueue(int capacity, boolean fair) &#123;</span><br><span class="line">        if (capacity &lt;= 0)</span><br><span class="line">            throw new IllegalArgumentException();</span><br><span class="line">        this.items = new Object[capacity];//存放数组</span><br><span class="line">        lock = new ReentrantLock(fair); //互斥锁</span><br><span class="line">        notEmpty = lock.newCondition();//竞争条件</span><br><span class="line">        notFull =  lock.newCondition();//竞争条件</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">添加</span><br><span class="line">   offer() //队列满了返回false</span><br><span class="line">   add() //队列满了抛出异常</span><br><span class="line">   put() //队列慢了,阻塞线程</span><br><span class="line">取出</span><br><span class="line">   poll()//获取并移除此队列的头，如果此队列为空，则返回 null。</span><br><span class="line">   remove()//获取并移除此队列的头，如果为空,返回false</span><br><span class="line">   take() //获取并移除此队列的头部，在元素变得可用之前一直等待（如果有必要）。</span><br><span class="line">遍历</span><br><span class="line">   iterator() //符合Collection 接口</span><br></pre></td></tr></table></figure>
+<p></p><h2>总结</h2><br>    这些API都不需要记忆,因为编程的时候,你可以查看API的实现原理.重点是要花时间把他看懂,知道为什么实现的.<p></p>
+<p>5.思考题ArrayBlockingQueue示例<br>   一个线程打印1-52,一个线程打印A-Z<br>   要求控制台输出A12B34C56….Z5152</p>
 
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://shengfq.github.io/2018/10/23/axis2开发webservice之-二进制文件传输/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="盛富强">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="shengfq's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/10/23/axis2开发webservice之-二进制文件传输/" itemprop="url">Untitled</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-10-23T15:55:00+08:00">
-                2018-10-23
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>###axis2开发webservice之-二进制文件传输</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">开发环境:&lt;/br&gt;</span><br><span class="line">jdk:javase 1.8 &lt;/br&gt;</span><br><span class="line">ide:eclipse &lt;/br&gt;</span><br><span class="line">webservice client:axis2 1.7.8&lt;/br&gt;</span><br><span class="line">webservice:soap12&lt;/br&gt;</span><br></pre></td></tr></table></figure>
-<p>####操作步骤<br>下载axis2,进入bin目录<br>wsdl2java.bat -uri <a href="http://121.15.203.82:9210/DA_DataPigeonhole/PushDataWebService.asmx?wsdl" target="_blank" rel="noopener">http://121.15.203.82:9210/DA_DataPigeonhole/PushDataWebService.asmx?wsdl</a><br>将生成的src目录源代码拷贝到项目<br></p>
-<p>####调用.net webservice (对SoapHeader的处理)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">PushDataWebServiceStub stub = new PushDataWebServiceStub();</span><br><span class="line">stub._getServiceClient()</span><br><span class="line">				.getOptions()</span><br><span class="line">				.setProperty(</span><br><span class="line">						org.apache.axis2.transport.http.HTTPConstants.CHUNKED,</span><br><span class="line">						Boolean.FALSE);</span><br><span class="line">PushDataWebServiceStub.MySoapHeaderE headerE = new PushDataWebServiceStub.MySoapHeaderE();</span><br><span class="line">PushDataWebServiceStub.MySoapHeader header = new PushDataWebServiceStub.MySoapHeader();</span><br><span class="line">header.setActiveCode(activeCode);//添加参数</span><br><span class="line">headerE.setMySoapHeader(header);</span><br></pre></td></tr></table></figure></p>
-<p>再看传递自定义对象<br>比如我这里的这个发短信的业务，生成的方法为sendSms(自定义对象,头信息);<br>好的这里我们需要构造这个自定义对象，原.net的sendSms方法的参数为一个自定义对象的数组，那么这里我们该怎么写呢？<br>axis为我们提供了一个类似ArrayOfXXXX的包装对象，构造这个对象然后将xxxx对象加进去即可。<br>到这里，我们基本完成了调用.net webservice的所有工作。</p>
-<p>####上传二进制文件流<br>WebService类中包含byte[]类型参数的方法在wsdl2java生成的stub类中对应的数据类型不再是byte[]类型，而是javax.activation.DataHandler。DataHandler类是专门用来映射WebService二进制类型的。<br></p>
-<p>在WebService类中除了可以使用byte[]作为传输二进制的数据类型外，也可以使用javax.activation.DataHandler作为数据类型。不管是使用byte[]，还是使用javax.activation.DataHandler作为WebService方法的数据类型，使用wsdl2java命令生成的stub类中相应方法的类型都是javax.activation.DataHandler。而象使用.net、delphi生成的stub类的相应方法类型都是byte[]。这是由于javax.activation.DataHandler类是Java特有的，对于其他语言和技术来说，并不认识javax.activation.DataHandler类，因此，也只有使用最原始的byte[]了。<br></p>
-<p>——————— <br></p>
-<p>如果使用wsdl2java命令生成调用Java客户端代码，则需要创建DataHandler类的对象实例，代码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">javax.activation.DataHandler datahandler = new javax.activation.DataHandler(</span><br><span class="line">					new FileDataSource(files));</span><br><span class="line">wsdl2java命令会为每一个方法生成一个封装方法参数的类，类名为方法名（第一个字符大写），如receiveFileData方法生成的类名为ReceiveFileData。如果要设置DocJpg参数的值，可以使用ReceiveFileData类的setDocJpg方法，代码如下：</span><br><span class="line">ReceiveFileData receive = new ReceiveFileData();</span><br><span class="line">receive.setDocJpg(datahandler);</span><br><span class="line"></span><br><span class="line">最后是调用receiveFileData方法，代码如下（PushDataWebServiceStub为wsdl2java生成的stub类名）：</span><br><span class="line"></span><br><span class="line">PushDataWebServiceStub stub = new PushDataWebServiceStub();</span><br><span class="line">stub.receiveFileData(receive,headerE);</span><br></pre></td></tr></table></figure>
           
         
       
@@ -626,128 +476,6 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">// 定义要解析的 XML 的路径，并初始化工具类</span><br><span class="line">File input = new File(&quot;books.xml&quot;); </span><br><span class="line">Digester digester = new Digester(); </span><br><span class="line"> </span><br><span class="line">// 如果碰到了 &lt;books&gt; 这个标签，应该初始化 test.myBean.Books 这个 JavaBean 并填装相关内容</span><br><span class="line">digester.addObjectCreate(&quot;books&quot;, &quot;test.myBean.Books&quot;); </span><br><span class="line">digester.addSetProperties(&quot;books&quot;); </span><br><span class="line">// 如果碰到了 &lt;books/book&gt; 这个标签，同上初始化 test.myBean.Book 这个 JavaBean </span><br><span class="line">digester.addObjectCreate(&quot;books/book&quot;, &quot;test.myBean.Book&quot;); </span><br><span class="line">digester.addSetProperties(&quot;books/book&quot;); </span><br><span class="line">// 通过调用上面已经初始化过的 JavaBean 的 addBook() 方法来把多个 &lt;books/book&gt; 加到一个集合中</span><br><span class="line">digester.addSetNext(&quot;books/book&quot;, &quot;addBook&quot;, &quot;test.myBean.Book&quot;); </span><br><span class="line"> </span><br><span class="line">// 定义好了上面的解析规则后，就可以开始进行解析工作了</span><br><span class="line">Books books = (Books) digester.parse(input);</span><br></pre></td></tr></table></figure>
 <p>上述代码简单的向读者展示了 Digester 处理 XML 的一些要点，主要是说明了一些模式以及规则的匹配。 简言之，Digester 就是一种用来把一个 XML 转化为一个与该 XML 结构类似的 JavaBean。你可以把 XML 根元素想象成一个 JavaBean， 该根元素的 attribute 就是这个 JavaBean 的各种 Field，当该根元素有其他子 tag 时，又要把这个子 tag 想象成一个个新的 XML，将其视为一个新的 JavaBean， 并作为一个 Field 加入到父 Bean 当中，然后以此类推，通过循环的方式将整个 XML 进行解析。</p>
 <p>结束语<br><br>本文介绍了 Java 解析 XML 的三种常用技术，其中 DOM 易于上手，程序易于理解，但缺点在于占用内存大，不适合于解析较大的 XML 文件； SAX 基于事件模型占用系统资源少，能够胜任较大的 XML 文件解析，但解析过程较为繁琐查找元素不方便； Digester/JAXB 基于上述两种技术衍生而来。文中的实例向读者展示了三种 API 的基本使用方法， 在实际开发过程中使用那种技术解析 XML 更好要依据各自的优缺点视具体情况而定。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://shengfq.github.io/2018/09/28/开发部培训-盛富强-2018年-10月/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="盛富强">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="shengfq's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/28/开发部培训-盛富强-2018年-10月/" itemprop="url">Untitled</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-28T12:08:02+08:00">
-                2018-09-28
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>培训主题：OA与第三方系统的集成<br>培训群体：开发部<br>培训要点：经验分享讨论，避免重复造轮子。<br>培训日期：2018-10月份<br>主讲人：盛富强</p>
-<p>概要内容(45分钟)：<br>一、OA与HR系统的集成需求及思路<br>二、OA与DA档案系统的集成需求及配置<br>三、OA的jsp前台页面框架和二开<br>四、OA的后台数据库模块介绍<br>五、OA与EAS的集成、同步</p>
-<p>案例讲解(45分钟)：<br>六、开发案例讲解：特建发多首页功能和HR系统集成，粮食集团的DA档案系统集成。</p>
 
           
         
@@ -1490,7 +1218,7 @@ The searched-for class definition existed when the currently executing class was
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
