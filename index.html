@@ -331,7 +331,7 @@ handler： 线程池对拒绝任务的处理策略
 
 <h4><br>一个任务通过 execute(Runnable)方法被添加到线程池，任务就是一个 Runnable类型的对象，任务的执行方法就是Runnable类型对象的run()方法。<br></h4>
 
-<h3>二、原理</h3><br>当一个任务通过execute(Runnable)方法欲添加到线程池时：<br><br>1.  如果此时线程池中的数量小于corePoolSize，即使线程池中的线程都处于空闲状态，也要创建新的线程来处理被添加的任务。<br><br>2.  如果此时线程池中的数量等于 corePoolSize，但是缓冲队列 workQueue未满，那么任务被放入缓冲队列。<br><br>3.  如果此时线程池中的数量大于corePoolSize，缓冲队列workQueue满，并且线程池中的数量小于maximumPoolSize，建新的线程来处理被添加的任务。<br><br>4.  如果此时线程池中的数量大于corePoolSize，缓冲队列workQueue满，并且线程池中的数量等于maximumPoolSize，那么通过 handler所指定的策略来处理此任务。也就是：处理任务的优先级为：核心线程corePoolSize、任务队列workQueue、最大线程maximumPoolSize，如果三者都满了，使用handler处理被拒绝的任务。<br><br>5. 当线程池中的线程数量大于 corePoolSize时，如果某线程空闲时间超过keepAliveTime，线程将被终止。这样，线程池可以动态的调整池中的线程数。<br><br>6. unit可选的参数为java.util.concurrent.TimeUnit中的几个静态属性：<br><br>NANOSECONDS、<br><br>MICROSECONDS、<br><br>MILLISECONDS、<br><br>SECONDS。<br><br>7. workQueue常用的是：java.util.concurrent.ArrayBlockingQueue<br><br>8. handler有四个选择：<br><br>  1. ThreadPoolExecutor.AbortPolicy()<br><br>抛出java.util.concurrent.RejectedExecutionException异常<br><br><br><br>  2. ThreadPoolExecutor.CallerRunsPolicy()<br><br>当抛出RejectedExecutionException异常时，会调用rejectedExecution方法<br><br>(如果主线程没有关闭，则主线程调用run方法,源码如下<br><br>public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {<br>            if (!e.isShutdown()) {<br>                r.run();<br>            }<br>        }<br><br>)<br><br>  3. ThreadPoolExecutor.DiscardOldestPolicy()<br>抛弃旧的任务<br>  4. ThreadPoolExecutor.DiscardPolicy()<br>抛弃当前的任务<br><br><br><h3>三、相关参考</h3>
+<h3>二、原理</h3><br><h4>当一个任务通过execute(Runnable)方法欲添加到线程池时</h4><br><br>1.  如果此时线程池中的数量小于corePoolSize，即使线程池中的线程都处于空闲状态，也要创建新的线程来处理被添加的任务。<br><br>2.  如果此时线程池中的数量等于 corePoolSize，但是缓冲队列 workQueue未满，那么任务被放入缓冲队列。<br><br>3.  如果此时线程池中的数量大于corePoolSize，缓冲队列workQueue满，并且线程池中的数量小于maximumPoolSize，建新的线程来处理被添加的任务。<br><br>4.  如果此时线程池中的数量大于corePoolSize，缓冲队列workQueue满，并且线程池中的数量等于maximumPoolSize，那么通过 handler所指定的策略来处理此任务。也就是：处理任务的优先级为：核心线程corePoolSize、任务队列workQueue、最大线程maximumPoolSize，如果三者都满了，使用handler处理被拒绝的任务。<br><br>5. 当线程池中的线程数量大于 corePoolSize时，如果某线程空闲时间超过keepAliveTime，线程将被终止。这样，线程池可以动态的调整池中的线程数。<br><br>6. unit可选的参数为java.util.concurrent.TimeUnit中的几个静态属性：<br><br>NANOSECONDS、<br><br>MICROSECONDS、<br><br>MILLISECONDS、<br><br>SECONDS。<br><br>7. workQueue常用的是：java.util.concurrent.ArrayBlockingQueue<br><br>8. handler有四个选择：<br><br>  1. ThreadPoolExecutor.AbortPolicy()<br><br>抛出java.util.concurrent.RejectedExecutionException异常<br><br><br><br>  2. ThreadPoolExecutor.CallerRunsPolicy()<br><br>当抛出RejectedExecutionException异常时，会调用rejectedExecution方法<br><br>(如果主线程没有关闭，则主线程调用run方法,源码如下<br><br>public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {<br>            if (!e.isShutdown()) {<br>                r.run();<br>            }<br>        }<br><br>)<br><br>  3. ThreadPoolExecutor.DiscardOldestPolicy()<br>抛弃旧的任务<br>  4. ThreadPoolExecutor.DiscardPolicy()<br>抛弃当前的任务<br><br><br><h3>三、相关参考</h3>
 
 <p>一个 ExecutorService，它使用可能的几个池线程之一执行每个提交的任务，通常使用 Executors 工厂方法配置。</p>
 <p>线程池可以解决两个不同问题：由于减少了每个任务调用的开销，它们通常可以在执行大量异步任务时提供增强的性能，并且还可以提供绑定和管理资源（包括执行集合任务时使用的线程）的方法。每个ThreadPoolExecutor 还维护着一些基本的统计数据，如完成的任务数。</p>
@@ -375,28 +375,28 @@ handler： 线程池对拒绝任务的处理策略
 <p>如果挂钩或回调方法抛出异常，则内部辅助线程将依次失败并突然终止。</p>
 <p></p><h4>9.队列维护</h4><p></p>
 <p></p><p>方法 getQueue() 允许出于监控和调试目的而访问工作队列。强烈反对出于其他任何目的而使用此方法。remove(java.lang.Runnable) 和 purge() 这两种方法可用于在取消大量已排队任务时帮助进行存储回收。<br></p><br>一、例子<br>创建 TestThreadPool 类<p></p>
-<pre>
-
-import java.util.concurrent.ArrayBlockingQueue;  
-import java.util.concurrent.ThreadPoolExecutor;  
-import java.util.concurrent.TimeUnit;  
-
-public class TestThreadPool {  
-
-    private static int produceTaskSleepTime = 2;  
-
-    private static int produceTaskMaxNumber = 10;  
-
-    public static void main(String[] args) {  
-
-        // 构造一个线程池  
-        ThreadPoolExecutor threadPool = new ThreadPoolExecutor(2, 4, 3,  
-                TimeUnit.SECONDS, new ArrayBlockingQueue<runnable>(3),  
-                new ThreadPoolExecutor.DiscardOldestPolicy());  
-
-        for (int i = 1; i <= 1="" 2="" 3="" 4="" 5="" 6="" 7="" 8="" 9="" 10="" producetaskmaxnumber;="" i++)="" {="" try="" string="" task="task@ " +="" i;="" system.out.println("创建任务并提交到线程池中："="" task);="" threadpool.execute(new="" threadpooltask(task));="" thread.sleep(producetasksleeptime);="" }="" catch="" (exception="" e)="" e.printstacktrace();="" import="" java.io.serializable;="" public="" class="" threadpooltask="" implements="" runnable,="" serializable="" private="" object="" attachdata;="" threadpooltask(object="" tasks)="" this.attachdata="tasks;" void="" run()="" system.out.println("开始执行任务："="" attachdata);="" attachdata="null;" gettask()="" return="" this.attachdata;="" 执行结果：="" 创建任务并提交到线程池中：task@="" 开始执行任务：task@="" <="" pre="">
-
-
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">import java.util.concurrent.ArrayBlockingQueue;  </span><br><span class="line">import java.util.concurrent.ThreadPoolExecutor;  </span><br><span class="line">import java.util.concurrent.TimeUnit;  </span><br><span class="line">  </span><br><span class="line">public class TestThreadPool &#123;  </span><br><span class="line">  </span><br><span class="line">    private static int produceTaskSleepTime = 2;  </span><br><span class="line">      </span><br><span class="line">    private static int produceTaskMaxNumber = 10;  </span><br><span class="line">  </span><br><span class="line">    public static void main(String[] args) &#123;  </span><br><span class="line">  </span><br><span class="line">        // 构造一个线程池  </span><br><span class="line">        ThreadPoolExecutor threadPool = new ThreadPoolExecutor(2, 4, 3,  </span><br><span class="line">                TimeUnit.SECONDS, new ArrayBlockingQueue&lt;Runnable&gt;(3),  </span><br><span class="line">                new ThreadPoolExecutor.DiscardOldestPolicy());  </span><br><span class="line">  </span><br><span class="line">        for (int i = 1; i &lt;= produceTaskMaxNumber; i++) &#123;  </span><br><span class="line">            try &#123;  </span><br><span class="line">                String task = &quot;task@ &quot; + i;  </span><br><span class="line">                System.out.println(&quot;创建任务并提交到线程池中：&quot; + task);  </span><br><span class="line">                threadPool.execute(new ThreadPoolTask(task));  </span><br><span class="line">  </span><br><span class="line">                Thread.sleep(produceTaskSleepTime);  </span><br><span class="line">            &#125; catch (Exception e) &#123;  </span><br><span class="line">                e.printStackTrace();  </span><br><span class="line">            &#125;  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;  </span><br><span class="line"></span><br><span class="line">import java.io.Serializable;  </span><br><span class="line">  </span><br><span class="line">public class ThreadPoolTask implements Runnable, Serializable &#123;  </span><br><span class="line">  </span><br><span class="line">    private Object attachData;  </span><br><span class="line">  </span><br><span class="line">    ThreadPoolTask(Object tasks) &#123;  </span><br><span class="line">        this.attachData = tasks;  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    public void run() &#123;  </span><br><span class="line">          </span><br><span class="line">        System.out.println(&quot;开始执行任务：&quot; + attachData);  </span><br><span class="line">          </span><br><span class="line">        attachData = null;  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    public Object getTask() &#123;  </span><br><span class="line">        return this.attachData;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行结果：</p>
+<p>创建任务并提交到线程池中：task@ 1</p>
+<p>开始执行任务：task@ 1</p>
+<p>创建任务并提交到线程池中：task@ 2</p>
+<p>开始执行任务：task@ 2</p>
+<p>创建任务并提交到线程池中：task@ 3</p>
+<p>创建任务并提交到线程池中：task@ 4</p>
+<p>开始执行任务：task@ 3</p>
+<p>创建任务并提交到线程池中：task@ 5</p>
+<p>开始执行任务：task@ 4</p>
+<p>创建任务并提交到线程池中：task@ 6</p>
+<p>创建任务并提交到线程池中：task@ 7</p>
+<p>创建任务并提交到线程池中：task@ 8</p>
+<p>开始执行任务：task@ 5</p>
+<p>开始执行任务：task@ 6</p>
+<p>创建任务并提交到线程池中：task@ 9</p>
+<p>开始执行任务：task@ 7</p>
+<p>创建任务并提交到线程池中：task@ 10</p>
+<p>开始执行任务：task@ 8</p>
+<p>开始执行任务：task@ 9</p>
+<p>开始执行任务：task@ 10</p>
 <h3>四.ThreadPoolExecutor配置</h3>
 
 <ol>
@@ -431,7 +431,7 @@ public class TestThreadPool {
 <li><p>可以使用PriorityBlockingQueue通过优先级安排任务</p>
 </li>
 </ol>
-</=></runnable></pre>
+
           
         
       
