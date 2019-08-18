@@ -232,6 +232,611 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://shengfq.github.io/2019/08/18/集合框架详解一/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="盛富强">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="shengfq's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/08/18/集合框架详解一/" itemprop="url">集合框架总结一</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-08-18T00:00:00+08:00">
+                2019-08-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>##1. 集合的定义<br>什么是集合呢？<br><br>定义：集合是一个存放对象的引用的容器。<br>在Java中，集合位于java.util包下。<br></p>
+<p>##2. 集合和数组的区别(面试常问)<br>提到容器，就会想起数组，那么集合和数组的区别是什么呢？（这里是重点，面试可能问的比较多）</p>
+<li>数组和集合都是Java中的容器<br><br></li><li>数组的长度是固定的，集合的长度是可变的<br><br></li><li>数组只能存储相同数据类型的数据，这里的数据类型可以是基本数据类型，也可以是引用类型<br><br></li><li>集合可以存储不同数据类型的对象的引用(但一般情况下，我们会使用泛型来约定只使用1种数据类型)，但不能存储基本数据类型<br><br><br>空口无凭，我们来点代码配合理解，首先，我们看下如下的数组代码：<br><br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">String[] platformArray = new String[3];</span><br><span class="line">platformArray[0] = &quot;博客园&quot;;</span><br><span class="line">platformArray[1] = &quot;掘金&quot;;</span><br><span class="line">platformArray[2] = &quot;微信公众号&quot;;</span><br><span class="line">platformArray[3] = &quot;个人博客&quot;;</span><br></pre></td></tr></table></figure><br><br>复制代码运行代码就会发现<br><br><pre>platformArray[3] = “个人博客”;</pre>会引发java.lang.ArrayIndexOutOfBoundsException异常。<br><br>而使用集合时就不存在这个问题，因为集合在声明时不需要指定长度并且长度会根据放入元素的多少而变化：<br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; platformList = new ArrayList&lt;&gt;();</span><br><span class="line">platformList.add(&quot;博客园&quot;);</span><br><span class="line">platformList.add(&quot;掘金&quot;);</span><br><span class="line">platformList.add(&quot;微信公众号&quot;);</span><br><span class="line">platformList.add(&quot;个人博客&quot;);</span><br><span class="line">复制代码观察上面声明数组的代码，我们可以推断出下面的代码肯定是编译不通过的：</span><br><span class="line">String[] platformArray = new String[3];</span><br><span class="line">platformArray[0] = &quot;博客园&quot;;</span><br><span class="line">platformArray[1] = &quot;掘金&quot;;</span><br><span class="line">platformArray[2] = 1;</span><br><span class="line">复制代码因为数组声明时用的是String类型，而platformArray[2] = 1;赋值时却使用了int类型。</span><br><span class="line">再来看下下面的集合代码：</span><br><span class="line">List&lt;int&gt; intList = new ArrayList&lt;int&gt;();</span><br><span class="line">intList.add(1);</span><br><span class="line">intList.add(2);</span><br><span class="line">intList.add(3);</span><br><span class="line">复制代码这段代码也是编译不通过的，在IDEA中，鼠标悬停时会提示如下的错误信息：</span><br><span class="line"></span><br><span class="line">意思是类型参数不能是原始类型(基本数据类型)，那怎么使用呢？总不能不让我使用int型的集合吧？</span><br><span class="line">当然不会，Java为每种基本数据类型都提供了对应的包装类，这里修改为int类型对应的包装类Integer即可：</span><br><span class="line">List&lt;Integer&gt; intList = new ArrayList&lt;Integer&gt;();</span><br><span class="line">intList.add(1);</span><br><span class="line">intList.add(2);</span><br><span class="line">intList.add(3);</span><br></pre></td></tr></table></figure><br><br>复制代码以下为Java的原始类型(基本数据类型)与其对应的包装类：<br><br><br><br>|原始类型|包装类|<br>| :——– | ——–: |<br>|byte |Byte|<br>|short|Short|<br>|int|Integer|<br>|long|Long|<br>|float|Float|<br>|double|Double|<br>|char|Character|<br>|boolean|Boolean|<br><br>##3. 集合的分类<br>在Java中，集合主要分为以下3种：<br></li><li> List集合</li><br><li>Set集合</li><br><li>Map集合</li>
+
+<p>它们之间的继承关系可以参考下图。</p>
+<p>从上图可以总结出如下几点：</p>
+<li>Java集合的根接口是Collection，它又继承了迭代接口Iterable</li><br><li>List接口和Set接口继承了Collection接口</li><br><li>Map接口是独立的接口，并没有继承Collection接口  （这里是重点，面试可能问的比较多）</li><br><li>List接口常用的实现类有：ArrayList、LinkedList、Vector</li><br><li>Set接口常用的实现类有：HashSet、LinkedHashSet、TreeSet</li><br><li>Map接口常用的实现类有：HashMap、HashTable、TreeMap</li>
+
+<p>##4. List集合<br>List集合包括List接口以及List接口的所有实现类。List集合具有以下特点：</p>
+<p><li>集合中的元素允许重复</li></p>
+<p><li>集合中的元素是有顺序的，各元素插入的顺序就是各元素的顺序</li></p>
+<p><li>集合中的元素可以通过索引来访问或者设置</li></p>
+<p><li>List接口常用的实现类有：ArrayList、LinkedList、Vector。</li></p>
+<p>我们先看下如下示例了解下List集合的用法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">package collection;</span><br><span class="line"></span><br><span class="line">import java.util.*;</span><br><span class="line"></span><br><span class="line">public class Muster &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        List&lt;String&gt; strList = new ArrayList&lt;&gt;();</span><br><span class="line">        strList.add(&quot;a&quot;);</span><br><span class="line">        strList.add(&quot;b&quot;);</span><br><span class="line">        strList.add(&quot;c&quot;);</span><br><span class="line"></span><br><span class="line">        int i = (int) (Math.random() * strList.size());</span><br><span class="line">        System.out.println(&quot;随机获取数组中的元素：&quot; + strList.get(i));</span><br><span class="line"></span><br><span class="line">        strList.remove(2);</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;将索引为2的元素从列表移除后，数组中的元素是:&quot;);</span><br><span class="line">        for (int j = 0; j &lt; strList.size(); j++) &#123;</span><br><span class="line">            System.out.println(strList.get(j));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>复制代码以上代码的输出结果为：</p>
+<p><pre><br>随机获取数组中的元素：a<br>将索引为2的元素从列表移除后，数组中的元素是:<br>a<br>b<br></pre><br><a href="##"><br>关于List集合的详细用法，ArrayList、LinkedList、Vector的区别（这里是重点，面试可能问的比较多），后续会单独写文总结，敬请期待。<br></a></p>
+<p>##5. Set集合<br>Set集合包括Set接口以及Set接口的所有实现类。Set集合具有以下特点：</p>
+<p><li>集合中不包含重复元素(你可以重复添加，但只会保留第1个)</li></p>
+<p><li>集合中的元素不一定保证有序</li></p>
+<p><li>Set接口常用的实现类有：HashSet、LinkedHashSet、TreeSet。</li></p>
+<p>我们先看下如下示例了解下Set集合的用法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">package collection;</span><br><span class="line"></span><br><span class="line">import java.util.*;</span><br><span class="line"></span><br><span class="line">public class Muster &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Set&lt;String&gt; platformList = new HashSet&lt;&gt;();</span><br><span class="line">        platformList.add(&quot;博客园&quot;);</span><br><span class="line">        platformList.add(&quot;掘金&quot;);</span><br><span class="line">        platformList.add(&quot;微信公众号&quot;);</span><br><span class="line">        platformList.add(&quot;个人博客&quot;);</span><br><span class="line"></span><br><span class="line">        // 尝试添加重复元素</span><br><span class="line">        platformList.add(&quot;博客园&quot;);</span><br><span class="line">        platformList.add(&quot;掘金&quot;);</span><br><span class="line"></span><br><span class="line">        for (String platform : platformList) &#123;</span><br><span class="line">            System.out.println(platform);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>复制代码以上代码的输出结果为：</p>
+<p><pre><br>博客园<br>个人博客<br>掘金<br>微信公众号<br></pre><br>可以看出，虽然我们尝试添加了重复元素，但并没有添加成功并且输出的元素没有顺序。<br>因此当你的集合中不允许有重复元素并且对排序也没有要求的话，可以使用Set集合。<br><a href="##">关于Set集合的详细用法，HashSet、LinkedHashSet、TreeSet的区别（这里是重点，面试可能问的比较多），后续会单独写文总结，敬请期待。</a></p>
+<p>##6. Map集合<br>Map集合包括Map接口以及Map接口的所有实现类。<br>Map集合具有以下特点：</p>
+<p><li>Map接口并没有继承Collection接口，提供的是key到value的映射</li></p>
+<p><li>Map中不能包含相同的key</li></p>
+<p><li>Map接口常用的实现类有：HashMap、HashTable、TreeMap。</li></p>
+<p>我们先看下如下示例了解下Map集合的用法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">package collection;</span><br><span class="line"></span><br><span class="line">import java.util.*;</span><br><span class="line"></span><br><span class="line">public class Muster &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Map&lt;Integer, String&gt; platformMap = new HashMap&lt;&gt;();</span><br><span class="line">        platformMap.put(1, &quot;博客园&quot;);</span><br><span class="line">        platformMap.put(2, &quot;掘金&quot;);</span><br><span class="line">        platformMap.put(3, &quot;微信公众号&quot;);</span><br><span class="line">        platformMap.put(4, &quot;个人博客&quot;);</span><br><span class="line"></span><br><span class="line">        // 尝试添加重复Map</span><br><span class="line">        platformMap.put(4, &quot;个人博客&quot;);</span><br><span class="line"></span><br><span class="line">        // 获取所有的key</span><br><span class="line">        Set&lt;Integer&gt; keys = platformMap.keySet();</span><br><span class="line">        for (Integer integer : keys) &#123;</span><br><span class="line">            System.out.println(&quot;Key:&quot; + integer + &quot;,Value:&quot; + platformMap.get(integer));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>复制代码以上代码的输出结果为：</p>
+<p><li>Key:1,Value:博客园</li></p>
+<p><li>Key:2,Value:掘金</li></p>
+<p><li>Key:3,Value:微信公众号</li></p>
+<p><li>Key:4,Value:个人博客</li></p>
+<p><li>从日志可以看出，当我们尝试重加重复Map时，并没有添加成功。</li></p>
+<p><li><a href="##">关于Map集合的详细用法，HashMap、HashTable、TreeMap的区别（这里是重点，面试可能问的比较多），后续会单独写文总结，敬请期待。</a></li></p>
+<p>##7. 源码及参考</p>
+<p>作者：申城异乡人<br>链接：<a href="https://juejin.im/post/5d3ac2b3f265da1bab29f588" target="_blank" rel="noopener">https://juejin.im/post/5d3ac2b3f265da1bab29f588</a><br>来源：掘金<br>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://shengfq.github.io/2019/08/18/一次生产问题的排查解决/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="盛富强">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="shengfq's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/08/18/一次生产问题的排查解决/" itemprop="url">JAVA线上问题的解决思路</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-08-18T00:00:00+08:00">
+                2019-08-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>###1、业务日志相关</p>
+<p>如果系统出现异常或者业务有异常，首先想到的都是查看业务日志</p>
+<p>####查看日志工具：</p>
+<p><li>less 或者more</li></p>
+<p><li>grep</li></p>
+<p><li>tail -f filename 查看实时的最新内容</li></p>
+<p><li>ps:切忌vim直接打开大日志文件，因为会直接加载到内存的</li></p>
+<p>###2、数据库相关<br>java应用很多瓶颈在数据库，一条sql没写好导致慢查询，可能就会带来应用带来致命危害。<br>如果出现Could not get JDBC Connection 、接口响应慢、线程打满等，<br>需要登录线上库，查看数据库连接情况：show processlist，<br>查看当前数据库的连接情况，确实由于慢查询造成，需要手动kill</p>
+<p>###3、JVM相关<br>java虚拟机相关的问题一般多是以下几种问题：gc时间过长、OOM、死锁、线程block、线程数暴涨等问题。一般通过以下几个工具都能定位出问题。</p>
+<p><ul></ul></p>
+<p>####jps命令<br>作用<br>是显示当前用户,当前系统的java进程情况，及其id号<br>常用命令<br>-m/-l/-v 查看运行参数</p>
+<p>####jstat命令<br>显示进程中的类装载、内存、垃圾收集、JIT编译等运行数据。<br>常用指令<br>jstat -gc 3331 250 20 ：查询进程2764的垃圾收集情况，每250毫秒查询一次，一共查询20次。<br>jstat -gccause：额外输出上次GC原因<br>jstat -calss：件事类装载、类卸载、总空间以及所消耗的时间</p>
+<p>####jstack命令<br>功能<br>生成当前时刻的线程快照。</p>
+<p>常用指令<br>jstack 3331：查看线程情况</p>
+<p>jstack -F 3331：正常输出不被响应时，使用该指令</p>
+<p>jstack -l 3331：除堆栈外，显示关于锁的附件信息</p>
+<p>####jmap命令<br>功能<br>生成堆转储快照（heapdump）</p>
+<p>常用指令<br>jmap -heap 3331：查看java 堆（heap）使用情况</p>
+<p>jmap -histo 3331：查看堆内存(histogram)中的对象数量及大小</p>
+<p>jmap -histo:live 3331：JVM会先触发gc，然后再统计信息</p>
+<p>jmap -dump:format=b,file=heapDump 3331：将内存使用的详细情况输出到文件，之后一般使用其他工具进行分析。</p>
+<p>####jhat命令 略</p>
+<p></p>
+<p>####3.1 OOM问题或者频繁GC问题<br>发生OOM问题一般服务都会crash，业务日志会有OutOfMemoryError。OOM一般都是出现了内存泄露，需要查看OOM时候的jvm堆的快照，如果配置了-XX:+HeapDumpOnOutOfMemoryError, 在发生OOM的时候会在-XX:HeapDumpPath生成堆的dump文件，结合MAT，可以对dump文件进行分析，查找出发生OOM的原因. 关于MAT使用不详述了，google上一堆（<a href="http://inter12.iteye.com/blog/1407492）。" target="_blank" rel="noopener">http://inter12.iteye.com/blog/1407492）。</a></p>
+<p>ps.<br>1、服务器的内存一般较大，所以要保证服务器的磁盘空间大于内存大小<br>2、另外手动dump堆快照，可以使用命令jmap -dump:format=b,file=file_name pid </p>
+<p>####3.2 死锁<br>死锁原因是两个或者多个线程相互等待资源，现象一般是出现线程hung住，更严重会出现线程数暴涨，系统出现api alive报警等。</p>
+<p><li>查看死锁最好的方法就是分析当时的线程栈。<br>具体case 可以参考jstack命令里面的例子<br>用到的命令：<br>jps -v<br>jstack -l pid</li></p>
+<p>####3.3 线程block、线程数暴涨</p>
+<p><li>jstack -l pid |wc -l</li></p>
+<p><li>jstack -l pid |grep “BLOCKED”|wc -l</li></p>
+<p><li>jstack -l pid |grep “Waiting on condition”|wc -l<br>线程block问题一般是等待io、等待网络、等待监视器锁等造成，可能会导致请求超时、造成造成线程数暴涨导致系统502等。<br>如果出现这种问题，主要是关注jstack 出来的BLOCKED、Waiting on condition、Waiting on monitor entry等状态信息。</li></p>
+<p><li><br>如果大量线程在“waiting for monitor entry”：<br>可能是一个全局锁阻塞住了大量线程。</li></p>
+<p><li><br>如果短时间内打印的 thread dump 文件反映，随着时间流逝，waiting for monitor entry 的线程越来越多，没有减少的趋势，可能意味着某些线程在临界区里呆的时间太长了，以至于越来越多新线程迟迟无法进入临界区。</li></p>
+<p><li><br>如果大量线程在“waiting on condition”：<br>可能是它们又跑去获取第三方资源，迟迟获取不到Response，导致大量线程进入等待状态。<br>所以如果你发现有大量的线程都处在 Wait on condition，从线程堆栈看，正等待网络读写，这可能是一个网络瓶颈的征兆，因为网络阻塞导致线程无法执行。</li></p>
+<p>####3.3 gc时间过长<br>todo<br>先贴一个文章占坑：<a href="http://www.oracle.com/technetwork/cn/articles/java/g1gc-1984535-zhs.html" target="_blank" rel="noopener">http://www.oracle.com/technetwork/cn/articles/java/g1gc-1984535-zhs.html</a></p>
+<p>####4、服务器问题</p>
+<p>#####4.1 CPU<br>top命令(参考<a href="https://linux.cn/article-2352-1.html" target="_blank" rel="noopener">https://linux.cn/article-2352-1.html</a>)<br>主要关注cpu的load，以及比较耗cpu的进程<br>由于现在服务器都是虚拟机，还要关注st（st 的全称是 Steal Time ，是分配给运行在其它虚拟机上的任务的实际 CPU 时间）</p>
+<p><li><br>常用交互命令：<br>h 帮助，十分有用<br>R: 反向排序<br>x：将排序字段高亮显示（纵列）<br>y 将运行进程高亮显示（横行）<br>shift+&gt; 或shift+&lt;:切换排序字段<br> d或s: 设置显示的刷新间隔<br>f: 字段管理 设置显示的字段<br>k:kill进程</li></p>
+<p>#####4.2 内存<br>free命令：<br>free -m -c10 -s1<br>-m：以MB为单位显示，其他的有-k -g -b<br>-s: 间隔多少秒持续观察内存使用状况<br>-c:观察多少次<br>vmstat命令：(<a href="http://man.linuxde.net/vmstat" target="_blank" rel="noopener">http://man.linuxde.net/vmstat</a>)<br>vmstat 1 10<br>1表示每隔1s输出一次,10 表示输出10次<br>两个参数需要关注<br>r: 运行队列中进程数量，这个值也可以判断是否需要增加CPU。（长期大于1）<br>b: 等待IO的进程数量。</p>
+<p>#####4.3 IO<br>iostat 命令（<a href="http://www.orczhou.com/index.php/2010/03/iostat-detail/）" target="_blank" rel="noopener">http://www.orczhou.com/index.php/2010/03/iostat-detail/）</a><br>iostat -m 1 10<br>-m：某些使用block为单位的列强制使用MB为单位<br>1 10：数据显示每隔1秒刷新一次，共显示10次</p>
+<p>#####4.4 网络<br>netstat 命令（<a href="http://www.cnblogs.com/ggjucheng/archive/2012/01/08/2316661.html）" target="_blank" rel="noopener">http://www.cnblogs.com/ggjucheng/archive/2012/01/08/2316661.html）</a><br>netstat -antp </p>
+<p>-a (all)显示所有选项，默认不显示LISTEN相关</p>
+<p>-t (tcp)仅显示tcp相关选项</p>
+<p>-u (udp)仅显示udp相关选项</p>
+<p>-n 拒绝显示别名，能显示数字的全部转化成数字。</p>
+<p>-l 仅列出有在 Listen (监听) 的服服务状态</p>
+<p>-p 显示建立相关链接的程序名</p>
+<p>显示tcp各个状态数量：<br> netstat -ant |awk ‘{print $6}’|sort|uniq -c</p>
+<p>查看连接某服务端口最多的的IP地址<br>netstat -nat | grep “10.32.45.35:8924” |awk ‘{print $5}’|awk -F: ‘{print $4}’|sort|uniq -c|sort -nr|head -10</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://shengfq.github.io/2019/03/27/100个spring的重要知识点/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="盛富强">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="shengfq's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/03/27/100个spring的重要知识点/" itemprop="url">Untitled</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-03-27T21:34:23+08:00">
+                2019-03-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>翻译:100个spring面试问答<br>原文:<a href="https://www.javacodegeeks.com/2014/05/spring-interview-questions-and-answers.html" target="_blank" rel="noopener">100 Spring Interview Questions and Answers</a></p>
+<p>spring 概述<br>1.什么是spring?<br>spring是一个企业级java开源开发框架.spring框架的核心特征就是用来开发任何的java应用,但是往往常用在JAVAEE平台中,spring的目标就是让javaEE变得越来越简单,通过基于POJO的编程模型.</p>
+<p>2.spring框架的优点:</p>
+<ul>
+<li>轻量级:spring是个轻量级的框架,核心版本只有2MB. </li>
+<li>IOC:通过IOC技术实现 降低耦合架构.对象之间的依赖改成了间接依赖.</li>
+<li>AOP:支持面向切面编程,能分离应用业务逻辑.</li>
+<li>容器:spring容器管理了应用对象的生命周期和配置.</li>
+<li>MVC框架:spring web框架是个设计良好的MVC框架,可代替传统的WEB框架</li>
+<li>事务管理:spring提供了严格的事务管理接口,能够向下支持本地事务也能向上支持全局事务(JTA).</li>
+<li><p>异常处理:spring提供了方便的API接口转化异常,未检查异常.</p>
+<p>3.spring包含哪些核心模块?<br>超过20个模块分布在core容器,数据访问/集成,web,aop,表达式,测试.<br>core容器:<br>core模块,bean模块,Context模块,语言表达式模块.</p>
+<p>数据访问:<br>jdbc模块,ORM模块,JMS模块,OXM模块,事务管理模块.</p>
+<p>web:<br>web模块,web-mvc模块,web-socket模块,web-portlet模块.</p>
+<p>aop:<br>你能使用advices,pointcuts,分解代码.</p>
+<p>表达式:<br>提供类加载器的实现.</p>
+<p>test:<br>提供了基于Junit和testNG的支持</p>
+<p>messaging:<br>支持注解编程模型,和基于STOMP协议支持的websocket客户端.</p>
+<p>aspect:<br>使用aspectj实现的的aop.</p>
+<p>4.解释下core容器(应用上下文)模块<br>这是spring模块的基础应用于基于函数式编程的spring. BeanFactory是bean构造的核心.spring框架基于此简历的容器.</p>
+<p>5.BeanFactory的实现案例<br>BeanFactory是使用工程模式基于Ioc技术让配置和依赖能从实际应用代码中剥离出来.最常用的子类是XMLBeanFactory.</p>
+<p>6.XMLBeanFactory<br>最常用的org.springframework.beans.factory.xml.XmlBeanFactory 是基于自定义的Xml文件来加载容器的.容器读取Xml的配置信息创建一个完整的系统.</p>
+<p>7.解释下aop模块<br>aop模块用于开发基于spring的应用, 大部分支持被aop连门用于确保interoperability在spring和其他aop框架.这个模块也是基于元数据编程.</p>
+<p>8.解释下jdbc和dao模块<br>使用jdbc/dao模块我们能确保数据访问层代码干净简单,防止因关闭数据库资源失败而导致的问题发生.提供了一个有意义的异常处理层在大多数数据库服务器上.也能使用spring aop模块支持事务管理.</p>
+<p>9.解释下 orm集成模块<br>spring支持orm映射原始的jdbc通过orm模块提供.spring提供支持许多著名的orm框架,如hibernate,jdo,mybatis.spring事务管理支持各种orm框架.</p>
+<p>10.解释下web模块<br>spring web模块构建于Context模块上,提供一个适合于web应用程序的上下文.这个模块包含了面向web任务如透明的处理多个请求如文件上传,绑定请求参数到业务对象,也支持Struts框架.</p>
+<p>11.解释下spring mvc模块<br>mvc模块被用于构建web应用程序,spring 也能很容易的跟其他mvc框架集成,但是spring mvc是更好的选择,从他使用IOC提供controller逻辑与业务对象层分离出来.spring mvc就能帮你把request请求的参数绑定到业务对象中.</p>
+<p>12.spring 配置文件<br>spring的配置文件是Xml文件.这个文件包含了类型信息和描述这些类互相联系的关系.</p>
+<p>13.我们怎么样才能配置多个spring配置文件<br>+web.xml contextConfigLocation: 你能加载这些文件到web application Context,通过contextConfigLocation元素,你已经有一个applicationContext在这声明了,您所需要做的就是在下一个上下文的声明之间留出一些空白。<br>+applicationContext.xml 导入资源:你能把你主要的applicationContext.xml放入web.xml</p>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://shengfq.github.io/2019/03/23/个人简历/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="盛富强">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="shengfq's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/03/23/个人简历/" itemprop="url">Untitled</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-03-23T09:24:05+08:00">
+                2019-03-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>个人简历</p>
+<p>个人信息</p>
+<ul>
+<li>盛富强/男/1990</li>
+<li>工作年限:8年</li>
+<li>技术博客:<a href="https://shengfq.github.io">https://shengfq.github.io</a></li>
+<li>github:<a href="https://github.com/ShengFQ" target="_blank" rel="noopener">https://github.com/ShengFQ</a></li>
+<li>期望职位:</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://shengfq.github.io/2019/03/20/JUC-线程池原理/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -310,26 +915,7 @@ TimeUnit.MILLISECONDS, new LinkedBlockingQueue<runnable>(100000),
 new ThreadPoolExecutor.CallerRunsPolicy());
 </runnable></code></pre>
 
-<h3>一、简介</h3>
-
-<pre><code> 
-线程池类为 java.util.concurrent.ThreadPoolExecutor，常用构造方法为：
-ThreadPoolExecutor(int corePoolSize, int maximumPoolSize,
-long keepAliveTime, TimeUnit unit,
-BlockingQueue<runnable> workQueue,
-RejectedExecutionHandler handler)
-
-corePoolSize： 线程池维护线程的最少数量
-maximumPoolSize：线程池维护线程的最大数量
-keepAliveTime： 线程池维护线程所允许的空闲时间
-unit： 线程池维护线程所允许的空闲时间的单位
-workQueue： 线程池所使用的缓冲队列
-handler： 线程池对拒绝任务的处理策略
-</runnable></code></pre>
-
-
-<p>一个任务通过 execute(Runnable)方法被添加到线程池，任务就是一个 Runnable类型的对象，任务的执行方法就是Runnable类型对象的run()方法。</p>
-<h3>二、原理</h3><br>当一个任务通过execute(Runnable)方法欲添加到线程池时:<br>1.  如果此时线程池中的数量小于corePoolSize，即使线程池中的线程都处于空闲状态，也要创建新的线程来处理被添加的任务。<br>2.  如果此时线程池中的数量等于 corePoolSize，但是缓冲队列 workQueue未满，那么任务被放入缓冲队列。<br>3.  如果此时线程池中的数量大于corePoolSize，缓冲队列workQueue满，并且线程池中的数量小于maximumPoolSize，建新的线程来处理被添加的任务。<br>4.  如果此时线程池中的数量大于corePoolSize，缓冲队列workQueue满，并且线程池中的数量等于maximumPoolSize，那么通过 handler所指定的策略来处理此任务。也就是：处理任务的优先级为：核心线程corePoolSize、任务队列workQueue、最大线程maximumPoolSize，如果三者都满了，使用handler处理被拒绝的任务。<br>5. 当线程池中的线程数量大于 corePoolSize时，如果某线程空闲时间超过keepAliveTime，线程将被终止。这样，线程池可以动态的调整池中的线程数。<br>6. unit可选的参数为java.util.concurrent.TimeUnit中的几个静态属性：<br>NANOSECONDS、<br>MICROSECONDS、<br>MILLISECONDS、<br>SECONDS。<br><br>7. workQueue常用的是：java.util.concurrent.ArrayBlockingQueue<br>8. handler有四个选择：<br><pre><code><br>  1. ThreadPoolExecutor.AbortPolicy()<br>抛出java.util.concurrent.RejectedExecutionException异常<br><br>  2. ThreadPoolExecutor.CallerRunsPolicy()<br>当抛出RejectedExecutionException异常时，会调用rejectedExecution方法<br>(如果主线程没有关闭，则主线程调用run方法,源码如下:<br>public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {<br>            if (!e.isShutdown()) {<br>                r.run();<br>            }<br>        }<br><br>)<br><br>  3. ThreadPoolExecutor.DiscardOldestPolicy()<br>抛弃旧的任务<br>  4. ThreadPoolExecutor.DiscardPolicy()<br>抛弃当前的任务<br></code></pre><br><br><h3>三、相关参考</h3><br>一个 ExecutorService，它使用可能的几个池线程之一执行每个提交的任务，通常使用 Executors 工厂方法配置。<br><br>线程池可以解决两个不同问题：由于减少了每个任务调用的开销，它们通常可以在执行大量异步任务时提供增强的性能，并且还可以提供绑定和管理资源（包括执行集合任务时使用的线程）的方法。每个ThreadPoolExecutor 还维护着一些基本的统计数据，如完成的任务数。<br><br>为了便于跨大量上下文使用，此类提供了很多可调整的参数和扩展挂钩。但是，强烈建议程序员使用较为方便的 Executors 工厂方法 Executors.newCachedThreadPool()（无界线程池，可以进行自动线程回收）、Executors.newFixedThreadPool(int)（固定大小线程池）和 Executors.newSingleThreadExecutor()（单个后台线程），它们均为大多数使用场景预定义了设置。否则，在手动配置和调整此类时，使用以下指导：<br><h4>核心和最大池大小</h4><br>ThreadPoolExecutor 将根据 corePoolSize（参见 getCorePoolSize()）和 maximumPoolSize（参见getMaximumPoolSize()）设置的边界自动调整池大小。<br>当新任务在方法 execute(java.lang.Runnable) 中提交时，如果运行的线程少于 corePoolSize，则创建新线程来处理请求，即使其他辅助线程是空闲的。<br><br>如果运行的线程多于corePoolSize 而少于 maximumPoolSize，则仅当队列满时才创建新线程。如果设置的 corePoolSize 和 maximumPoolSize相同，则创建了固定大小的线程池。<br>如果将 maximumPoolSize 设置为基本的无界值（如 Integer.MAX_VALUE），则允许池适应任意数量的并发任务。在大多数情况下，核心和最大池大小仅基于构造来设置，不过也可以使用setCorePoolSize(int) 和 setMaximumPoolSize(int) 进行动态更改。<br><br><br><br><h4>按需构造</h4><br><br>默认情况下，即使核心线程最初只是在新任务需要时才创建和启动的，也可以使用方法 prestartCoreThread()或 prestartAllCoreThreads() 对其进行动态重写。<br><br><h4>创建新线程</h4><br><br>使用 ThreadFactory 创建新线程。如果没有另外说明，则在同一个 ThreadGroup 中一律使用Executors.defaultThreadFactory() 创建线程，并且这些线程具有相同的 NORM_PRIORITY 优先级和非守护进程状态。通过提供不同的 ThreadFactory，可以改变线程的名称、线程组、优先级、守护进程状态，等等。如果从 newThread返回 null 时 ThreadFactory 未能创建线程，则执行程序将继续运行，但不能执行任何任务。<br><br><h4>保持活动时间</h4><br><br>如果池中当前有多于 corePoolSize 的线程，则这些多出的线程在空闲时间超过 keepAliveTime 时将会终止（参见getKeepAliveTime(java.util.concurrent.TimeUnit)）。这提供了当池处于非活动状态时减少资源消耗的方法。如果池后来变得更为活动，则可以创建新的线程。也可以使用方法 setKeepAliveTime(long, java.util.concurrent.TimeUnit) 动态地更改此参数。使用 Long.MAX_VALUE TimeUnit.NANOSECONDS 的值在关闭前有效地从以前的终止状态禁用空闲线程。<br><br><h4>排队</h4><br><br>所有 BlockingQueue 都可用于传输和保持提交的任务。可以使用此队列与池大小进行交互：<br>1. 如果运行的线程少于 corePoolSize，则 Executor 始终首选添加新的线程，而不进行排队。<br>2. 如果运行的线程等于或多于 corePoolSize，则 Executor 始终首选将请求加入队列，而不添加新的线程。<br>3.如果无法将请求加入队列，则创建新的线程，除非创建此线程超出 maximumPoolSize，在这种情况下，任务将被拒绝。<br><br><h4>排队有三种通用策略：</h4><br><br>1. 直接提交。工作队列的默认选项是 SynchronousQueue，它将任务直接提交给线程而不保持它们。在此，如果不存在可用于立即运行任务的线程，则试图把任务加入队列将失败，因此会构造一个新的线程。此策略可以避免在处理可能具有内部依赖性的请求集合时出现锁定。直接提交通常要求无界 maximumPoolSizes 以避免拒绝新提交的任务。当命令以超过队列所能处理的平均数连续到达时，此策略允许无界线程具有增长的可能性。<br><br>2. 无界队列。使用无界队列（例如，不具有预定义容量的 LinkedBlockingQueue）将导致在所有 corePoolSize 线程都忙的情况下将新任务加入队列。这样，创建的线程就不会超过 corePoolSize。（因此，maximumPoolSize 的值也就无效了。）当每个任务完全独立于其他任务，即任务执行互不影响时，适合于使用无界队列；例如，在 Web 页服务器中。这种排队可用于处理瞬态突发请求，当命令以超过队列所能处理的平均数连续到达时，此策略允许无界线程具有增长的可能性。<br><br>3. 有界队列。当使用有限的 maximumPoolSizes 时，有界队列（如 ArrayBlockingQueue）有助于防止资源耗尽，但是可能较难调整和控制。队列大小和最大池大小可能需要相互折衷：使用大型队列和小型池可以最大限度地降低CPU 使用率、操作系统资源和上下文切换开销，但是可能导致人工降低吞吐量。如果任务频繁阻塞（例如，如果它们是 I/O 边界），则系统可能为超过您许可的更多线程安排时间。使用小型队列通常要求较大的池大小，CPU 使用率较高，但是可能遇到不可接受的调度开销，这样也会降低吞吐量。<br><br><h4>被拒绝的任务</h4><br>当 Executor 已经关闭，并且 Executor 将有限边界用于最大线程和工作队列容量，且已经饱和时，在方法execute(java.lang.Runnable) 中提交的新任务将被拒绝。在以上两种情况下，execute 方法都将调用其RejectedExecutionHandler 的 RejectedExecutionHandler.rejectedExecution(java.lang.Runnable, java.util.concurrent.ThreadPoolExecutor) 方法。<br>下面提供了四种预定义的处理程序策略:<br>1.在默认的 ThreadPoolExecutor.AbortPolicy 中，处理程序遭到拒绝将抛出运行时 RejectedExecutionException。<br>2.在 ThreadPoolExecutor.CallerRunsPolicy 中，线程调用运行该任务的 execute 本身。此策略提供简单的反馈控制机制，能够减缓新任务的提交速度。<br>3.在 ThreadPoolExecutor.DiscardPolicy 中，不能执行的任务将被删除。<br>4.在 ThreadPoolExecutor.DiscardOldestPolicy 中，如果执行程序尚未关闭，则位于工作队列头部的任务将被删除，然后重试执行程序（如果再次失败，则重复此过程）。<br>5. 定义和使用其他种类的 RejectedExecutionHandler 类也是可能的，但这样做需要非常小心，尤其是当策略仅用于特定容量或排队策略时。<br><br><h4>挂钩方法</h4><br><br>此类提供 protected 可重写的 beforeExecute(java.lang.Thread, java.lang.Runnable) 和 afterExecute(java.lang.Runnable, java.lang.Throwable) 方法，这两种方法分别在执行每个任务之前和之后调用。它们可用于操纵执行环境；例如，重新初始化ThreadLocal、搜集统计信息或添加日志条目。此外，还可以重写方法 terminated() 来执行 Executor 完全终止后需要完成的所有特殊处理。<br><br><br>如果挂钩或回调方法抛出异常，则内部辅助线程将依次失败并突然终止。<br><br><br><h4>队列维护</h4><br><p>方法 getQueue() 允许出于监控和调试目的而访问工作队列。强烈反对出于其他任何目的而使用此方法。remove(java.lang.Runnable) 和 purge() 这两种方法可用于在取消大量已排队任务时帮助进行存储回收。<br></p><br>一、例子<br>创建 TestThreadPool 类<br><br><pre><br><code><br><br>import java.util.concurrent.ArrayBlockingQueue;<br>import java.util.concurrent.ThreadPoolExecutor;<br>import java.util.concurrent.TimeUnit;<br><br>public class TestThreadPool {<br><br>    private static int produceTaskSleepTime = 2;<br><br>    private static int produceTaskMaxNumber = 10;<br><br>    public static void main(String[] args) {<br><br>        // 构造一个线程池<br>        ThreadPoolExecutor threadPool = new ThreadPoolExecutor(2, 4, 3,<br>                TimeUnit.SECONDS, new ArrayBlockingQueue<runnable>(3),<br>                new ThreadPoolExecutor.DiscardOldestPolicy());<br><br>        for (int i = 1; i &lt;= produceTaskMaxNumber; i++) {<br>            try {<br>                String task = “task@ “ + i;<br>                System.out.println(“创建任务并提交到线程池中：” + task);<br>                threadPool.execute(new ThreadPoolTask(task));<br><br>                Thread.sleep(produceTaskSleepTime);<br>            } catch (Exception e) {<br>                e.printStackTrace();<br>            }<br>        }<br>    }<br>}<br><br>import java.io.Serializable;<br><br>public class ThreadPoolTask implements Runnable, Serializable {<br><br>    private Object attachData;<br><br>    ThreadPoolTask(Object tasks) {<br>        this.attachData = tasks;<br>    }<br><br>    public void run() {<br><br>        System.out.println(“开始执行任务：” + attachData);<br><br>        attachData = null;<br>    }<br><br>    public Object getTask() {<br>        return this.attachData;<br>    }<br>}<br><br><br><br>执行结果：<br><br>创建任务并提交到线程池中：task@ 1<br><br>开始执行任务：task@ 1<br><br>创建任务并提交到线程池中：task@ 2<br><br>开始执行任务：task@ 2<br><br>创建任务并提交到线程池中：task@ 3<br><br>创建任务并提交到线程池中：task@ 4<br><br>开始执行任务：task@ 3<br><br>创建任务并提交到线程池中：task@ 5<br><br>开始执行任务：task@ 4<br><br>创建任务并提交到线程池中：task@ 6<br><br>创建任务并提交到线程池中：task@ 7<br><br>创建任务并提交到线程池中：task@ 8<br><br>开始执行任务：task@ 5<br><br>开始执行任务：task@ 6<br><br>创建任务并提交到线程池中：task@ 9<br><br>开始执行任务：task@ 7<br><br>创建任务并提交到线程池中：task@ 10<br><br>开始执行任务：task@ 8<br><br>开始执行任务：task@ 9<br><br>开始执行任务：task@ 10<br></runnable></code><br></pre><br><br><br><h3>四.ThreadPoolExecutor配置</h3>
+<h3>一、简介</h3><br><pre><code><br>线程池类为 java.util.concurrent.ThreadPoolExecutor，常用构造方法为：<br>ThreadPoolExecutor(int corePoolSize, int maximumPoolSize,<br>long keepAliveTime, TimeUnit unit,<br>BlockingQueue<runnable> workQueue,<br>RejectedExecutionHandler handler)<br><br>corePoolSize： 线程池维护线程的最少数量<br>maximumPoolSize：线程池维护线程的最大数量<br>keepAliveTime： 线程池维护线程所允许的空闲时间<br>unit： 线程池维护线程所允许的空闲时间的单位<br>workQueue： 线程池所使用的缓冲队列<br>handler： 线程池对拒绝任务的处理策略<br></runnable></code></pre><br><br><br>一个任务通过 execute(Runnable)方法被添加到线程池，任务就是一个 Runnable类型的对象，任务的执行方法就是Runnable类型对象的run()方法。<br><br><br><h3>二、原理</h3><br>当一个任务通过execute(Runnable)方法欲添加到线程池时:<br>1.  如果此时线程池中的数量小于corePoolSize，即使线程池中的线程都处于空闲状态，也要创建新的线程来处理被添加的任务。<br>2.  如果此时线程池中的数量等于 corePoolSize，但是缓冲队列 workQueue未满，那么任务被放入缓冲队列。<br>3.  如果此时线程池中的数量大于corePoolSize，缓冲队列workQueue满，并且线程池中的数量小于maximumPoolSize，建新的线程来处理被添加的任务。<br>4.  如果此时线程池中的数量大于corePoolSize，缓冲队列workQueue满，并且线程池中的数量等于maximumPoolSize，那么通过 handler所指定的策略来处理此任务。也就是：处理任务的优先级为：核心线程corePoolSize、任务队列workQueue、最大线程maximumPoolSize，如果三者都满了，使用handler处理被拒绝的任务。<br>5. 当线程池中的线程数量大于 corePoolSize时，如果某线程空闲时间超过keepAliveTime，线程将被终止。这样，线程池可以动态的调整池中的线程数。<br>6. unit可选的参数为java.util.concurrent.TimeUnit中的几个静态属性：<br>NANOSECONDS、<br>MICROSECONDS、<br>MILLISECONDS、<br>SECONDS。<br><br>7. workQueue常用的是：java.util.concurrent.ArrayBlockingQueue<br>8. handler有四个选择：<br><pre><code><br>  1. ThreadPoolExecutor.AbortPolicy()<br>抛出java.util.concurrent.RejectedExecutionException异常<br><br>  2. ThreadPoolExecutor.CallerRunsPolicy()<br>当抛出RejectedExecutionException异常时，会调用rejectedExecution方法<br>(如果主线程没有关闭，则主线程调用run方法,源码如下:<br>public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {<br>            if (!e.isShutdown()) {<br>                r.run();<br>            }<br>        }<br><br>)<br><br>  3. ThreadPoolExecutor.DiscardOldestPolicy()<br>抛弃旧的任务<br>  4. ThreadPoolExecutor.DiscardPolicy()<br>抛弃当前的任务<br></code></pre><br><br><h3>三、相关参考</h3><br>一个 ExecutorService，它使用可能的几个池线程之一执行每个提交的任务，通常使用 Executors 工厂方法配置。<br><br>线程池可以解决两个不同问题：由于减少了每个任务调用的开销，它们通常可以在执行大量异步任务时提供增强的性能，并且还可以提供绑定和管理资源（包括执行集合任务时使用的线程）的方法。每个ThreadPoolExecutor 还维护着一些基本的统计数据，如完成的任务数。<br><br>为了便于跨大量上下文使用，此类提供了很多可调整的参数和扩展挂钩。但是，强烈建议程序员使用较为方便的 Executors 工厂方法 Executors.newCachedThreadPool()（无界线程池，可以进行自动线程回收）、Executors.newFixedThreadPool(int)（固定大小线程池）和 Executors.newSingleThreadExecutor()（单个后台线程），它们均为大多数使用场景预定义了设置。否则，在手动配置和调整此类时，使用以下指导：<br><h4>核心和最大池大小</h4><br>ThreadPoolExecutor 将根据 corePoolSize（参见 getCorePoolSize()）和 maximumPoolSize（参见getMaximumPoolSize()）设置的边界自动调整池大小。<br>当新任务在方法 execute(java.lang.Runnable) 中提交时，如果运行的线程少于 corePoolSize，则创建新线程来处理请求，即使其他辅助线程是空闲的。<br><br>如果运行的线程多于corePoolSize 而少于 maximumPoolSize，则仅当队列满时才创建新线程。如果设置的 corePoolSize 和 maximumPoolSize相同，则创建了固定大小的线程池。<br>如果将 maximumPoolSize 设置为基本的无界值（如 Integer.MAX_VALUE），则允许池适应任意数量的并发任务。在大多数情况下，核心和最大池大小仅基于构造来设置，不过也可以使用setCorePoolSize(int) 和 setMaximumPoolSize(int) 进行动态更改。<br><br><br><br><h4>按需构造</h4><br>默认情况下，即使核心线程最初只是在新任务需要时才创建和启动的，也可以使用方法 prestartCoreThread()或 prestartAllCoreThreads() 对其进行动态重写。<br><br><h4>创建新线程</h4><br>使用 ThreadFactory 创建新线程。如果没有另外说明，则在同一个 ThreadGroup 中一律使用Executors.defaultThreadFactory() 创建线程，并且这些线程具有相同的 NORM_PRIORITY 优先级和非守护进程状态。通过提供不同的 ThreadFactory，可以改变线程的名称、线程组、优先级、守护进程状态，等等。如果从 newThread返回 null 时 ThreadFactory 未能创建线程，则执行程序将继续运行，但不能执行任何任务。<br><br><h4>保持活动时间</h4><br>如果池中当前有多于 corePoolSize 的线程，则这些多出的线程在空闲时间超过 keepAliveTime 时将会终止（参见getKeepAliveTime(java.util.concurrent.TimeUnit)）。这提供了当池处于非活动状态时减少资源消耗的方法。如果池后来变得更为活动，则可以创建新的线程。也可以使用方法 setKeepAliveTime(long, java.util.concurrent.TimeUnit) 动态地更改此参数。使用 Long.MAX_VALUE TimeUnit.NANOSECONDS 的值在关闭前有效地从以前的终止状态禁用空闲线程。<br><br><h4>排队</h4><br>所有 BlockingQueue 都可用于传输和保持提交的任务。可以使用此队列与池大小进行交互：<br>1. 如果运行的线程少于 corePoolSize，则 Executor 始终首选添加新的线程，而不进行排队。<br>2. 如果运行的线程等于或多于 corePoolSize，则 Executor 始终首选将请求加入队列，而不添加新的线程。<br>3.如果无法将请求加入队列，则创建新的线程，除非创建此线程超出 maximumPoolSize，在这种情况下，任务将被拒绝。<br><br><h4>排队有三种通用策略：</h4><br>1. 直接提交。工作队列的默认选项是 SynchronousQueue，它将任务直接提交给线程而不保持它们。在此，如果不存在可用于立即运行任务的线程，则试图把任务加入队列将失败，因此会构造一个新的线程。此策略可以避免在处理可能具有内部依赖性的请求集合时出现锁定。直接提交通常要求无界 maximumPoolSizes 以避免拒绝新提交的任务。当命令以超过队列所能处理的平均数连续到达时，此策略允许无界线程具有增长的可能性。<br><br>2. 无界队列。使用无界队列（例如，不具有预定义容量的 LinkedBlockingQueue）将导致在所有 corePoolSize 线程都忙的情况下将新任务加入队列。这样，创建的线程就不会超过 corePoolSize。（因此，maximumPoolSize 的值也就无效了。）当每个任务完全独立于其他任务，即任务执行互不影响时，适合于使用无界队列；例如，在 Web 页服务器中。这种排队可用于处理瞬态突发请求，当命令以超过队列所能处理的平均数连续到达时，此策略允许无界线程具有增长的可能性。<br><br>3. 有界队列。当使用有限的 maximumPoolSizes 时，有界队列（如 ArrayBlockingQueue）有助于防止资源耗尽，但是可能较难调整和控制。队列大小和最大池大小可能需要相互折衷：使用大型队列和小型池可以最大限度地降低CPU 使用率、操作系统资源和上下文切换开销，但是可能导致人工降低吞吐量。如果任务频繁阻塞（例如，如果它们是 I/O 边界），则系统可能为超过您许可的更多线程安排时间。使用小型队列通常要求较大的池大小，CPU 使用率较高，但是可能遇到不可接受的调度开销，这样也会降低吞吐量。<br><br><h4>被拒绝的任务</h4><br>当 Executor 已经关闭，并且 Executor 将有限边界用于最大线程和工作队列容量，且已经饱和时，在方法execute(java.lang.Runnable) 中提交的新任务将被拒绝。在以上两种情况下，execute 方法都将调用其RejectedExecutionHandler 的 RejectedExecutionHandler.rejectedExecution(java.lang.Runnable, java.util.concurrent.ThreadPoolExecutor) 方法。<br>下面提供了四种预定义的处理程序策略:<br>1.在默认的 ThreadPoolExecutor.AbortPolicy 中，处理程序遭到拒绝将抛出运行时 RejectedExecutionException。<br>2.在 ThreadPoolExecutor.CallerRunsPolicy 中，线程调用运行该任务的 execute 本身。此策略提供简单的反馈控制机制，能够减缓新任务的提交速度。<br>3.在 ThreadPoolExecutor.DiscardPolicy 中，不能执行的任务将被删除。<br>4.在 ThreadPoolExecutor.DiscardOldestPolicy 中，如果执行程序尚未关闭，则位于工作队列头部的任务将被删除，然后重试执行程序（如果再次失败，则重复此过程）。<br>5. 定义和使用其他种类的 RejectedExecutionHandler 类也是可能的，但这样做需要非常小心，尤其是当策略仅用于特定容量或排队策略时。<br><br><h4>挂钩方法</h4><br>此类提供 protected 可重写的 beforeExecute(java.lang.Thread, java.lang.Runnable) 和 afterExecute(java.lang.Runnable, java.lang.Throwable) 方法，这两种方法分别在执行每个任务之前和之后调用。它们可用于操纵执行环境；例如，重新初始化ThreadLocal、搜集统计信息或添加日志条目。此外，还可以重写方法 terminated() 来执行 Executor 完全终止后需要完成的所有特殊处理。<br><br><br>如果挂钩或回调方法抛出异常，则内部辅助线程将依次失败并突然终止。<br><br><br><h4>队列维护</h4><br><p>方法 getQueue() 允许出于监控和调试目的而访问工作队列。强烈反对出于其他任何目的而使用此方法。remove(java.lang.Runnable) 和 purge() 这两种方法可用于在取消大量已排队任务时帮助进行存储回收。<br></p><br>一、例子<br>创建 TestThreadPool 类<br><br><pre><br><code><br><br>import java.util.concurrent.ArrayBlockingQueue;<br>import java.util.concurrent.ThreadPoolExecutor;<br>import java.util.concurrent.TimeUnit;<br><br>public class TestThreadPool {<br><br>    private static int produceTaskSleepTime = 2;<br><br>    private static int produceTaskMaxNumber = 10;<br><br>    public static void main(String[] args) {<br><br>        // 构造一个线程池<br>        ThreadPoolExecutor threadPool = new ThreadPoolExecutor(2, 4, 3,<br>                TimeUnit.SECONDS, new ArrayBlockingQueue<runnable>(3),<br>                new ThreadPoolExecutor.DiscardOldestPolicy());<br><br>        for (int i = 1; i &lt;= produceTaskMaxNumber; i++) {<br>            try {<br>                String task = “task@ “ + i;<br>                System.out.println(“创建任务并提交到线程池中：” + task);<br>                threadPool.execute(new ThreadPoolTask(task));<br><br>                Thread.sleep(produceTaskSleepTime);<br>            } catch (Exception e) {<br>                e.printStackTrace();<br>            }<br>        }<br>    }<br>}<br><br>import java.io.Serializable;<br><br>public class ThreadPoolTask implements Runnable, Serializable {<br><br>    private Object attachData;<br><br>    ThreadPoolTask(Object tasks) {<br>        this.attachData = tasks;<br>    }<br><br>    public void run() {<br><br>        System.out.println(“开始执行任务：” + attachData);<br><br>        attachData = null;<br>    }<br><br>    public Object getTask() {<br>        return this.attachData;<br>    }<br>}<br><br><br><br>执行结果：<br><br>创建任务并提交到线程池中：task@ 1<br><br>开始执行任务：task@ 1<br><br>创建任务并提交到线程池中：task@ 2<br><br>开始执行任务：task@ 2<br><br>创建任务并提交到线程池中：task@ 3<br><br>创建任务并提交到线程池中：task@ 4<br><br>开始执行任务：task@ 3<br><br>创建任务并提交到线程池中：task@ 5<br><br>开始执行任务：task@ 4<br><br>创建任务并提交到线程池中：task@ 6<br><br>创建任务并提交到线程池中：task@ 7<br><br>创建任务并提交到线程池中：task@ 8<br><br>开始执行任务：task@ 5<br><br>开始执行任务：task@ 6<br><br>创建任务并提交到线程池中：task@ 9<br><br>开始执行任务：task@ 7<br><br>创建任务并提交到线程池中：task@ 10<br><br>开始执行任务：task@ 8<br><br>开始执行任务：task@ 9<br><br>开始执行任务：task@ 10<br></runnable></code><br></pre><br><br><br><h3>四.ThreadPoolExecutor配置</h3>
 
 <ol>
 <li><p>ThreadPoolExcutor为一些Executor提供了基本的实现，这些Executor是由Executors中的工厂 newCahceThreadPool、newFixedThreadPool和newScheduledThreadExecutor返回的。 ThreadPoolExecutor是一个灵活的健壮的池实现，允许各种各样的用户定制。</p>
@@ -1083,410 +1669,13 @@ The searched-for class definition existed when the currently executing class was
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://shengfq.github.io/2018/05/26/socket客户端监控案例/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="盛富强">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="shengfq's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/26/socket客户端监控案例/" itemprop="url">socket客户端监控案例</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-26T19:43:27+08:00">
-                2018-05-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="java-socket-监控案例包含"><a href="#java-socket-监控案例包含" class="headerlink" title="java socket 监控案例包含"></a>java socket 监控案例包含</h3><pre>
-1.客户端
- 1.1 客户端心跳线程
- 1.2 客户端消息发送线程
- 1.3 客户端消息接收线程 
- 1.4 客户端启动,关闭 方法
- 1.5 接收处理器接口(心跳接收,消息接收)
-
-
-2.服务端
-    2.1 服务端链接看门口线程
-    2.2 服务端接收线程
-    2.3 服务端启动,关闭方法
-    2.4 接受处理器接口(心跳接收,消息接收)
-
-3.心跳包
-    3.1 包含的时间戳和id字段
-
-4.普通消息
-    4.4 消息正文,消息类型
-
-5.异常处理
-    5.1套接字异常的处理办法
-
-</pre>
-
-<hr>
-<h4 id="服务端"><a href="#服务端" class="headerlink" title="服务端"></a>服务端</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">package client;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line">import java.io.InputStream;</span><br><span class="line">import java.io.ObjectInputStream;</span><br><span class="line">import java.io.ObjectOutputStream;</span><br><span class="line">import java.net.ServerSocket;</span><br><span class="line">import java.net.Socket;</span><br><span class="line">import java.util.concurrent.ConcurrentHashMap;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Created by sheng on 17/12/4.</span><br><span class="line"> */</span><br><span class="line">public class Server &#123;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 要处理客户端发来的对象，并返回一个对象，可实现该接口。</span><br><span class="line">     */</span><br><span class="line">    public interface ObjectAction&#123;</span><br><span class="line">        Object doAction(Object rev, Server server);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public  final class DefaultObjectAction implements ObjectAction&#123;</span><br><span class="line">        @Override</span><br><span class="line">        public Object doAction(Object rev,Server server) &#123;</span><br><span class="line">            KeepAlive keepAlive=(KeepAlive)rev;</span><br><span class="line">            System.out.println(&quot;接收数据,心跳包处理：\t&quot;+keepAlive.toString());</span><br><span class="line">            //心跳包解析</span><br><span class="line">            return keepAlive;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    public  class MsgObjectAction implements ObjectAction&#123;</span><br><span class="line">        @Override</span><br><span class="line">        public Object doAction(Object obj, Server server) &#123;</span><br><span class="line">            Message message=(Message)obj;</span><br><span class="line">            System.out.println(&quot;接收数据,消息包处理：\t&quot;+message.toString());</span><br><span class="line">            // TODO 消息解析</span><br><span class="line">            return message;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        int port = 65432;</span><br><span class="line">        Server server = new Server(port);</span><br><span class="line">        server.start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private int port;</span><br><span class="line">    //线程运行状态控制</span><br><span class="line">    private volatile boolean running=false;</span><br><span class="line">    //接收超时时间</span><br><span class="line">    private long receiveTimeDelay=3000;</span><br><span class="line">    private ConcurrentHashMap&lt;Class&lt;Object&gt;, ObjectAction&gt; actionMapping = new ConcurrentHashMap&lt;Class&lt;Object&gt;,ObjectAction&gt;();</span><br><span class="line">    private Thread connWatchDog;</span><br><span class="line">    public Server(int port) &#123;</span><br><span class="line">        this.port = port;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void start()&#123;</span><br><span class="line">        if(running)&#123;return;&#125;</span><br><span class="line">        running=true;</span><br><span class="line">        connWatchDog = new Thread(new ConnWatchDog());</span><br><span class="line">        connWatchDog.start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void stop()&#123;</span><br><span class="line">        if(running)&#123;running=false;&#125;</span><br><span class="line">        if(connWatchDog!=null)&#123;connWatchDog.stop();&#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void addActionMap(Class&lt;Object&gt; cls,ObjectAction action)&#123;</span><br><span class="line">        actionMapping.put(cls, action);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    class ConnWatchDog implements Runnable&#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void run()&#123;</span><br><span class="line">            try &#123;</span><br><span class="line">                System.out.println(&quot;server initial....&quot;);</span><br><span class="line">                ServerSocket ss = new ServerSocket(port,5);</span><br><span class="line">                while(running)&#123;</span><br><span class="line">                    Socket s = ss.accept();</span><br><span class="line">                    System.out.println(&quot;server accept one client ....&quot;);</span><br><span class="line">                    new Thread(new ReceiveWatchDogs(s)).start();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; catch (IOException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">                Server.this.stop();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    class ReceiveWatchDogs implements Runnable&#123;</span><br><span class="line">        Socket s;</span><br><span class="line">        boolean run=true;</span><br><span class="line">        long lastReceiveTime = System.currentTimeMillis();</span><br><span class="line">        KeepAlive lastKeepAlive;</span><br><span class="line">        public ReceiveWatchDogs(Socket s) &#123;</span><br><span class="line">            this.s = s;</span><br><span class="line">        &#125;</span><br><span class="line">        @Override</span><br><span class="line">        public void run() &#123;</span><br><span class="line">            while(running &amp;&amp; run)&#123;</span><br><span class="line">                if(System.currentTimeMillis()-lastReceiveTime&gt;receiveTimeDelay)&#123;</span><br><span class="line">                    overThis(lastKeepAlive);</span><br><span class="line">                &#125;else&#123;</span><br><span class="line">                    try &#123;</span><br><span class="line">                        InputStream in = s.getInputStream();</span><br><span class="line">                        if(in.available()&gt;0)&#123;</span><br><span class="line">                            ObjectInputStream ois = new ObjectInputStream(in);</span><br><span class="line">                            Object obj = ois.readObject();</span><br><span class="line">                            lastReceiveTime = System.currentTimeMillis();</span><br><span class="line">                            System.out.println(&quot;server receive... :\t&quot;+obj);</span><br><span class="line">                            if(obj instanceof Message)&#123;</span><br><span class="line">                                addActionMap((Class&lt;Object&gt;) obj.getClass(),new MsgObjectAction());</span><br><span class="line">                            &#125;else if(obj instanceof KeepAlive)&#123;</span><br><span class="line">                                this.lastKeepAlive=(KeepAlive) obj;</span><br><span class="line">                                addActionMap((Class&lt;Object&gt;) obj.getClass(),new DefaultObjectAction());</span><br><span class="line">                            &#125;</span><br><span class="line"></span><br><span class="line">                            ObjectAction oa = actionMapping.get(obj.getClass());</span><br><span class="line">                            oa = oa==null?new DefaultObjectAction():oa;</span><br><span class="line">                            Object out = oa.doAction(obj,Server.this);</span><br><span class="line">                        &#125;else&#123;</span><br><span class="line">                            Thread.sleep(10);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125; catch (Exception e) &#123;</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                        overThis(this.lastKeepAlive);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        private void overThis(KeepAlive keepAlive) &#123;</span><br><span class="line">            if(run)&#123;run=false;&#125;</span><br><span class="line">            if(s!=null)&#123;</span><br><span class="line">                try &#123;</span><br><span class="line">                    s.close();</span><br><span class="line">                &#125; catch (IOException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;System.out.println(&quot;client &quot;+keepAlive.getId()+&quot;  离线&quot;);</span><br><span class="line">            System.out.println(&quot;client connect over time....&quot;+s.getRemoteSocketAddress());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br></pre></td><td class="code"><pre><span class="line">package client;</span><br><span class="line">import java.io.ObjectOutputStream;</span><br><span class="line">import java.net.Socket;</span><br><span class="line">import java.io.IOException;</span><br><span class="line">import java.io.InputStream;</span><br><span class="line">import java.io.ObjectInputStream;</span><br><span class="line">import java.net.UnknownHostException;</span><br><span class="line">import java.util.Scanner;</span><br><span class="line">import java.util.concurrent.ConcurrentHashMap;</span><br><span class="line">import java.util.concurrent.RunnableFuture;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Created by sheng on 17/12/13.</span><br><span class="line"> * 客户端可以发送心跳包/消息包,在 keepAliveDelay毫秒内未发送任何数据,则自动发送一个KeepAlive Object(心跳)给服务器.</span><br><span class="line"> *</span><br><span class="line"> */</span><br><span class="line">public class Client &#123;</span><br><span class="line">    //sendObject 发送</span><br><span class="line"></span><br><span class="line">    //Message Object 消息</span><br><span class="line"></span><br><span class="line">    //keepAliveDelay 延时</span><br><span class="line"></span><br><span class="line">    //KeepAlive Object</span><br><span class="line"></span><br><span class="line">    //addActionMap</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 处理服务端发回的对象，可实现该接口。</span><br><span class="line">     */</span><br><span class="line">    public  interface ObjectAction&#123;</span><br><span class="line">        void doAction(Object obj,Client client);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static final class DefaultObjectAction implements ObjectAction&#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void doAction(Object obj,Client client) &#123;</span><br><span class="line">            KeepAlive alive=(KeepAlive) obj;</span><br><span class="line">            System.out.println(&quot;接收数据,心跳包处理：\t&quot;+alive.toString());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static class MsgObjectAction implements ObjectAction&#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void doAction(Object obj, Client client) &#123;</span><br><span class="line">            Message message=(Message) obj;</span><br><span class="line">            System.out.println(&quot;接收数据,消息包处理：\t&quot;+message.toString());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws UnknownHostException, IOException &#123;</span><br><span class="line">        String serverIp = &quot;127.0.0.1&quot;;</span><br><span class="line">        int port = 65432;</span><br><span class="line">        Client client = new Client(serverIp,port);</span><br><span class="line">        KeepAlive keepAlive=new KeepAlive(&quot;2&quot;,&quot;2&quot;,&quot;2&quot;);</span><br><span class="line">        client.start(keepAlive);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private String serverIp;</span><br><span class="line">    private int port;</span><br><span class="line">    private Socket socket;</span><br><span class="line">    //连接状态</span><br><span class="line">    private boolean running=false;</span><br><span class="line">    //最后一次发送数据的时间</span><br><span class="line">    private long lastSendTime;</span><br><span class="line"></span><br><span class="line">    //用于保存接收消息对象类型及该类型消息处理的对象</span><br><span class="line">    private ConcurrentHashMap&lt;Class, ObjectAction&gt; actionMapping = new ConcurrentHashMap&lt;Class,ObjectAction&gt;();</span><br><span class="line"></span><br><span class="line">    public Client(String serverIp, int port) &#123;</span><br><span class="line">        this.serverIp=serverIp;</span><br><span class="line">        this.port=port;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void start(KeepAlive keepAlive) throws UnknownHostException, IOException &#123;</span><br><span class="line">        if(running)return;</span><br><span class="line">        socket = new Socket(serverIp,port);</span><br><span class="line">        System.out.println(&quot;本地端口：&quot;+socket.getLocalPort());</span><br><span class="line">        lastSendTime=System.currentTimeMillis();</span><br><span class="line">        running=true;</span><br><span class="line">        //保持长连接的线程，每隔2秒项服务器发一个一个保持连接的心跳消息</span><br><span class="line">        new Thread(new KeepAliveWatchDog(keepAlive)).start();</span><br><span class="line">        //接受消息的线程，处理消息</span><br><span class="line">        new Thread(new ReceiveWatchDog()).start();</span><br><span class="line">        //发送消息线程.</span><br><span class="line">        new Thread(new SendMsgPacket()).start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void stop()&#123;</span><br><span class="line">        if(running)running=false;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 添加接收对象的处理对象。</span><br><span class="line">     * @param cls 待处理的对象，其所属的类。</span><br><span class="line">     * @param action 处理过程对象。</span><br><span class="line">     */</span><br><span class="line">    public void addActionMap(Class&lt;? extends Object&gt; cls, ObjectAction action)&#123;</span><br><span class="line">        actionMapping.put(cls, action);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void sendObject(Object obj) throws IOException &#123;</span><br><span class="line">        ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());</span><br><span class="line">        oos.writeObject(obj);</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;client send..：\t&quot;+obj);</span><br><span class="line">        oos.flush();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 心跳包发送</span><br><span class="line">     * */</span><br><span class="line">    class KeepAliveWatchDog implements Runnable&#123;</span><br><span class="line">        KeepAlive keepAlive;</span><br><span class="line">        public KeepAliveWatchDog(KeepAlive keepAlive)&#123;</span><br><span class="line">            this.keepAlive=keepAlive;</span><br><span class="line">        &#125;</span><br><span class="line">        long checkDelay = 10;</span><br><span class="line">        long keepAliveDelay = 2000;</span><br><span class="line">        @Override</span><br><span class="line">        public void run() &#123;</span><br><span class="line">            while(running)&#123;</span><br><span class="line">                if(System.currentTimeMillis()-lastSendTime&gt;keepAliveDelay)&#123;</span><br><span class="line">                    try &#123;</span><br><span class="line">                        KeepAlive alive=this.keepAlive;</span><br><span class="line">                        Client.this.sendObject(alive);</span><br><span class="line">                        addActionMap(alive.getClass(),new DefaultObjectAction());</span><br><span class="line">                    &#125; catch (IOException e) &#123;</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                        Client.this.stop();</span><br><span class="line">                    &#125;</span><br><span class="line">                    lastSendTime = System.currentTimeMillis();</span><br><span class="line">                &#125;else&#123;</span><br><span class="line">                    try &#123;</span><br><span class="line">                        //线程休眠10毫秒</span><br><span class="line">                        Thread.sleep(checkDelay);</span><br><span class="line">                    &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                        Client.this.stop();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    class SendMsgPacket implements Runnable&#123;</span><br><span class="line">        boolean isrunning=true;</span><br><span class="line">        @Override</span><br><span class="line">        public void run() &#123;</span><br><span class="line">            //接收控制台输入</span><br><span class="line">            Scanner input=new Scanner(System.in);</span><br><span class="line">            while(input.hasNext() &amp;&amp; isrunning)&#123;</span><br><span class="line">                String str = input.next();</span><br><span class="line">                if(str.equals(&quot;cancel&quot;))&#123;</span><br><span class="line">                    isrunning=false;</span><br><span class="line">                    Client.this.stop();</span><br><span class="line">                &#125;</span><br><span class="line">                try &#123;</span><br><span class="line">                    Message msg = new Message(str, 0);</span><br><span class="line">                    Client.this.sendObject(msg);</span><br><span class="line">                    addActionMap(msg.getClass(),new MsgObjectAction());</span><br><span class="line">                &#125;catch(IOException e)&#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                    Client.this.stop();</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    class ReceiveWatchDog implements Runnable&#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void run() &#123;</span><br><span class="line">            while(running)&#123;</span><br><span class="line">                try &#123;</span><br><span class="line">                    InputStream in = socket.getInputStream();</span><br><span class="line">                    if(in.available()&gt;0)&#123;</span><br><span class="line">                        ObjectInputStream ois = new ObjectInputStream(in);</span><br><span class="line">                        Object obj = ois.readObject();</span><br><span class="line">                        System.out.println(&quot;client receive ....:\t&quot;+obj);</span><br><span class="line">                        ObjectAction oa = actionMapping.get(obj.getClass());</span><br><span class="line">                        oa = oa==null?new DefaultObjectAction():oa;</span><br><span class="line">                        oa.doAction(obj, Client.this);</span><br><span class="line">                    &#125;else&#123;</span><br><span class="line">                        Thread.sleep(10);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; catch (Exception e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                    Client.this.stop();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="心跳包"><a href="#心跳包" class="headerlink" title="心跳包"></a>心跳包</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">package client;</span><br><span class="line"></span><br><span class="line">import java.io.Serializable;  </span><br><span class="line">import java.text.SimpleDateFormat;  </span><br><span class="line">import java.util.Date;  </span><br><span class="line">  </span><br><span class="line">/**  </span><br><span class="line"> *   </span><br><span class="line"> * 维持连接的消息对象（心跳对象）  </span><br><span class="line"> */  </span><br><span class="line">public class KeepAlive implements Serializable&#123;  </span><br><span class="line">    private String id;</span><br><span class="line">    private String ip;</span><br><span class="line">    private String timestamp=new SimpleDateFormat(&quot;yyyy-MM-dd HH:mm:ss&quot;).format(new Date());</span><br><span class="line">    private String mac;</span><br><span class="line"></span><br><span class="line">    public KeepAlive(String id,String ip,String mac)&#123;</span><br><span class="line">        this.id=id;</span><br><span class="line">        this.ip=ip;</span><br><span class="line">        this.mac=mac;</span><br><span class="line">    &#125;</span><br><span class="line">    private static final long serialVersionUID = -2813120366138988480L;</span><br><span class="line">    public String getId() &#123;</span><br><span class="line">        return id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setId(String id) &#123;</span><br><span class="line">        this.id = id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getIp() &#123;</span><br><span class="line">        return ip;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setIp(String ip) &#123;</span><br><span class="line">        this.ip = ip;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getMac() &#123;</span><br><span class="line">        return mac;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setMac(String mac) &#123;</span><br><span class="line">        this.mac = mac;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getTimestamp() &#123;</span><br><span class="line">        return timestamp;</span><br><span class="line">    &#125;</span><br><span class="line">    /**</span><br><span class="line">     *  覆盖该方法，仅用于测试使用。</span><br><span class="line">     * @see java.lang.Object#toString()  </span><br><span class="line">     */  </span><br><span class="line">    @Override  </span><br><span class="line">    public String toString()</span><br><span class="line">    &#123;</span><br><span class="line">        StringBuffer sb=new StringBuffer(new SimpleDateFormat(&quot;yyyy-MM-dd HH:mm:ss&quot;).format(new Date()));</span><br><span class="line">        sb.append(&quot;||&quot;).append(this.id);</span><br><span class="line">        sb.append(&quot;||&quot;).append(this.ip);</span><br><span class="line">        sb.append(&quot;||&quot;).append(this.mac);</span><br><span class="line">        return sb.toString();</span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="普通消息类型"><a href="#普通消息类型" class="headerlink" title="普通消息类型"></a>普通消息类型</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">package client;</span><br><span class="line"></span><br><span class="line">import java.io.Serializable;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Created by sheng on 17/12/14.</span><br><span class="line"> */</span><br><span class="line">public class Message implements Serializable &#123;</span><br><span class="line">    private static final long serialVersionUID = -2813120366138988480L;</span><br><span class="line">    public Message()&#123;&#125;</span><br><span class="line">    public Message(String msg,Integer type)&#123;</span><br><span class="line">        this.msg=msg;</span><br><span class="line">        this.type=type;</span><br><span class="line">    &#125;</span><br><span class="line">    private String msg;</span><br><span class="line">    private Integer type;</span><br><span class="line"></span><br><span class="line">    public String getMsg() &#123;</span><br><span class="line">        return msg;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setMsg(String msg) &#123;</span><br><span class="line">        this.msg = msg;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public Integer getType() &#123;</span><br><span class="line">        return type;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setType(Integer type) &#123;</span><br><span class="line">        this.type = type;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        return &quot;Message&#123;&quot; +</span><br><span class="line">                &quot;msg=&apos;&quot; + msg + &apos;\&apos;&apos; +</span><br><span class="line">                &quot;, type=&quot; + type +</span><br><span class="line">                &apos;&#125;&apos;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h4><p>socket的异常往往是连接超时引起,如果socket丢失,则操作socket会引起IOException,只需要在异常处理中,将socket释放,将线程的run()结束就行了.</p>
-<p>write by shengfq 17/12/13.</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://shengfq.github.io/2018/05/24/aboutme/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="盛富强">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="shengfq's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/24/aboutme/" itemprop="url">aboutme</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-24T19:29:54+08:00">
-                2018-05-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>盛富强<br>安卓开发工程师<br>联系电话:+86 132-6675-0060<br>电子邮箱:<a href="mailto:shengfu.qiang@163.com" target="_blank" rel="noopener">shengfu.qiang@163.com</a><br>个人博客:<a href="https://shengfq.github.io/">https://shengfq.github.io/</a><br>github:<a href="https://github.com/shengfq" target="_blank" rel="noopener">https://github.com/shengfq</a></p>
-<p>自我描述</p>
-<h2 id="我是一名热爱分享-爱开源-爱谷歌的安卓开发者"><a href="#我是一名热爱分享-爱开源-爱谷歌的安卓开发者" class="headerlink" title="我是一名热爱分享,爱开源,爱谷歌的安卓开发者."></a>我是一名热爱分享,爱开源,爱谷歌的安卓开发者.</h2>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://shengfq.github.io/2018/05/24/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="盛富强">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="shengfq's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/24/hello-world/" itemprop="url">Hello World</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-24T18:25:38+08:00">
-                2018-05-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
 
 
           </div>
@@ -1530,7 +1719,7 @@ The searched-for class definition existed when the currently executing class was
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">18</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -1538,6 +1727,15 @@ The searched-for class definition existed when the currently executing class was
 
             
 
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
             
 
           </nav>

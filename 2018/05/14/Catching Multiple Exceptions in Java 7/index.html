@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zn-han">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="翻译," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="在java7中,在同一个catch块中是可以捕获到多个不同的异常的.这被称之为多次捕获.在java7之前你可能这样写12345678910111213try &amp;#123;    // execute code that may throw 1 of the 3 exceptions below.&amp;#125; catch(SQLException e) &amp;#123;    logger.log(e)">
+<meta name="keywords" content="翻译">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Catching Multiple Exceptions in Java 7">
+<meta property="og:url" content="https://shengfq.github.io/2018/05/14/Catching Multiple Exceptions in Java 7/index.html">
+<meta property="og:site_name" content="shengfq&#39;s blog">
+<meta property="og:description" content="在java7中,在同一个catch块中是可以捕获到多个不同的异常的.这被称之为多次捕获.在java7之前你可能这样写12345678910111213try &amp;#123;    // execute code that may throw 1 of the 3 exceptions below.&amp;#125; catch(SQLException e) &amp;#123;    logger.log(e)">
+<meta property="og:locale" content="zn-han">
+<meta property="og:updated_time" content="2019-03-29T12:53:42.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Catching Multiple Exceptions in Java 7">
+<meta name="twitter:description" content="在java7中,在同一个catch块中是可以捕获到多个不同的异常的.这被称之为多次捕获.在java7之前你可能这样写12345678910111213try &amp;#123;    // execute code that may throw 1 of the 3 exceptions below.&amp;#125; catch(SQLException e) &amp;#123;    logger.log(e)">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://shengfq.github.io/2018/05/14/Catching Multiple Exceptions in Java 7/"/>
+
+
+
+
+
+  <title>Catching Multiple Exceptions in Java 7 | shengfq's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zn-han">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">shengfq's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">an developer using java</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://shengfq.github.io/2018/05/14/Catching Multiple Exceptions in Java 7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="盛富强">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="shengfq's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Catching Multiple Exceptions in Java 7</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-14T00:00:00+08:00">
+                2018-05-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在java7中,在同一个catch块中是可以捕获到多个不同的异常的.这被称之为多次捕获.<br>在java7之前你可能这样写<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">try &#123;</span><br><span class="line"></span><br><span class="line">    // execute code that may throw 1 of the 3 exceptions below.</span><br><span class="line"></span><br><span class="line">&#125; catch(SQLException e) &#123;</span><br><span class="line">    logger.log(e);</span><br><span class="line"></span><br><span class="line">&#125; catch(IOException e) &#123;</span><br><span class="line">    logger.log(e);</span><br><span class="line"></span><br><span class="line">&#125; catch(Exception e) &#123;</span><br><span class="line">    logger.severe(e);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>你可以看到, SQLEXCEPTION AND IOEXCEPTIOn的处理方式相同,但是你需要些两个不同的catch块来处理,在java7中你可以使用这样的语法:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">try &#123;</span><br><span class="line"></span><br><span class="line">    // execute code that may throw 1 of the 3 exceptions below.</span><br><span class="line"></span><br><span class="line">&#125; catch(SQLException | IOException e) &#123;</span><br><span class="line">    logger.log(e);</span><br><span class="line"></span><br><span class="line">&#125; catch(Exception e) &#123;</span><br><span class="line">    logger.severe(e);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>注意:两个异常使用|分割开,声明的多个异常处理会通过同一个catch接收.</p>
+<p>###Exception Hierarchies 异常的继承结构<br>在java或c#中,异常被分类到继承结构体系,异常继承结构的有点是你可以使用一个特定的异常,你能自动捕获该异常下所有的子类异常.换个说法,你能捕获一个特定异常也能捕获该异常下面所有的子类异常.例如FileNotFoundException ,你能捕获IOException捕获,也能使用FileNotFoundException.</p>
+<p>多catch块<br>你可能已经知道使用多catch块.这是在try…块发生多种异常情况下的处理.但是,多个捕获块,也可用于try块内的所有抛出的异常情况是相同的类型或类型的子类.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">try&#123;</span><br><span class="line">    //call some methods that throw IOException&apos;s</span><br><span class="line">&#125; catch (FileNotFoundException e)&#123;</span><br><span class="line">&#125; catch (IOException e)&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>按照异常的继承结构,上述代码是FileNotFoundException先被捕获,如果是IOException则被第二个捕获.</p>
+<p>throws 语法<br>如果一个方法能抛出一具体的异常A,或者该异常的子类,可以使用方法声明 抛出A或者A的子类<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public void doSomething() throws IOException&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public void doSomething() throws IOException, FileNotFoundException&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>设计异常的继承结构<br>当设计一个API或者app时,为之设计一个异常体系结构是一个好主意.例如,Mr Persister(注:作者项目), 我们的持久层/ORM API的基础异常是 PersistenceException.这个基础异常能捕获和处理<br>Mr.Persister抛出的所有异常.</p>
+<p>如果你需要更多粒度的异常抛出,例如你可能以为异常很难处理,需要增加一个子类异常到应用的基础异常库.可以选择的方法是要么捕获一个确切的异常要么捕获基础异常.在MrPersister项目中,我们增加了 ConnectionOpenException, QueryException, UpdateException, CommitException和ConnectionCloseException作为PersistenceException异常的子类.如果Mr Persister的用户想要处理ConnectionOpenException与QueryException区分开,他们可以捕获这些具体的异常使用具体的操作.如果不是,用户可以捕获PersistenceException处理所有异常.</p>
+<p>你能通过更多等级的异常体系结构来区分所有的异常类型,例如,你可以区分一个异常是因为url错误,还是由于数据库没有运行.这个案例中,你能创建两个异常DatabaseURLException和DatabaseNotRespondingException,他们都扩展自ConnectionOpenException.用户可以捕获这两种不同的异常.</p>
+<p>总结<br>这章节我们了解了异常的体系结构通过创建子类.区分子类用来捕获和处理这些细分的异常,你也能创建细分的异常. </p>
+<p>###Checked or Unchecked Exceptions?<br>在java中有两种基础异常类型:Checked异常和unchecked异常(译者:可以类比为JVM需要强制执行异常处理/不需要强制执行).c#只有unchecked异常.他们的区别在于:<br>1.checked 异常必须显式的捕获或传播通过 try-catch-finally异常处理.unchecked异常不必须.他们不需要显式的捕获.<br>2.checked异常继承自java.lang.exception. unchecked exceptions 继承自 java.lang.RuntimeException.</p>
+<p>关于checked和unchecked有许多的争论,是否应该使用checked异常,我将通过许多争论提纲来说明,在我做之前,让我们先明确下:<br>checked和unchecked异常都是功能等效的.如果无法的unchecked异常的情形那么对于checked异常同样也无能为力.</p>
+<p>不论你选择的是checked或unchecked,这都是一个个人或组织的习惯,跟功能好坏无关.</p>
+<p>一个简单案例<br>在讨论这两种的优点和缺点时,我将先告诉你他们的不同用法,下面是抛出一个checked异常<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">public void storeDataFromUrl(String url)&#123;</span><br><span class="line">    try &#123;</span><br><span class="line">        String data = readDataFromUrl(url);</span><br><span class="line">    &#125; catch (BadUrlException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public String readDataFromUrl(String url)</span><br><span class="line">throws BadUrlException&#123;</span><br><span class="line">    if(isUrlBad(url))&#123;</span><br><span class="line">        throw new BadUrlException(&quot;Bad URL: &quot; + url);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    String data = null;</span><br><span class="line">    //read lots of data over HTTP and return</span><br><span class="line">    //it as a String instance.</span><br><span class="line"></span><br><span class="line">    return data;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">   public class BadUrlException extends Exception &#123;</span><br><span class="line">    public BadUrlException(String s) &#123;</span><br><span class="line">        super(s);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>storeDataFromUrl()方法有两种选择,要么捕获要么传播给访问栈<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//传播给访问栈</span><br><span class="line">   public void storeDataFromUrl(String url)</span><br><span class="line">    throws BadUrlException&#123;</span><br><span class="line">        String data = readDataFromUrl(url);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>现在,让我们看一下unchecked 异常的处理,首先让异常类继承 java.lang.RuntimeException<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public class BadUrlException extends RuntimeException &#123;</span><br><span class="line">        public BadUrlException(String s) &#123;</span><br><span class="line">            super(s);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public void storeDataFromUrl(String url)&#123;</span><br><span class="line">        String data = readDataFromUrl(url);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String readDataFromUrl(String url) &#123;</span><br><span class="line">        if(isUrlBad(url))&#123;</span><br><span class="line">            throw new BadUrlException(&quot;Bad URL: &quot; + url);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        String data = null;</span><br><span class="line">        //read lots of data over HTTP and</span><br><span class="line">        //return it as a String instance.</span><br><span class="line"></span><br><span class="line">        return data;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>storeDataFromUrl()方法可以选择捕获异常,但不是必须的了,也不是必须要传播.</p>
+<h4 id="什么时候checked什么时候unchecked"><a href="#什么时候checked什么时候unchecked" class="headerlink" title="什么时候checked什么时候unchecked?"></a>什么时候checked什么时候unchecked?</h4><p>我们看到了两种处理方式,让我们好好讨论下.<br>许多java书籍建议你使用checked异常为所有 可恢复应用程序,使用unchecked异常处理应用程序不可恢复的场景.实际上大部分的应用都需要恢复包括空指针异常,无效参数异常或者其他unchecked异常. 行动/交易失败将中止,但应用程序必须活下去,准备下一步行动/事务服务。这通常是合法的关闭应用程序.例如,如果配置文件丢失了,应用程序不能做任何事情,这将导致程序关闭.</p>
+<p>我的建议是你要么使用checked异常要么使用unchecked异常.混合异常类型常常导致迷惑和不一致的使用.当然你应该务实一点,在具体情况具体分析.</p>
+<p>下面的列表是最常见的争论关于checked和unchecked异常.最常见的区别是pro-checked=con-unchecked,pro-unchecked=con-checked.因此<br>1.高级的检查异常<br>编译器强制捕获或传播检查异常是为了不让开发者忘记处理异常.<br>2.非检查异常是编译器不强制开发者捕获和传播异常.<br>3.高级非检查异常<br>检查异常被传播到访问栈顶层方法,因为这些方法需要强制声明抛出他们声明的异常.<br>4.当一个方法没有声明非检查异常,他们一旦出现异常将很难处理.<br>5.检查异常的声明成为方法声明的一部分,增加一个或删除一个异常声明在需要变更方法声明时会很困难.</p>
+<p>争论一</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">try&#123;</span><br><span class="line">   callMethodThatThrowsException();</span><br><span class="line">catch(Exception e)&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面这种情况,强制捕获或传播异常让开发者粗心的处理风险,只会让开发者忽略错误.</p>
+<p>争论二<br>非检查异常很容易让开发者忘记异常处理,因为编译器不强制开发者处理.<br>没有比粗心的异常处理更糟糕的,当强制进行异常处理的时候.<br>在一个最近的大项目里,我们决定使用非检查异常.我个人的经验是,当使用非检查异常的方法趋向于抛出异常.我常常合理的有意识的考虑异常.不仅仅是检查下异常.我都会考虑一个方法的异常处理.</p>
+<p>许多标准java API方法没有声明任何可检查异常仍然可能抛出非检查异常例如空指针和无效参数.你的应用程序需要处理这些非检查异常.你可以考虑这些检查异常很容易忘记处理非检查异常的情况,因为他们不需要声明.</p>
+<p>argument3<br>传播到访问栈顶层方法的可检查异常,因为方法需要声明抛出异常,所以在顶层的方法要声明的异常是一种底层异常,例如.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">public long readNumberFromUrl(String url)</span><br><span class="line">   throws BadUrlExceptions, BadNumberException&#123;</span><br><span class="line">       String data = readDataFromUrl(url);</span><br><span class="line">       long number = convertData(data);</span><br><span class="line">       return number;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   private String readDataFromUrl(String url)</span><br><span class="line">   throws BadUrlException &#123;</span><br><span class="line">      //throw BadUrlException if url is bad.</span><br><span class="line">      //read data and return it.</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   private long convertData(String data)</span><br><span class="line">   throws BadNumberException&#123;</span><br><span class="line">       //convert data to long.</span><br><span class="line">       //throw BadNumberException if number isn&apos;t within valid range.</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>你能看到readNumberFromUrl()方法需要声明BadUrlException和BadNumberException,因为他的访问栈方法抛出了异常.想想,如果成千上万的类里面的顶级方法需要声明多少种异常.</p>
+<p>争论1:<br>异常声明聚合通常发生在实际的应用程序中.通常开发者使用异常包装器代替,例如:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public void readNumberFromUrl(String url)</span><br><span class="line">  throws ApplicationException&#123;</span><br><span class="line">      try&#123;</span><br><span class="line">          String data = readDataFromUrl(url);</span><br><span class="line">          long number = convertData(data);</span><br><span class="line">      &#125; catch (BadUrlException e)&#123;</span><br><span class="line">          throw new ApplicationException(e);</span><br><span class="line">      &#125; catch (BadNumberException e)&#123;</span><br><span class="line">          throw new ApplicationException(e);</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>你能看到readNumberFromUrl()方法声明了ApplicationException.而异常BadUrlException和BadNumberException被捕获并包装到一个通用的ApplicationException.这就是异常包装避免异常声明聚合.我个人的意见是,如果你所做的是包装一个异常,而不是提供附加的信息,你为什么要包装他?try-catch块附加一个代码而不做其他.使得这些异常成为unchecked 异常更容易,下面是以unchecked版本:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public void readNumberFromUrl(String url)&#123;</span><br><span class="line">       String data = readDataFromUrl(url);</span><br><span class="line">       long number = convertData(data);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>包装一个unchecked异常如果你想.下面是一个包装版本,注意,方法签名并不声明抛出的异常类型:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public void readNumberFromUrl(String url)</span><br><span class="line">       try&#123;</span><br><span class="line">           String data = readDataFromUrl(url);</span><br><span class="line">           long number = convertData(data);</span><br><span class="line">       &#125; catch (BadUrlException e)&#123;</span><br><span class="line">           throw new ApplicationException(</span><br><span class="line">               &quot;Error reading number from URL&quot;, e);</span><br><span class="line">       &#125; catch (BadNumberException e)&#123;</span><br><span class="line">           throw new ApplicationException(</span><br><span class="line">               &quot;Error reading number from URL&quot;, e);</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure></p>
+<p>另外一个常用技术是避免异常声明传播到访问栈而创建的一个基础异常声明类.所有的异常捕获都是该基础异常的子类.所有的方法抛出异常仅需要声明throw一个基础异常, 一个方法抛出基类的子类:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">public long readNumberFromUrl(String url)</span><br><span class="line">   throws ApplicationException &#123;</span><br><span class="line">       String data = readDataFromUrl(url);</span><br><span class="line">       long number = convertData(data);</span><br><span class="line">       return number;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   private String readDataFromUrl(String url)</span><br><span class="line">   throws BadUrlException &#123;</span><br><span class="line">      //throw BadUrlException if url is bad.</span><br><span class="line">      //read data and return it.</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   private long convertData(String data)</span><br><span class="line">   throws BadNumberException&#123;</span><br><span class="line">       //convert data to long.</span><br><span class="line">       //throw BadNumberException if number isn&apos;t within valid range.</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">   public class ApplicationException extends Exception&#123; &#125;</span><br><span class="line">   public class BadNumberException   extends ApplicationException&#123;&#125;</span><br><span class="line">   public class BadUrlException      extends ApplicationException&#123;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>注意子类异常也不再声明了 也不捕获和包装了,因为他们的超类已经将异常传播给访问栈了.<br>我的意见跟异常包装一样:如果所有的方法都声明抛出基类异常,为什么不让基类成为unchecked异常 保存一些try-catch块,抛出一个基类.</p>
+<p>当一个方法不再声明非检查异常,但是他们可能抛出这种异常将会很难处理.不声明你就不知道什么异常会抛出.你也许不会知道如何处理,当然除了你已经通过代码处理他们那些可能抛出的异常.<br>争论1:<br>在大多数情况下你,对于异常的处理你除了显示打印错误信息给调用者,不能做其他,写一条日志,回滚事务.不管什么异常发生在很多情况下处理他们是用相同的方式.因为应用程序通常有一些中央和通用的异常处理代码.因此知道实际发生了什么可能抛出的异常就没那么重要了.</p>
+<p>总结<br>我通常赞成检查异常但是最近我凯撒改变我的主意.个人喜欢Rod johnson,anders hejlsberg,joshua bloch和其他人让我重新思考真实的益处来自检查异常.最近我们尝试使用unchecked异常在大项目上,他们工作很好.异常处理集中在一部分类.这里我们必须做本地异常处理代替传播异常到主异常处理代码.但是这不是非常多.我们的代码可读性更高,没有try-catch快.在另一方面,这里有更少的catch-rethrow try-catch块在代码里使用检查异常.我将提醒所有使用unchecked异常的人,至少使用try.我说明下原因:<br>1.非检查异常不需要杂乱的代码使用非必要的try-catch块.<br>2.非检查异常不需要杂乱的方法头声明去传播异常.<br>3.你很容易忘记处理非检查异常的论证是这不适合我的经验.<br>4.非检查异常避免了版本升级的问题.</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/翻译/" rel="tag"># 翻译</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/14/Java Exception Handling/" rel="next" title="java 异常处理">
+                <i class="fa fa-chevron-left"></i> java 异常处理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/14/异常的层级/" rel="prev" title="Exception Hierarchies">
+                Exception Hierarchies <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">盛富强</p>
+              <p class="site-description motion-element" itemprop="description">blogs and research</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/shengfq" target="_blank" title="github">
+                      
+                        <i class="fa fa-fw fa-globe"></i>github</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#什么时候checked什么时候unchecked"><span class="nav-number">1.</span> <span class="nav-text">什么时候checked什么时候unchecked?</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">盛富强</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

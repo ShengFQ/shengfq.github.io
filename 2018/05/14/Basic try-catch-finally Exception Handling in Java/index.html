@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zn-han">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="翻译," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="概要内容1.访问栈解析2.抛出异常3.捕获异常4.上诉异常5.案例:捕获IOException6.案例:上报IOException7.finally关键字8.捕获或上报异常的策略 这片文章基于如何try..catch…finally 处理,这个案例是java语言,但是同样适用于c#.java和c#在异常处理上不同的地方就是c#没有检查性异常.这在后续文章讨论.异常在程序中的表示一些错误或不可预料的">
+<meta name="keywords" content="翻译">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Basic try-catch-finally Exception Handling in Java">
+<meta property="og:url" content="https://shengfq.github.io/2018/05/14/Basic try-catch-finally Exception Handling in Java/index.html">
+<meta property="og:site_name" content="shengfq&#39;s blog">
+<meta property="og:description" content="概要内容1.访问栈解析2.抛出异常3.捕获异常4.上诉异常5.案例:捕获IOException6.案例:上报IOException7.finally关键字8.捕获或上报异常的策略 这片文章基于如何try..catch…finally 处理,这个案例是java语言,但是同样适用于c#.java和c#在异常处理上不同的地方就是c#没有检查性异常.这在后续文章讨论.异常在程序中的表示一些错误或不可预料的">
+<meta property="og:locale" content="zn-han">
+<meta property="og:updated_time" content="2019-03-29T12:53:14.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Basic try-catch-finally Exception Handling in Java">
+<meta name="twitter:description" content="概要内容1.访问栈解析2.抛出异常3.捕获异常4.上诉异常5.案例:捕获IOException6.案例:上报IOException7.finally关键字8.捕获或上报异常的策略 这片文章基于如何try..catch…finally 处理,这个案例是java语言,但是同样适用于c#.java和c#在异常处理上不同的地方就是c#没有检查性异常.这在后续文章讨论.异常在程序中的表示一些错误或不可预料的">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://shengfq.github.io/2018/05/14/Basic try-catch-finally Exception Handling in Java/"/>
+
+
+
+
+
+  <title>Basic try-catch-finally Exception Handling in Java | shengfq's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zn-han">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">shengfq's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">an developer using java</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://shengfq.github.io/2018/05/14/Basic try-catch-finally Exception Handling in Java/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="盛富强">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="shengfq's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Basic try-catch-finally Exception Handling in Java</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-14T00:00:00+08:00">
+                2018-05-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>概要内容<br>1.访问栈解析<br>2.抛出异常<br>3.捕获异常<br>4.上诉异常<br>5.案例:捕获IOException<br>6.案例:上报IOException<br>7.finally关键字<br>8.捕获或上报异常的策略</p>
+<p>这片文章基于如何try..catch…finally 处理,这个案例是java语言,但是同样适用于c#.java和c#在异常处理上不同的地方就是c#没有检查性异常.这在后续文章讨论.<br>异常在程序中的表示一些错误或不可预料的情况发生了.应该要执行一些操作能让程序刘继续运行,直到异常被处理.一个方法可能会抛出很多异常,例如输入参数和无效的参数.</p>
+<p>访问栈解释<br>call stack多次提到这个概念是因为 访问栈意味着一系列访问当前方法和返回到主方法的程序流.如果方法A访问B,B访问C,访问栈就是ABC.<br>当方法C返回到访问栈就只剩下A和B,如果B访问了方法D,访问栈就是ABD</p>
+<p>了解访问栈是学习异常上报概念很重要的知识,异常被访问栈上报,从发生的地方抛出,直到访问栈catch住.</p>
+<p>抛出异常<br>如果一个方法需要抛出异常,应该先在方法签名中申明这个异常,并且包含在throw语句的方法中.下面是案例:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public void divide(int numberToDivide, int numberToDivideBy)</span><br><span class="line"> throws BadNumberException&#123;</span><br><span class="line">     if(numberToDivideBy == 0)&#123;</span><br><span class="line">         throw new BadNumberException(&quot;Cannot divide by 0&quot;);</span><br><span class="line">     &#125;</span><br><span class="line">     return numberToDivide / numberToDivideBy;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></p>
+<p>当一个异常通过throw语句抛出后阻止了执行流继续.任何throw语句下面的的语句都不会执行.上面的案例numberToDivide / numberToDivideBy 不会执行.程序当异常被catch块捕获的时候,程序将恢复执行.捕获异常稍后解释.</p>
+<p>你能抛出任何类型的异常,只需要你的方法签名声明了.你也能定义自己的异常,异常都是继承自java.lang.Exception.或者其他的内置异常类.如果一个方法声明抛出异常A,他的子类重写的A方法也应该声明.</p>
+<p>捕获异常<br>检查性异常声明的方法,在被方法栈调用时强制捕获或者上报.捕获异常使用try..catch块:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public void callDivide()&#123;</span><br><span class="line">       try &#123;</span><br><span class="line">           int result = divide(2,1);</span><br><span class="line">           System.out.println(result);</span><br><span class="line">       &#125; catch (BadNumberException e) &#123;</span><br><span class="line">           //do something clever with the exception</span><br><span class="line">           System.out.println(e.getMessage());</span><br><span class="line">       &#125;</span><br><span class="line">       System.out.println(&quot;Division attempt done&quot;);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>BadNumberException 参数e指向异常抛出的地方.如果没有异常抛出在try块中,catch块会被忽略执行.<br>如果异常被try抛出,方法栈程序流callDivide被中止.在有catch块的访问栈能catch住抛出的异常,程序流也将恢复执行[译者:只有在catch块的方法能恢复,调用栈底层的方法上报的异常,底层是不会恢复执行的],上面的案例中System.out.println(result);不会执行,执行将执行catch块.如果catch当中抛出了异常没有被捕获,这个catch就会被终止,就像上面的try块.</p>
+<p>当一个catch块完成程序将继续catch下面的后语, System.out.println(“Division attempt done”)将执行.</p>
+<p>上报异常<br>你不必捕获从其他方法抛出的异常,如果你不能做任何事情的时候,你可以让方法上报这个异常到方法访问栈顶层,这样做就需要声明抛出异常,如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public void callDivide() throws BadNumberException&#123;</span><br><span class="line">       int result = divide(2,1);</span><br><span class="line">       System.out.println(result);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>try…catch块不见了,方法声明了可能抛出的异常类型,这个程序直到抛出异常被打断.”System.out.println(result);将不会执行,但是这个方法没有恢复,这个异常上报了.直到遇到catch块的访问栈捕获这个异常之前程序都不会恢复.抛出异常和捕获异常的方法在访问栈中都有他们自己执行停止,当异常抛出或上报时.</p>
+<p>案例:捕获IOException<br>当一个异常抛出在一系列的语句中的try…catch中时,这一系列的语将直接被忽略直接跳到catch块.这样的代码被异常打断在很多地方:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">public void openFile()&#123;</span><br><span class="line">       try &#123;</span><br><span class="line">           // constructor may throw FileNotFoundException</span><br><span class="line">           FileReader reader = new FileReader(&quot;someFile&quot;);</span><br><span class="line">           int i=0;</span><br><span class="line">           while(i != -1)&#123;</span><br><span class="line">               //reader.read() may throw IOException</span><br><span class="line">               i = reader.read();</span><br><span class="line">               System.out.println((char) i );</span><br><span class="line">           &#125;</span><br><span class="line">           reader.close();</span><br><span class="line">           System.out.println(&quot;--- File End ---&quot;);</span><br><span class="line">       &#125; catch (FileNotFoundException e) &#123;</span><br><span class="line">           //do something clever with the exception</span><br><span class="line">       &#125; catch (IOException e) &#123;</span><br><span class="line">           //do something clever with the exception</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面的语句如果new FileReader(“someFile”)抛出异常,下面try块没有语句会执行</p>
+<p>上报IOException:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public void openFile() throws IOException &#123;</span><br><span class="line">        FileReader reader = new FileReader(&quot;someFile&quot;);</span><br><span class="line">        int i=0;</span><br><span class="line">        while(i != -1)&#123;</span><br><span class="line">            i = reader.read();</span><br><span class="line">            System.out.println((char) i );</span><br><span class="line">        &#125;</span><br><span class="line">        reader.close();</span><br><span class="line">        System.out.println(&quot;--- File End ---&quot;);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>如果reader.read()方法抛出异常,程序将终止,异常通过访问栈传递到访问openFile()的栈顶.如果栈顶有try..catch快,异常被捕获.如果上层也只是抛出,这个访问openfile()的地方也会终止,异常再次上传.直到被catch住或者虚拟机来处理.</p>
+<p>finally关键字<br>你能附加一个finally块到try…catch.finally块的代码始终会执行.如果你的try..catch中有return语句,finally块先执行,下面是案例:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">public void openFile()&#123;</span><br><span class="line">        FileReader reader = null;</span><br><span class="line">        try &#123;</span><br><span class="line">            reader = new FileReader(&quot;someFile&quot;);</span><br><span class="line">            int i=0;</span><br><span class="line">            while(i != -1)&#123;</span><br><span class="line">                i = reader.read();</span><br><span class="line">                System.out.println((char) i );</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; catch (IOException e) &#123;</span><br><span class="line">            //do something clever with the exception</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            if(reader != null)&#123;</span><br><span class="line">                try &#123;</span><br><span class="line">                    reader.close();</span><br><span class="line">                &#125; catch (IOException e) &#123;</span><br><span class="line">                    //do something clever with the exception</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(&quot;--- File End ---&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>不管异常是否抛出,finally都会执行,上面的案例reader都会关闭.</p>
+<p>注意:如果finally块抛出异常,没有捕获,finally块也将被打断就像try..catch一样,这就是上面为什么reader.close()方法要包含在try-catch中<br>你不必再catch和finally块,你只需要在其一使用try块,这个代码不会捕获,但是会让它上报给访问栈,因为finally块关闭这个文件阅读器,当异常抛出时.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">public void openFile() throws IOException &#123;</span><br><span class="line">        FileReader reader = null;</span><br><span class="line">        try &#123;</span><br><span class="line">            reader = new FileReader(&quot;someFile&quot;);</span><br><span class="line">            int i=0;</span><br><span class="line">            while(i != -1)&#123;</span><br><span class="line">                i = reader.read();</span><br><span class="line">                System.out.println((char) i );</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            if(reader != null)&#123;</span><br><span class="line">                try &#123;</span><br><span class="line">                    reader.close();</span><br><span class="line">                &#125; catch (IOException e) &#123;</span><br><span class="line">                    //do something clever with the exception</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(&quot;--- File End ---&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>是捕获还是上报异常<br>你可能好奇你是否该捕获还是上报这个异常.这取决于具体的情形.在很多应用中你不能做太多除了高数请求程序当前失败.在这些应用程序通常可以捕获所有或大部分异常集中的第一个方法的调用堆栈,你能处理资源当异常上报后,例如,一个错误访问数据库连接的web程序,你鞥关闭连接在finally中,即使你不能做任何事情,只有告诉方法访问者访问失败,你最终处理异常还取决于你是否为应用程序选择检查或未经检查的异常。下面的张杰将会说明.</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/翻译/" rel="tag"># 翻译</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/14/异常的层级/" rel="next" title="Exception Hierarchies">
+                <i class="fa fa-chevron-left"></i> Exception Hierarchies
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/14/Try-with-resources in Java 7/" rel="prev" title="Try-with-resources in Java 7">
+                Try-with-resources in Java 7 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">盛富强</p>
+              <p class="site-description motion-element" itemprop="description">blogs and research</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/shengfq" target="_blank" title="github">
+                      
+                        <i class="fa fa-fw fa-globe"></i>github</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">盛富强</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
