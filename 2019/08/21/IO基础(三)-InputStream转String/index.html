@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="javaIO," />
 
 
 
@@ -79,17 +79,18 @@
 
 
 
-<meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta name="description" content="我们在 Java 中经常会碰到如何把 InputStream 转换成 String 的情形，比如从文件或网络得到一个 InputStream，需要转换成字符串输出或赋给别的变量。 未真正关注这个问题之前我常用的办法就是按字节一次次读到缓冲区，或是建立 BufferedReader 逐行读取。其实大可不必费此周折，我们可以用 Apache commons IOUtils，或者是 JDK 1.5 后的">
+<meta name="keywords" content="javaIO">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="https://www.shengfq.github.io/2018/05/24/hello-world/index.html">
+<meta property="og:title" content="javaIO(三)-InputStream与String的转换">
+<meta property="og:url" content="https://www.shengfq.github.io/2019/08/21/IO基础(三)-InputStream转String/index.html">
 <meta property="og:site_name" content="shengfq&#39;s blog">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta property="og:description" content="我们在 Java 中经常会碰到如何把 InputStream 转换成 String 的情形，比如从文件或网络得到一个 InputStream，需要转换成字符串输出或赋给别的变量。 未真正关注这个问题之前我常用的办法就是按字节一次次读到缓冲区，或是建立 BufferedReader 逐行读取。其实大可不必费此周折，我们可以用 Apache commons IOUtils，或者是 JDK 1.5 后的">
 <meta property="og:locale" content="zn-han">
-<meta property="og:updated_time" content="2018-05-24T10:25:38.000Z">
+<meta property="og:updated_time" content="2019-08-21T02:06:34.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hello World">
-<meta name="twitter:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta name="twitter:title" content="javaIO(三)-InputStream与String的转换">
+<meta name="twitter:description" content="我们在 Java 中经常会碰到如何把 InputStream 转换成 String 的情形，比如从文件或网络得到一个 InputStream，需要转换成字符串输出或赋给别的变量。 未真正关注这个问题之前我常用的办法就是按字节一次次读到缓冲区，或是建立 BufferedReader 逐行读取。其实大可不必费此周折，我们可以用 Apache commons IOUtils，或者是 JDK 1.5 后的">
 
 
 
@@ -119,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="https://www.shengfq.github.io/2018/05/24/hello-world/"/>
+  <link rel="canonical" href="https://www.shengfq.github.io/2019/08/21/IO基础(三)-InputStream转String/"/>
 
 
 
 
 
-  <title>Hello World | shengfq's blog</title>
+  <title>javaIO(三)-InputStream与String的转换 | shengfq's blog</title>
   
 
 
@@ -232,7 +233,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2018/05/24/hello-world/">
+    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2019/08/21/IO基础(三)-InputStream转String/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="盛富强">
@@ -249,7 +250,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Hello World</h1>
+          <h1 class="post-title" itemprop="name headline">javaIO(三)-InputStream与String的转换</h1>
         
 
         <div class="post-meta">
@@ -261,8 +262,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-24T18:25:38+08:00">
-                2018-05-24
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-08-21T00:00:00+08:00">
+                2019-08-21
               </time>
             
 
@@ -299,15 +300,209 @@
       
 
       
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+        <p>我们在 Java 中经常会碰到如何把 InputStream 转换成 String 的情形，比如从文件或网络得到一个 InputStream，需要转换成字符串输出或赋给别的变量。</p>
+<p>未真正关注这个问题之前我常用的办法就是按字节一次次读到缓冲区，或是建立 BufferedReader 逐行读取。其实大可不必费此周折，我们可以用 Apache commons IOUtils，或者是 JDK 1.5 后的 Scanner，还可用 Google  Guava 库的 CharStreams。到了 JDK7，若要从文件中直接得到字符串还能用 java.nio.file.Files#readAllLines 和 java.nio.file.Files#readAllBytes 方法。</p>
+<p>下面看各个例子，为能够实际用运，例子写在 main 方法里，并从文件获得一个 InputStream，代码中把可能要捕获的异常抛出来。再就是注意处理输入输出流时有涉及到字符集，字符集乱了就乱码了，默认字符集是 System.getProperty(“file.encoding”)，通常我们都用 UTF-8，异常 UnsupportedEncodingException 继承自 IOException。</p>
+<p>下面的 6 个方法中应该有一个你能看得上的吧，用 Groovy，Scala 的除外，若未找到一个遂意的，告诉我，你有好办法更应该告诉我。</p>
+<ol>
+<li>使用 JDK 5 的 Scanner</li>
+</ol>
+<pre>
+package cc.unmi.test;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.util.Scanner;
+
+/**
+ * 
+ * @author Unmi
+ * @Creation date: 2013-02-01
+ */
+public class Test {
+
+    /**
+     * @param args
+     * @throws FileNotFoundException 
+     */
+    public static void main(String[] args) throws FileNotFoundException {
+        InputStream inputStream = new FileInputStream("d:/sample.txt");
+        Scanner scanner = new Scanner(inputStream, "UTF-8");
+        String text = scanner.useDelimiter("\\A").next();
+        System.out.println(text);
+        scanner.close();
+    }
+}
+</pre>
+2. JDK1.4 及之前的 BufferedReader 法
+
+<pre>
+package cc.unmi.test;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+/**
+ * 
+ * @author Unmi
+ * @Creation date: 2013-02-01
+ */
+public class Test {
+
+    /**
+     * @param args
+     * @throws IOException 
+     */
+    public static void main(String[] args) throws IOException {
+        InputStream inputStream = new FileInputStream("d:/sample.txt");
+        StringBuilder stringBuilder = new StringBuilder();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        boolean firstLine = true;
+        String line = null; ;
+        while((line = bufferedReader.readLine()) != null){
+            if(!firstLine){
+                stringBuilder.append(System.getProperty("line.separator"));
+            }else{
+                firstLine = false;
+            }
+            stringBuilder.append(line);
+        }
+        System.out.println(stringBuilder.toString());
+    }
+}
+</pre>
+中间那些判断是不是第一行来决定是否加换行符是些杂音。
+<br>
+
+3. JDK1.4 及之前的 readBytes 法
+<pre>
+package cc.unmi.test;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+/**
+ * 
+ * @author Unmi
+ * @Creation date: 2013-02-01
+ */
+public class Test {
+
+    /**
+     * @throws IOException 
+     */
+    public static void main(String[] args) throws IOException {
+        InputStream inputStream = new FileInputStream("d:/sample.txt");
+
+        byte[] buffer = new byte[2048];
+        int readBytes = 0;
+        StringBuilder stringBuilder = new StringBuilder();
+        while((readBytes = inputStream.read(buffer)) > 0){
+            stringBuilder.append(new String(buffer, 0, readBytes));
+        }
+
+        System.out.println(stringBuilder.toString());
+    }
+}
+
+</pre>
+缓冲区的大小自己根据实际来调，比 BufferedReader 还简洁些，不需管换行符的事情。<br>
+
+4. Apache commons IOUtils.toString 法
+
+<pre>
+package cc.unmi.test;
+
+import java.io.*;
+
+import org.apache.commons.io.IOUtils;
+
+/**
+ * 
+ * @author Unmi
+ * @Creation date: 2013-02-01
+ */
+public class Test {
+
+    /**
+     * @throws IOException 
+     */
+    public static void main(String[] args) throws IOException {
+        InputStream inputStream = new FileInputStream("d:/sample.txt");
+        String text = IOUtils.toString(inputStream);
+        System.out.println(text);
+    }
+}
+</pre>
+第三方库就是第三方库，人家充分考虑到了你的感受，你对 JDK 库的抱怨，多简洁，一行搞定。IOUtils 还能把内容拷入其他的 Writer 中，如 
+<pre>
+IOUtils.copy(inputStream, new StringWriter())。
+</pre>
+<br>
+
+5. Google guava 的  CharStreams 方法
+
+<pre>
+package cc.unmi.test;
+
+import java.io.*;
+
+import com.google.common.io.CharStreams;
+
+/**
+ * 
+ * @author Unmi
+ * @Creation date: 2013-02-01
+ */
+public class Test {
+
+    /**
+     * @throws IOException 
+     */
+    public static void main(String[] args) throws IOException {
+        InputStream inputStream = new FileInputStream("d:/sample.txt");
+        String text = CharStreams.toString(new InputStreamReader(inputStream, "UTF-8"));
+        System.out.println(text);
+    }
+}
+</pre>
+
+<p>CharSteams 不是直接作用在 InputSteam 上的，还要靠 InputStreamReader 拱个桥。<br><br></p>
+<ol start="6">
+<li>JDK 7 的 NIO readAllBytes</li>
+</ol>
+<pre>
+
+package cc.unmi.test;
+
+import java.io.IOException;
+import java.nio.file.*;
+
+/**
+ * 
+ * @author Unmi
+ * @Creation date: 2013-02-01
+ */
+
+public class Test {
+
+    /**
+     * @throws IOException 
+     */
+    public static void main(String[] args) throws IOException {
+        byte[] bytes = Files.readAllBytes(Paths.get("d:/sample.txt"));
+        String text = new String(bytes);
+        System.out.println(text);
+    }
+}
+</pre>
+
+<h2 id=""><a href="#" class="headerlink" title=""></a><span></span></h2><p>这让我们相信 JDK  一直还有人在管，虽然不可能象动态语言的方法那么快捷，上面的  readAllBytes 在处理大文件时肯定会很被动的。而 Files.readAllLines 会把文件的内容读入一个 List<string> 对象中，往内存不断放东西就得掂量下内存会不会被爆。在 java.nio.file.* 还有很多新事物可供发掘。<br></string></p>
 
       
     </div>
@@ -323,6 +518,12 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/javaIO/" rel="tag"># javaIO</a>
+          
+        </div>
+      
 
       
       
@@ -332,8 +533,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/05/14/异常的层级/" rel="next" title="Exception Hierarchies">
-                <i class="fa fa-chevron-left"></i> Exception Hierarchies
+              <a href="/2019/08/21/(Reactor)异步非阻塞多路IO复用模型/" rel="next" title="(Reactor)异步非阻塞多路IO复用模型">
+                <i class="fa fa-chevron-left"></i> (Reactor)异步非阻塞多路IO复用模型
               </a>
             
           </div>
@@ -341,10 +542,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/05/24/aboutme/" rel="prev" title="aboutme">
-                aboutme <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -477,7 +674,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start"><span class="nav-number">1.</span> <span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-new-post"><span class="nav-number">1.1.</span> <span class="nav-text">Create a new post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Run-server"><span class="nav-number">1.2.</span> <span class="nav-text">Run server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate-static-files"><span class="nav-number">1.3.</span> <span class="nav-text">Generate static files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploy-to-remote-sites"><span class="nav-number">1.4.</span> <span class="nav-text">Deploy to remote sites</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#"><span class="nav-number">1.</span> <span class="nav-text"></span></a></li></ol></div>
             
 
           </div>

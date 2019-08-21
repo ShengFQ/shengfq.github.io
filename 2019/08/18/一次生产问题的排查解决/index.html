@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="1、业务日志相关   如果系统出现异常或者业务有异常，首先想到的都是查看业务日志 查看日志工具： less 或者moregreptail -f filename 查看实时的最新内容ps:切忌vim直接打开大日志文件，因为会直接加载到内存的2、数据库相关java应用很多瓶颈在数据库，一条sql没写好导致慢查询，可能就会带来应用带来致命危害。如果出现Could not get JDBC Connect">
+<meta name="description" content="导读java线上问题一直是个老大难的问题,紧急,信息量少,故障种类多,不易排查.那么在第一次遇到线上问题的时候我们可能会没有办法,但是随着解决问题的次数增多,对于很多线上问题,就会有了现象-分析-判定-解决这样的思路.开发人员在面对这样的问题时,一则是要见得多,从别人的博客中去分析提炼为什么会出现这样的,而不仅仅只满足答案. 二则是要能举一反三,理解了病症,病灶,病因,才能药到病除.  病症病灶诊">
 <meta name="keywords" content="jvm">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JAVA线上问题的解决思路">
 <meta property="og:url" content="https://www.shengfq.github.io/2019/08/18/一次生产问题的排查解决/index.html">
 <meta property="og:site_name" content="shengfq&#39;s blog">
-<meta property="og:description" content="1、业务日志相关   如果系统出现异常或者业务有异常，首先想到的都是查看业务日志 查看日志工具： less 或者moregreptail -f filename 查看实时的最新内容ps:切忌vim直接打开大日志文件，因为会直接加载到内存的2、数据库相关java应用很多瓶颈在数据库，一条sql没写好导致慢查询，可能就会带来应用带来致命危害。如果出现Could not get JDBC Connect">
+<meta property="og:description" content="导读java线上问题一直是个老大难的问题,紧急,信息量少,故障种类多,不易排查.那么在第一次遇到线上问题的时候我们可能会没有办法,但是随着解决问题的次数增多,对于很多线上问题,就会有了现象-分析-判定-解决这样的思路.开发人员在面对这样的问题时,一则是要见得多,从别人的博客中去分析提炼为什么会出现这样的,而不仅仅只满足答案. 二则是要能举一反三,理解了病症,病灶,病因,才能药到病除.  病症病灶诊">
 <meta property="og:locale" content="zn-han">
-<meta property="og:updated_time" content="2019-08-18T10:21:28.000Z">
+<meta property="og:updated_time" content="2019-08-21T05:36:25.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JAVA线上问题的解决思路">
-<meta name="twitter:description" content="1、业务日志相关   如果系统出现异常或者业务有异常，首先想到的都是查看业务日志 查看日志工具： less 或者moregreptail -f filename 查看实时的最新内容ps:切忌vim直接打开大日志文件，因为会直接加载到内存的2、数据库相关java应用很多瓶颈在数据库，一条sql没写好导致慢查询，可能就会带来应用带来致命危害。如果出现Could not get JDBC Connect">
+<meta name="twitter:description" content="导读java线上问题一直是个老大难的问题,紧急,信息量少,故障种类多,不易排查.那么在第一次遇到线上问题的时候我们可能会没有办法,但是随着解决问题的次数增多,对于很多线上问题,就会有了现象-分析-判定-解决这样的思路.开发人员在面对这样的问题时,一则是要见得多,从别人的博客中去分析提炼为什么会出现这样的,而不仅仅只满足答案. 二则是要能举一反三,理解了病症,病灶,病因,才能药到病除.  病症病灶诊">
 
 
 
@@ -300,31 +300,44 @@
       
 
       
-        <h5>1、业务日志相关 </h5>
+        <p><b>导读</b><br>java线上问题一直是个老大难的问题,紧急,信息量少,故障种类多,不易排查.那么在第一次遇到线上问题的时候我们可能会没有办法,但是随着解决问题的次数增多,对于很多线上问题,就会有了现象-分析-判定-解决这样的思路.开发人员在面对这样的问题时,一则是要见得多,从别人的博客中去分析提炼为什么会出现这样的,而不仅仅只满足答案. 二则是要能举一反三,<br>理解了病症,病灶,病因,才能药到病除.</p>
+<hr>
+<ul><br><li>病症</li><br><li>病灶</li><br><li>诊断</li><br><li>分析</li><br><li>对症下药</li><br></ul>
 
-<p>如果系统出现异常或者业务有异常，首先想到的都是查看业务日志</p>
+<hr>
+<p></p><p>病症</p><br>典型的性能问题如页面响应慢、接口超时，服务器负载高、并发数低，数据库频繁死锁等。<p></p>
+<p></p><p>病灶</p><br>Java 应用性能的瓶颈点非常多，比如磁盘、内存、网络 I/O 等系统因素，Java 应用代码，JVM GC，数据库，缓存等。<br>Java 性能优化分为 4 个层级：应用层、数据库层、框架层、JVM 层<p></p>
+<p></p><p>诊断</p><br><b>OS层面的诊断</b><p></p><br>OS 的诊断主要关注的是 CPU、Memory、I/O 三个方面。<br><br>对于 CPU 主要关注平均负载（Load Average），CPU 使用率，上下文切换次数（Context Switch）。<br><br>通过 top 命令可以查看系统平均负载和 CPU 使用率<br><br>通过 vmstat 命令可以查看 CPU 的上下文切换次数<br><p></p>
+<p>Memory<br><br>从操作系统角度，内存关注应用进程是否足够，可以使用 free –m 命令查看内存的使用情况<br></p>
+<p>IO<br><br>通过 iostat 可以查看磁盘的读写情况，通过 CPU 的 I/O wait 可以看出磁盘 I/O 是否正常。<br></p>
+<p><b>JVM层面的诊断</b><br><br>jstack,JProfiler, jstat, jmap,MAT,</p>
+<p></p><p>对症下药</p><br>GC 调优目标基本有三个思路：降低 GC 频率，可以通过增大堆空间，减少不必要对象生成；降低 GC 暂停时间，可以通过减少堆空间，使用 CMS GC 算法实现；避免 Full GC，调整 CMS 触发比例，避免 Promotion Failure 和 Concurrent mode failure（老年代分配更多空间，增加 GC 线程数加快回收速度），减少大对象生成等。<p></p>
+<p><b>业务逻辑层面的诊断</b></p>
+<p>并发业务,不要使用静态共享全局集合来操作Hashmap是线程不安全的,多线程put操作会导致存储的链表出现死循环</p>
+<p></p><h5>1、业务日志相关 </h5><br>如果系统出现异常或者业务有异常，首先想到的都是查看业务日志<p></p>
 <p></p><h4>查看日志工具：<p></p>
-<h6>less 或者more<br><h6>grep<br><h6>tail -f filename 查看实时的最新内容<br><h6>ps:切忌vim直接打开大日志文件，因为会直接加载到内存的<br><br><h5>2、数据库相关</h5><br>java应用很多瓶颈在数据库，一条sql没写好导致慢查询，可能就会带来应用带来致命危害。<br>如果出现Could not get JDBC Connection 、接口响应慢、线程打满等，<br>需要登录线上库，查看数据库连接情况：show processh6st，<br>查看当前数据库的连接情况，确实由于慢查询造成，需要手动kill<br><br><h5>3、JVM相关</h5><br>java虚拟机相关的问题一般多是以下几种问题：gc时间过长、OOM、死锁、线程block、线程数暴涨等问题。一般通过以下几个工具都能定位出问题。<br><br><h6>jps命令 </h6><br>作用<br>是显示当前用户,当前系统的java进程情况，及其id号<br>常用命令<br>-m/-l/-v 查看运行参数<br><br><h6>jstat命令 </h6><br>显示进程中的类装载、内存、垃圾收集、JIT编译等运行数据。<br>常用指令<br>jstat -gc 3331 250 20 ：查询进程2764的垃圾收集情况，每250毫秒查询一次，一共查询20次。<br>jstat -gccause：额外输出上次GC原因<br>jstat -calss：件事类装载、类卸载、总空间以及所消耗的时间<br><br><h6>jstack命令</h6><br>功能<br>生成当前时刻的线程快照。<br><br>常用指令<br>jstack 3331：查看线程情况<br><br>jstack -F 3331：正常输出不被响应时，使用该指令<br><br>jstack -l 3331：除堆栈外，显示关于锁的附件信息<br><br><h6>jmap命令</h6><br>功能<br>生成堆转储快照（heapdump）<br><br>常用指令<br>jmap -heap 3331：查看java 堆（heap）使用情况<br><br>jmap -histo 3331：查看堆内存(histogram)中的对象数量及大小<br><br>jmap -histo:h6ve 3331：JVM会先触发gc，然后再统计信息<br><br>jmap -dump:format=b,file=heapDump 3331：将内存使用的详细情况输出到文件，之后一般使用其他工具进行分析。<br><br><h6>jhat命令 略</h6>
-
-<h6>3.1 OOM问题或者频繁GC问题</h6><br>发生OOM问题一般服务都会crash，业务日志会有OutOfMemoryError。OOM一般都是出现了内存泄露，需要查看OOM时候的jvm堆的快照，如果配置了-XX:+HeapDumpOnOutOfMemoryError, 在发生OOM的时候会在-XX:HeapDumpPath生成堆的dump文件，结合MAT，可以对dump文件进行分析，查找出发生OOM的原因. 关于MAT使用不详述了，google上一堆（<a href="http://inter12.iteye.com/blog/1407492）。" target="_blank" rel="noopener">http://inter12.iteye.com/blog/1407492）。</a><br><br>ps.<br>1、服务器的内存一般较大，所以要保证服务器的磁盘空间大于内存大小<br>2、另外手动dump堆快照，可以使用命令jmap -dump:format=b,file=file_name pid<br><br><h6>3.2 死锁</h6>
-
-<p>死锁原因是两个或者多个线程相互等待资源，现象一般是出现线程hung住，更严重会出现线程数暴涨，系统出现api ah6ve报警等。</p>
-<p>查看死锁最好的方法就是分析当时的线程栈。<br>具体case 可以参考jstack命令里面的例子<br>用到的命令：<br>jps -v<br>jstack -l pid</p>
-<h6>3.3 线程block、线程数暴涨 </h6>
-
-<h6>jstack -l pid |wc -l</h6><br><h6>jstack -l pid |grep “BLOCKED”|wc -l</h6><br><h6>jstack -l pid |grep “Waiting on condition”|wc -l</h6>
-
-<p>线程block问题一般是等待io、等待网络、等待监视器锁等造成，可能会导致请求超时、造成造成线程数暴涨导致系统502等。<br><br>如果出现这种问题，主要是关注jstack 出来的BLOCKED、Waiting on condition、Waiting on monitor entry等状态信息。<br><br>如果大量线程在“waiting for monitor entry”：<br>可能是一个全局锁阻塞住了大量线程。<br><br>如果短时间内打印的 thread dump 文件反映，随着时间流逝，waiting for monitor entry 的线程越来越多，没有减少的趋势，可能意味着某些线程在临界区里呆的时间太长了，以至于越来越多新线程迟迟无法进入临界区。<br><br>如果大量线程在“waiting on condition”：<br>可能是它们又跑去获取第三方资源，迟迟获取不到Response，导致大量线程进入等待状态。<br>所以如果你发现有大量的线程都处在 Wait on condition，从线程堆栈看，正等待网络读写，这可能是一个网络瓶颈的征兆，因为网络阻塞导致线程无法执行。<br><br></p>
-<h6>3.4 gc时间过长</h6><br>todo<br>先贴一个文章占坑：&lt;a href= <a href="http://www.oracle.com/technetwork/cn/articles/java/g1gc-1984535-zhs.html&gt;传送门" target="_blank" rel="noopener">http://www.oracle.com/technetwork/cn/articles/java/g1gc-1984535-zhs.html&gt;传送门</a><br><br><h5>4、服务器问题</h5><br><h6>4.1 CPU</h6><br>top命令(参考<a href="https://h6nux.cn/article-2352-1.html" target="_blank" rel="noopener">https://h6nux.cn/article-2352-1.html</a>)<br>主要关注cpu的load，以及比较耗cpu的进程<br>由于现在服务器都是虚拟机，还要关注st（st 的全称是 Steal Time ，是分配给运行在其它虚拟机上的任务的实际 CPU 时间）<br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">常用交互命令：</span><br><span class="line">h 帮助，十分有用</span><br><span class="line">R: 反向排序</span><br><span class="line">x：将排序字段高亮显示（纵列）</span><br><span class="line">y 将运行进程高亮显示（横行）</span><br><span class="line">shift+&gt; 或shift+&lt;:切换排序字段</span><br><span class="line"> d或s: 设置显示的刷新间隔</span><br><span class="line">f: 字段管理 设置显示的字段</span><br><span class="line">k:kill进程</span><br></pre></td></tr></table></figure><br><br><h6>4.2 内存</h6><br>free命令：<br>free -m -c10 -s1<br>-m：以MB为单位显示，其他的有-k -g -b<br>-s: 间隔多少秒持续观察内存使用状况<br>-c:观察多少次<br>vmstat命令：(<a href="http://man.h6nuxde.net/vmstat" target="_blank" rel="noopener">http://man.h6nuxde.net/vmstat</a>)<br>vmstat 1 10<br>1表示每隔1s输出一次,10 表示输出10次<br>两个参数需要关注<br>r: 运行队列中进程数量，这个值也可以判断是否需要增加CPU。（长期大于1）<br>b: 等待IO的进程数量。<br><br><h6>4.3 IO</h6>
-
-<p>iostat 命令（<a href="http://www.orczhou.com/index.php/2010/03/iostat-detail/）" target="_blank" rel="noopener">http://www.orczhou.com/index.php/2010/03/iostat-detail/）</a><br>iostat -m 1 10<br>-m：某些使用block为单位的列强制使用MB为单位<br>1 10：数据显示每隔1秒刷新一次，共显示10次</p>
+<p></p><h6>less 或者more<p></p>
+<p></p><h6>grep<p></p>
+<p></p><h6>tail -f filename 查看实时的最新内容<p></p>
+<p></p><h6>ps:切忌vim直接打开大日志文件，因为会直接加载到内存的<p></p>
+<p></p><h5>2、数据库相关</h5><br>java应用很多瓶颈在数据库，一条sql没写好导致慢查询，可能就会带来应用带来致命危害。<br>如果出现Could not get JDBC Connection 、接口响应慢、线程打满等，<br>需要登录线上库，查看数据库连接情况：show processh6st，<br>查看当前数据库的连接情况，确实由于慢查询造成，需要手动kill<p></p>
+<p></p><h5>3、JVM相关</h5><br>java虚拟机相关的问题一般多是以下几种问题：gc时间过长、OOM、死锁、线程block、线程数暴涨等问题。一般通过以下几个工具都能定位出问题。<p></p>
+<p></p><h6>jps命令 </h6><br>作用<br>是显示当前用户,当前系统的java进程情况，及其id号<br>常用命令<br>-m/-l/-v 查看运行参数<p></p>
+<p></p><h6>jstat命令 </h6><br>显示进程中的类装载、内存、垃圾收集、JIT编译等运行数据。<br>常用指令<br>jstat -gc 3331 250 20 ：查询进程2764的垃圾收集情况，每250毫秒查询一次，一共查询20次。<br>jstat -gccause：额外输出上次GC原因<br>jstat -calss：件事类装载、类卸载、总空间以及所消耗的时间<p></p>
+<p></p><h6>jstack命令</h6><br>功能<br>生成当前时刻的线程快照。<br>常用指令<br>jstack 3331：查看线程情况<br>jstack -F 3331：正常输出不被响应时，使用该指令<br>jstack -l 3331：除堆栈外，显示关于锁的附件信息<p></p>
+<p></p><h6>jmap命令</h6><br>功能<br>生成堆转储快照（heapdump）<br>常用指令<br>jmap -heap 3331：查看java 堆（heap）使用情况<br>jmap -histo 3331：查看堆内存(histogram)中的对象数量及大小<br>jmap -histo:h6ve 3331：JVM会先触发gc，然后再统计信息<br>jmap -dump:format=b,file=heapDump 3331：将内存使用的详细情况输出到文件，之后一般使用其他工具进行分析。<p></p>
+<p></p><h6>jhat命令 略</h6><p></p>
+<p></p><h6>3.1 OOM问题或者频繁GC问题</h6><br>发生OOM问题一般服务都会crash，业务日志会有OutOfMemoryError。OOM一般都是出现了内存泄露，需要查看OOM时候的jvm堆的快照，如果配置了-XX:+HeapDumpOnOutOfMemoryError, 在发生OOM的时候会在-XX:HeapDumpPath生成堆的dump文件，结合MAT，可以对dump文件进行分析，查找出发生OOM的原因. 关于MAT使用不详述了，google上一堆（<a href="http://inter12.iteye.com/blog/1407492）。" target="_blank" rel="noopener">http://inter12.iteye.com/blog/1407492）。</a><br>ps.<br>1、服务器的内存一般较大，所以要保证服务器的磁盘空间大于内存大小<br>2、另外手动dump堆快照，可以使用命令jmap -dump:format=b,file=file_name pid<p></p>
+<p></p><h6>3.2 死锁</h6><br>死锁原因是两个或者多个线程相互等待资源，现象一般是出现线程hung住，更严重会出现线程数暴涨，系统出现api ah6ve报警等。<br>查看死锁最好的方法就是分析当时的线程栈。<br>具体case 可以参考jstack命令里面的例子<br>用到的命令：<br>jps -v<br>jstack -l pid<p></p>
+<p></p><h6>3.3 线程block、线程数暴涨 </h6><br>jstack -l pid |wc -l<br>jstack -l pid |grep “BLOCKED”|wc -l<br>jstack -l pid |grep “Waiting on condition”|wc -l<p></p>
+<p>线程block问题一般是等待io、等待网络、等待监视器锁等造成，可能会导致请求超时、造成造成线程数暴涨导致系统502等。<br><br>如果出现这种问题，主要是关注jstack 出来的BLOCKED、Waiting on condition、Waiting on monitor entry等状态信息。<br><br>如果大量线程在“waiting for monitor entry”：<br>可能是一个全局锁阻塞住了大量线程。<br><br>如果短时间内打印的 thread dump 文件反映，随着时间流逝，waiting for monitor entry 的线程越来越多，没有减少的趋势，可能意味着某些线程在临界区里呆的时间太长了，以至于越来越多新线程迟迟无法进入临界区。<br><br>如果大量线程在“waiting on condition”：<br>可能是它们又跑去获取第三方资源，迟迟获取不到Response，导致大量线程进入等待状态。<br>所以如果你发现有大量的线程都处在 Wait on condition，从线程堆栈看，正等待网络读写，这可能是一个网络瓶颈的征兆，因为网络阻塞导致线程无法执行。</p>
+<p></p><h6>3.4 gc时间过长</h6><br>先贴一个文章占坑：&lt;a href= <a href="http://www.oracle.com/technetwork/cn/articles/java/g1gc-1984535-zhs.html&gt;传送门" target="_blank" rel="noopener">http://www.oracle.com/technetwork/cn/articles/java/g1gc-1984535-zhs.html&gt;传送门</a><p></p>
+<p><b>4、服务器问题</b></p>
+<p></p><h6>4.1 CPU</h6><br>top命令(参考<a href="https://h6nux.cn/article-2352-1.html" target="_blank" rel="noopener">https://h6nux.cn/article-2352-1.html</a>)<br>主要关注cpu的load，以及比较耗cpu的进程<br>由于现在服务器都是虚拟机，还要关注st（st 的全称是 Steal Time ，是分配给运行在其它虚拟机上的任务的实际 CPU 时间）<br>常用交互命令：<br>h 帮助，十分有用<br>R: 反向排序<br>x：将排序字段高亮显示（纵列）<br>y 将运行进程高亮显示（横行）<br>shift+&gt; 或shift+&lt;:切换排序字段<br>d或s: 设置显示的刷新间隔<br>f: 字段管理 设置显示的字段<br>k:kill进程<p></p>
+<p></p><h6>4.2 内存</h6><br>free命令：<br>free -m -c10 -s1<br>-m：以MB为单位显示，其他的有-k -g -b<br>-s: 间隔多少秒持续观察内存使用状况<br>-c:观察多少次<br>vmstat命令：(<a href="http://man.h6nuxde.net/vmstat" target="_blank" rel="noopener">http://man.h6nuxde.net/vmstat</a>)<br>vmstat 1 10<br>1表示每隔1s输出一次,10 表示输出10次<br>两个参数需要关注<br>r: 运行队列中进程数量，这个值也可以判断是否需要增加CPU。（长期大于1）<br>b: 等待IO的进程数量。<p></p>
+<p></p><h6>4.3 IO</h6><br>iostat 命令（<a href="http://www.orczhou.com/index.php/2010/03/iostat-detail/）" target="_blank" rel="noopener">http://www.orczhou.com/index.php/2010/03/iostat-detail/）</a><br>iostat -m 1 10<br>-m：某些使用block为单位的列强制使用MB为单位<br>1 10：数据显示每隔1秒刷新一次，共显示10次<p></p>
 <p></p><h6>4.4 网络</h6><br>netstat 命令（<a href="http://www.cnblogs.com/ggjucheng/archive/2012/01/08/2316661.html）" target="_blank" rel="noopener">http://www.cnblogs.com/ggjucheng/archive/2012/01/08/2316661.html）</a><br>netstat -antp <p></p>
-<p>-a (all)显示所有选项，默认不显示h6STEN相关</p>
-<p>-t (tcp)仅显示tcp相关选项</p>
-<p>-u (udp)仅显示udp相关选项</p>
-<p>-n 拒绝显示别名，能显示数字的全部转化成数字。</p>
-<p>-l 仅列出有在 h6sten (监听) 的服服务状态</p>
-<p>-p 显示建立相关链接的程序名</p>
+<p>-a (all)显示所有选项，默认不显示h6STEN相关<br>-t (tcp)仅显示tcp相关选项<br>-u (udp)仅显示udp相关选项<br>-n 拒绝显示别名，能显示数字的全部转化成数字。<br>-l 仅列出有在 h6sten (监听) 的服服务状态<br>-p 显示建立相关链接的程序名</p>
 <p>显示tcp各个状态数量：<br> netstat -ant |awk ‘{print $6}’|sort|uniq -c</p>
 <p>查看连接某服务端口最多的的IP地址<br>netstat -nat | grep “10.32.45.35:8924” |awk ‘{print $5}’|awk -F: ‘{print $4}’|sort|uniq -c|sort -nr|head -10</p>
 </h6></h6></h6></h6></h4>
@@ -357,8 +370,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/08/18/集合框架详解一/" rel="next" title="集合框架总结一">
-                <i class="fa fa-chevron-left"></i> 集合框架总结一
+              <a href="/2019/03/20/JUC-线程池原理/" rel="next" title="JUC系列-线程池原理">
+                <i class="fa fa-chevron-left"></i> JUC系列-线程池原理
               </a>
             
           </div>
@@ -366,6 +379,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/08/18/集合框架详解一/" rel="prev" title="集合框架总结一">
+                集合框架总结一 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -442,7 +459,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">18</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -455,7 +472,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
@@ -499,122 +516,121 @@
 
             
               <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">1、业务日志相关 </span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#undefined"><span class="nav-number"></span> <span class="nav-text">查看日志工具：
-less 或者moregreptail -f filename 查看实时的最新内容ps:切忌vim直接打开大日志文件，因为会直接加载到内存的2、数据库相关java应用很多瓶颈在数据库，一条sql没写好导致慢查询，可能就会带来应用带来致命危害。如果出现Could not get JDBC Connection 、接口响应慢、线程打满等，需要登录线上库，查看数据库连接情况：show processh6st，查看当前数据库的连接情况，确实由于慢查询造成，需要手动kill3、JVM相关java虚拟机相关的问题一般多是以下几种问题：gc时间过长、OOM、死锁、线程block、线程数暴涨等问题。一般通过以下几个工具都能定位出问题。jps命令 作用是显示当前用户,当前系统的java进程情况，及其id号常用命令-m/-l/-v 查看运行参数jstat命令 显示进程中的类装载、内存、垃圾收集、JIT编译等运行数据。常用指令jstat -gc 3331 250 20 ：查询进程2764的垃圾收集情况，每250毫秒查询一次，一共查询20次。jstat -gccause：额外输出上次GC原因jstat -calss：件事类装载、类卸载、总空间以及所消耗的时间jstack命令功能生成当前时刻的线程快照。常用指令jstack 3331：查看线程情况jstack -F 3331：正常输出不被响应时，使用该指令jstack -l 3331：除堆栈外，显示关于锁的附件信息jmap命令功能生成堆转储快照（heapdump）常用指令jmap -heap 3331：查看java 堆（heap）使用情况jmap -histo 3331：查看堆内存(histogram)中的对象数量及大小jmap -histo:h6ve 3331：JVM会先触发gc，然后再统计信息jmap -dump:format=b,file=heapDump 3331：将内存使用的详细情况输出到文件，之后一般使用其他工具进行分析。jhat命令 略
-
-3.1 OOM问题或者频繁GC问题发生OOM问题一般服务都会crash，业务日志会有OutOfMemoryError。OOM一般都是出现了内存泄露，需要查看OOM时候的jvm堆的快照，如果配置了-XX:+HeapDumpOnOutOfMemoryError, 在发生OOM的时候会在-XX:HeapDumpPath生成堆的dump文件，结合MAT，可以对dump文件进行分析，查找出发生OOM的原因. 关于MAT使用不详述了，google上一堆（http://inter12.iteye.com/blog/1407492）。ps.1、服务器的内存一般较大，所以要保证服务器的磁盘空间大于内存大小2、另外手动dump堆快照，可以使用命令jmap -dump:format=b,file=file_name pid3.2 死锁
-
-死锁原因是两个或者多个线程相互等待资源，现象一般是出现线程hung住，更严重会出现线程数暴涨，系统出现api ah6ve报警等。
-查看死锁最好的方法就是分析当时的线程栈。具体case 可以参考jstack命令里面的例子用到的命令：jps -vjstack -l pid
-3.3 线程block、线程数暴涨 
-
-jstack -l pid |wc -ljstack -l pid |grep “BLOCKED”|wc -ljstack -l pid |grep “Waiting on condition”|wc -l
-
+less 或者more
+grep
+tail -f filename 查看实时的最新内容
+ps:切忌vim直接打开大日志文件，因为会直接加载到内存的
+2、数据库相关java应用很多瓶颈在数据库，一条sql没写好导致慢查询，可能就会带来应用带来致命危害。如果出现Could not get JDBC Connection 、接口响应慢、线程打满等，需要登录线上库，查看数据库连接情况：show processh6st，查看当前数据库的连接情况，确实由于慢查询造成，需要手动kill
+3、JVM相关java虚拟机相关的问题一般多是以下几种问题：gc时间过长、OOM、死锁、线程block、线程数暴涨等问题。一般通过以下几个工具都能定位出问题。
+jps命令 作用是显示当前用户,当前系统的java进程情况，及其id号常用命令-m/-l/-v 查看运行参数
+jstat命令 显示进程中的类装载、内存、垃圾收集、JIT编译等运行数据。常用指令jstat -gc 3331 250 20 ：查询进程2764的垃圾收集情况，每250毫秒查询一次，一共查询20次。jstat -gccause：额外输出上次GC原因jstat -calss：件事类装载、类卸载、总空间以及所消耗的时间
+jstack命令功能生成当前时刻的线程快照。常用指令jstack 3331：查看线程情况jstack -F 3331：正常输出不被响应时，使用该指令jstack -l 3331：除堆栈外，显示关于锁的附件信息
+jmap命令功能生成堆转储快照（heapdump）常用指令jmap -heap 3331：查看java 堆（heap）使用情况jmap -histo 3331：查看堆内存(histogram)中的对象数量及大小jmap -histo:h6ve 3331：JVM会先触发gc，然后再统计信息jmap -dump:format=b,file=heapDump 3331：将内存使用的详细情况输出到文件，之后一般使用其他工具进行分析。
+jhat命令 略
+3.1 OOM问题或者频繁GC问题发生OOM问题一般服务都会crash，业务日志会有OutOfMemoryError。OOM一般都是出现了内存泄露，需要查看OOM时候的jvm堆的快照，如果配置了-XX:+HeapDumpOnOutOfMemoryError, 在发生OOM的时候会在-XX:HeapDumpPath生成堆的dump文件，结合MAT，可以对dump文件进行分析，查找出发生OOM的原因. 关于MAT使用不详述了，google上一堆（http://inter12.iteye.com/blog/1407492）。ps.1、服务器的内存一般较大，所以要保证服务器的磁盘空间大于内存大小2、另外手动dump堆快照，可以使用命令jmap -dump:format=b,file=file_name pid
+3.2 死锁死锁原因是两个或者多个线程相互等待资源，现象一般是出现线程hung住，更严重会出现线程数暴涨，系统出现api ah6ve报警等。查看死锁最好的方法就是分析当时的线程栈。具体case 可以参考jstack命令里面的例子用到的命令：jps -vjstack -l pid
+3.3 线程block、线程数暴涨 jstack -l pid |wc -ljstack -l pid |grep “BLOCKED”|wc -ljstack -l pid |grep “Waiting on condition”|wc -l
 线程block问题一般是等待io、等待网络、等待监视器锁等造成，可能会导致请求超时、造成造成线程数暴涨导致系统502等。如果出现这种问题，主要是关注jstack 出来的BLOCKED、Waiting on condition、Waiting on monitor entry等状态信息。如果大量线程在“waiting for monitor entry”：可能是一个全局锁阻塞住了大量线程。如果短时间内打印的 thread dump 文件反映，随着时间流逝，waiting for monitor entry 的线程越来越多，没有减少的趋势，可能意味着某些线程在临界区里呆的时间太长了，以至于越来越多新线程迟迟无法进入临界区。如果大量线程在“waiting on condition”：可能是它们又跑去获取第三方资源，迟迟获取不到Response，导致大量线程进入等待状态。所以如果你发现有大量的线程都处在 Wait on condition，从线程堆栈看，正等待网络读写，这可能是一个网络瓶颈的征兆，因为网络阻塞导致线程无法执行。
-3.4 gc时间过长todo先贴一个文章占坑：&lt;a href= http://www.oracle.com/technetwork/cn/articles/java/g1gc-1984535-zhs.html&gt;传送门4、服务器问题4.1 CPUtop命令(参考https://h6nux.cn/article-2352-1.html)主要关注cpu的load，以及比较耗cpu的进程由于现在服务器都是虚拟机，还要关注st（st 的全称是 Steal Time ，是分配给运行在其它虚拟机上的任务的实际 CPU 时间）123456789常用交互命令：h 帮助，十分有用R: 反向排序x：将排序字段高亮显示（纵列）y 将运行进程高亮显示（横行）shift+&gt; 或shift+&lt;:切换排序字段 d或s: 设置显示的刷新间隔f: 字段管理 设置显示的字段k:kill进程4.2 内存free命令：free -m -c10 -s1-m：以MB为单位显示，其他的有-k -g -b-s: 间隔多少秒持续观察内存使用状况-c:观察多少次vmstat命令：(http://man.h6nuxde.net/vmstat)vmstat 1 101表示每隔1s输出一次,10 表示输出10次两个参数需要关注r: 运行队列中进程数量，这个值也可以判断是否需要增加CPU。（长期大于1）b: 等待IO的进程数量。4.3 IO
-
-iostat 命令（http://www.orczhou.com/index.php/2010/03/iostat-detail/）iostat -m 1 10-m：某些使用block为单位的列强制使用MB为单位1 10：数据显示每隔1秒刷新一次，共显示10次
+3.4 gc时间过长先贴一个文章占坑：&lt;a href= http://www.oracle.com/technetwork/cn/articles/java/g1gc-1984535-zhs.html&gt;传送门
+4、服务器问题
+4.1 CPUtop命令(参考https://h6nux.cn/article-2352-1.html)主要关注cpu的load，以及比较耗cpu的进程由于现在服务器都是虚拟机，还要关注st（st 的全称是 Steal Time ，是分配给运行在其它虚拟机上的任务的实际 CPU 时间）常用交互命令：h 帮助，十分有用R: 反向排序x：将排序字段高亮显示（纵列）y 将运行进程高亮显示（横行）shift+&gt; 或shift+&lt;:切换排序字段d或s: 设置显示的刷新间隔f: 字段管理 设置显示的字段k:kill进程
+4.2 内存free命令：free -m -c10 -s1-m：以MB为单位显示，其他的有-k -g -b-s: 间隔多少秒持续观察内存使用状况-c:观察多少次vmstat命令：(http://man.h6nuxde.net/vmstat)vmstat 1 101表示每隔1s输出一次,10 表示输出10次两个参数需要关注r: 运行队列中进程数量，这个值也可以判断是否需要增加CPU。（长期大于1）b: 等待IO的进程数量。
+4.3 IOiostat 命令（http://www.orczhou.com/index.php/2010/03/iostat-detail/）iostat -m 1 10-m：某些使用block为单位的列强制使用MB为单位1 10：数据显示每隔1秒刷新一次，共显示10次
 4.4 网络netstat 命令（http://www.cnblogs.com/ggjucheng/archive/2012/01/08/2316661.html）netstat -antp 
--a (all)显示所有选项，默认不显示h6STEN相关
--t (tcp)仅显示tcp相关选项
--u (udp)仅显示udp相关选项
--n 拒绝显示别名，能显示数字的全部转化成数字。
--l 仅列出有在 h6sten (监听) 的服服务状态
--p 显示建立相关链接的程序名
+-a (all)显示所有选项，默认不显示h6STEN相关-t (tcp)仅显示tcp相关选项-u (udp)仅显示udp相关选项-n 拒绝显示别名，能显示数字的全部转化成数字。-l 仅列出有在 h6sten (监听) 的服服务状态-p 显示建立相关链接的程序名
 显示tcp各个状态数量： netstat -ant |awk ‘{print $6}’|sort|uniq -c
 查看连接某服务端口最多的的IP地址netstat -nat | grep “10.32.45.35:8924” |awk ‘{print $5}’|awk -F: ‘{print $4}’|sort|uniq -c|sort -nr|head -10
-</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#undefined"><span class="nav-number">0.1.</span> <span class="nav-text">less 或者moregreptail -f filename 查看实时的最新内容ps:切忌vim直接打开大日志文件，因为会直接加载到内存的2、数据库相关java应用很多瓶颈在数据库，一条sql没写好导致慢查询，可能就会带来应用带来致命危害。如果出现Could not get JDBC Connection 、接口响应慢、线程打满等，需要登录线上库，查看数据库连接情况：show processh6st，查看当前数据库的连接情况，确实由于慢查询造成，需要手动kill3、JVM相关java虚拟机相关的问题一般多是以下几种问题：gc时间过长、OOM、死锁、线程block、线程数暴涨等问题。一般通过以下几个工具都能定位出问题。jps命令 作用是显示当前用户,当前系统的java进程情况，及其id号常用命令-m/-l/-v 查看运行参数jstat命令 显示进程中的类装载、内存、垃圾收集、JIT编译等运行数据。常用指令jstat -gc 3331 250 20 ：查询进程2764的垃圾收集情况，每250毫秒查询一次，一共查询20次。jstat -gccause：额外输出上次GC原因jstat -calss：件事类装载、类卸载、总空间以及所消耗的时间jstack命令功能生成当前时刻的线程快照。常用指令jstack 3331：查看线程情况jstack -F 3331：正常输出不被响应时，使用该指令jstack -l 3331：除堆栈外，显示关于锁的附件信息jmap命令功能生成堆转储快照（heapdump）常用指令jmap -heap 3331：查看java 堆（heap）使用情况jmap -histo 3331：查看堆内存(histogram)中的对象数量及大小jmap -histo:h6ve 3331：JVM会先触发gc，然后再统计信息jmap -dump:format=b,file=heapDump 3331：将内存使用的详细情况输出到文件，之后一般使用其他工具进行分析。jhat命令 略
-
-3.1 OOM问题或者频繁GC问题发生OOM问题一般服务都会crash，业务日志会有OutOfMemoryError。OOM一般都是出现了内存泄露，需要查看OOM时候的jvm堆的快照，如果配置了-XX:+HeapDumpOnOutOfMemoryError, 在发生OOM的时候会在-XX:HeapDumpPath生成堆的dump文件，结合MAT，可以对dump文件进行分析，查找出发生OOM的原因. 关于MAT使用不详述了，google上一堆（http://inter12.iteye.com/blog/1407492）。ps.1、服务器的内存一般较大，所以要保证服务器的磁盘空间大于内存大小2、另外手动dump堆快照，可以使用命令jmap -dump:format=b,file=file_name pid3.2 死锁
-
-死锁原因是两个或者多个线程相互等待资源，现象一般是出现线程hung住，更严重会出现线程数暴涨，系统出现api ah6ve报警等。
-查看死锁最好的方法就是分析当时的线程栈。具体case 可以参考jstack命令里面的例子用到的命令：jps -vjstack -l pid
-3.3 线程block、线程数暴涨 
-
-jstack -l pid |wc -ljstack -l pid |grep “BLOCKED”|wc -ljstack -l pid |grep “Waiting on condition”|wc -l
-
+</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#undefined"><span class="nav-number">0.1.</span> <span class="nav-text">less 或者more
+grep
+tail -f filename 查看实时的最新内容
+ps:切忌vim直接打开大日志文件，因为会直接加载到内存的
+2、数据库相关java应用很多瓶颈在数据库，一条sql没写好导致慢查询，可能就会带来应用带来致命危害。如果出现Could not get JDBC Connection 、接口响应慢、线程打满等，需要登录线上库，查看数据库连接情况：show processh6st，查看当前数据库的连接情况，确实由于慢查询造成，需要手动kill
+3、JVM相关java虚拟机相关的问题一般多是以下几种问题：gc时间过长、OOM、死锁、线程block、线程数暴涨等问题。一般通过以下几个工具都能定位出问题。
+jps命令 作用是显示当前用户,当前系统的java进程情况，及其id号常用命令-m/-l/-v 查看运行参数
+jstat命令 显示进程中的类装载、内存、垃圾收集、JIT编译等运行数据。常用指令jstat -gc 3331 250 20 ：查询进程2764的垃圾收集情况，每250毫秒查询一次，一共查询20次。jstat -gccause：额外输出上次GC原因jstat -calss：件事类装载、类卸载、总空间以及所消耗的时间
+jstack命令功能生成当前时刻的线程快照。常用指令jstack 3331：查看线程情况jstack -F 3331：正常输出不被响应时，使用该指令jstack -l 3331：除堆栈外，显示关于锁的附件信息
+jmap命令功能生成堆转储快照（heapdump）常用指令jmap -heap 3331：查看java 堆（heap）使用情况jmap -histo 3331：查看堆内存(histogram)中的对象数量及大小jmap -histo:h6ve 3331：JVM会先触发gc，然后再统计信息jmap -dump:format=b,file=heapDump 3331：将内存使用的详细情况输出到文件，之后一般使用其他工具进行分析。
+jhat命令 略
+3.1 OOM问题或者频繁GC问题发生OOM问题一般服务都会crash，业务日志会有OutOfMemoryError。OOM一般都是出现了内存泄露，需要查看OOM时候的jvm堆的快照，如果配置了-XX:+HeapDumpOnOutOfMemoryError, 在发生OOM的时候会在-XX:HeapDumpPath生成堆的dump文件，结合MAT，可以对dump文件进行分析，查找出发生OOM的原因. 关于MAT使用不详述了，google上一堆（http://inter12.iteye.com/blog/1407492）。ps.1、服务器的内存一般较大，所以要保证服务器的磁盘空间大于内存大小2、另外手动dump堆快照，可以使用命令jmap -dump:format=b,file=file_name pid
+3.2 死锁死锁原因是两个或者多个线程相互等待资源，现象一般是出现线程hung住，更严重会出现线程数暴涨，系统出现api ah6ve报警等。查看死锁最好的方法就是分析当时的线程栈。具体case 可以参考jstack命令里面的例子用到的命令：jps -vjstack -l pid
+3.3 线程block、线程数暴涨 jstack -l pid |wc -ljstack -l pid |grep “BLOCKED”|wc -ljstack -l pid |grep “Waiting on condition”|wc -l
 线程block问题一般是等待io、等待网络、等待监视器锁等造成，可能会导致请求超时、造成造成线程数暴涨导致系统502等。如果出现这种问题，主要是关注jstack 出来的BLOCKED、Waiting on condition、Waiting on monitor entry等状态信息。如果大量线程在“waiting for monitor entry”：可能是一个全局锁阻塞住了大量线程。如果短时间内打印的 thread dump 文件反映，随着时间流逝，waiting for monitor entry 的线程越来越多，没有减少的趋势，可能意味着某些线程在临界区里呆的时间太长了，以至于越来越多新线程迟迟无法进入临界区。如果大量线程在“waiting on condition”：可能是它们又跑去获取第三方资源，迟迟获取不到Response，导致大量线程进入等待状态。所以如果你发现有大量的线程都处在 Wait on condition，从线程堆栈看，正等待网络读写，这可能是一个网络瓶颈的征兆，因为网络阻塞导致线程无法执行。
-3.4 gc时间过长todo先贴一个文章占坑：&lt;a href= http://www.oracle.com/technetwork/cn/articles/java/g1gc-1984535-zhs.html&gt;传送门4、服务器问题4.1 CPUtop命令(参考https://h6nux.cn/article-2352-1.html)主要关注cpu的load，以及比较耗cpu的进程由于现在服务器都是虚拟机，还要关注st（st 的全称是 Steal Time ，是分配给运行在其它虚拟机上的任务的实际 CPU 时间）123456789常用交互命令：h 帮助，十分有用R: 反向排序x：将排序字段高亮显示（纵列）y 将运行进程高亮显示（横行）shift+&gt; 或shift+&lt;:切换排序字段 d或s: 设置显示的刷新间隔f: 字段管理 设置显示的字段k:kill进程4.2 内存free命令：free -m -c10 -s1-m：以MB为单位显示，其他的有-k -g -b-s: 间隔多少秒持续观察内存使用状况-c:观察多少次vmstat命令：(http://man.h6nuxde.net/vmstat)vmstat 1 101表示每隔1s输出一次,10 表示输出10次两个参数需要关注r: 运行队列中进程数量，这个值也可以判断是否需要增加CPU。（长期大于1）b: 等待IO的进程数量。4.3 IO
-
-iostat 命令（http://www.orczhou.com/index.php/2010/03/iostat-detail/）iostat -m 1 10-m：某些使用block为单位的列强制使用MB为单位1 10：数据显示每隔1秒刷新一次，共显示10次
+3.4 gc时间过长先贴一个文章占坑：&lt;a href= http://www.oracle.com/technetwork/cn/articles/java/g1gc-1984535-zhs.html&gt;传送门
+4、服务器问题
+4.1 CPUtop命令(参考https://h6nux.cn/article-2352-1.html)主要关注cpu的load，以及比较耗cpu的进程由于现在服务器都是虚拟机，还要关注st（st 的全称是 Steal Time ，是分配给运行在其它虚拟机上的任务的实际 CPU 时间）常用交互命令：h 帮助，十分有用R: 反向排序x：将排序字段高亮显示（纵列）y 将运行进程高亮显示（横行）shift+&gt; 或shift+&lt;:切换排序字段d或s: 设置显示的刷新间隔f: 字段管理 设置显示的字段k:kill进程
+4.2 内存free命令：free -m -c10 -s1-m：以MB为单位显示，其他的有-k -g -b-s: 间隔多少秒持续观察内存使用状况-c:观察多少次vmstat命令：(http://man.h6nuxde.net/vmstat)vmstat 1 101表示每隔1s输出一次,10 表示输出10次两个参数需要关注r: 运行队列中进程数量，这个值也可以判断是否需要增加CPU。（长期大于1）b: 等待IO的进程数量。
+4.3 IOiostat 命令（http://www.orczhou.com/index.php/2010/03/iostat-detail/）iostat -m 1 10-m：某些使用block为单位的列强制使用MB为单位1 10：数据显示每隔1秒刷新一次，共显示10次
 4.4 网络netstat 命令（http://www.cnblogs.com/ggjucheng/archive/2012/01/08/2316661.html）netstat -antp 
--a (all)显示所有选项，默认不显示h6STEN相关
--t (tcp)仅显示tcp相关选项
--u (udp)仅显示udp相关选项
--n 拒绝显示别名，能显示数字的全部转化成数字。
--l 仅列出有在 h6sten (监听) 的服服务状态
--p 显示建立相关链接的程序名
+-a (all)显示所有选项，默认不显示h6STEN相关-t (tcp)仅显示tcp相关选项-u (udp)仅显示udp相关选项-n 拒绝显示别名，能显示数字的全部转化成数字。-l 仅列出有在 h6sten (监听) 的服服务状态-p 显示建立相关链接的程序名
 显示tcp各个状态数量： netstat -ant |awk ‘{print $6}’|sort|uniq -c
 查看连接某服务端口最多的的IP地址netstat -nat | grep “10.32.45.35:8924” |awk ‘{print $5}’|awk -F: ‘{print $4}’|sort|uniq -c|sort -nr|head -10
-</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#undefined"><span class="nav-number">0.2.</span> <span class="nav-text">greptail -f filename 查看实时的最新内容ps:切忌vim直接打开大日志文件，因为会直接加载到内存的2、数据库相关java应用很多瓶颈在数据库，一条sql没写好导致慢查询，可能就会带来应用带来致命危害。如果出现Could not get JDBC Connection 、接口响应慢、线程打满等，需要登录线上库，查看数据库连接情况：show processh6st，查看当前数据库的连接情况，确实由于慢查询造成，需要手动kill3、JVM相关java虚拟机相关的问题一般多是以下几种问题：gc时间过长、OOM、死锁、线程block、线程数暴涨等问题。一般通过以下几个工具都能定位出问题。jps命令 作用是显示当前用户,当前系统的java进程情况，及其id号常用命令-m/-l/-v 查看运行参数jstat命令 显示进程中的类装载、内存、垃圾收集、JIT编译等运行数据。常用指令jstat -gc 3331 250 20 ：查询进程2764的垃圾收集情况，每250毫秒查询一次，一共查询20次。jstat -gccause：额外输出上次GC原因jstat -calss：件事类装载、类卸载、总空间以及所消耗的时间jstack命令功能生成当前时刻的线程快照。常用指令jstack 3331：查看线程情况jstack -F 3331：正常输出不被响应时，使用该指令jstack -l 3331：除堆栈外，显示关于锁的附件信息jmap命令功能生成堆转储快照（heapdump）常用指令jmap -heap 3331：查看java 堆（heap）使用情况jmap -histo 3331：查看堆内存(histogram)中的对象数量及大小jmap -histo:h6ve 3331：JVM会先触发gc，然后再统计信息jmap -dump:format=b,file=heapDump 3331：将内存使用的详细情况输出到文件，之后一般使用其他工具进行分析。jhat命令 略
-
-3.1 OOM问题或者频繁GC问题发生OOM问题一般服务都会crash，业务日志会有OutOfMemoryError。OOM一般都是出现了内存泄露，需要查看OOM时候的jvm堆的快照，如果配置了-XX:+HeapDumpOnOutOfMemoryError, 在发生OOM的时候会在-XX:HeapDumpPath生成堆的dump文件，结合MAT，可以对dump文件进行分析，查找出发生OOM的原因. 关于MAT使用不详述了，google上一堆（http://inter12.iteye.com/blog/1407492）。ps.1、服务器的内存一般较大，所以要保证服务器的磁盘空间大于内存大小2、另外手动dump堆快照，可以使用命令jmap -dump:format=b,file=file_name pid3.2 死锁
-
-死锁原因是两个或者多个线程相互等待资源，现象一般是出现线程hung住，更严重会出现线程数暴涨，系统出现api ah6ve报警等。
-查看死锁最好的方法就是分析当时的线程栈。具体case 可以参考jstack命令里面的例子用到的命令：jps -vjstack -l pid
-3.3 线程block、线程数暴涨 
-
-jstack -l pid |wc -ljstack -l pid |grep “BLOCKED”|wc -ljstack -l pid |grep “Waiting on condition”|wc -l
-
+</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#undefined"><span class="nav-number">0.2.</span> <span class="nav-text">grep
+tail -f filename 查看实时的最新内容
+ps:切忌vim直接打开大日志文件，因为会直接加载到内存的
+2、数据库相关java应用很多瓶颈在数据库，一条sql没写好导致慢查询，可能就会带来应用带来致命危害。如果出现Could not get JDBC Connection 、接口响应慢、线程打满等，需要登录线上库，查看数据库连接情况：show processh6st，查看当前数据库的连接情况，确实由于慢查询造成，需要手动kill
+3、JVM相关java虚拟机相关的问题一般多是以下几种问题：gc时间过长、OOM、死锁、线程block、线程数暴涨等问题。一般通过以下几个工具都能定位出问题。
+jps命令 作用是显示当前用户,当前系统的java进程情况，及其id号常用命令-m/-l/-v 查看运行参数
+jstat命令 显示进程中的类装载、内存、垃圾收集、JIT编译等运行数据。常用指令jstat -gc 3331 250 20 ：查询进程2764的垃圾收集情况，每250毫秒查询一次，一共查询20次。jstat -gccause：额外输出上次GC原因jstat -calss：件事类装载、类卸载、总空间以及所消耗的时间
+jstack命令功能生成当前时刻的线程快照。常用指令jstack 3331：查看线程情况jstack -F 3331：正常输出不被响应时，使用该指令jstack -l 3331：除堆栈外，显示关于锁的附件信息
+jmap命令功能生成堆转储快照（heapdump）常用指令jmap -heap 3331：查看java 堆（heap）使用情况jmap -histo 3331：查看堆内存(histogram)中的对象数量及大小jmap -histo:h6ve 3331：JVM会先触发gc，然后再统计信息jmap -dump:format=b,file=heapDump 3331：将内存使用的详细情况输出到文件，之后一般使用其他工具进行分析。
+jhat命令 略
+3.1 OOM问题或者频繁GC问题发生OOM问题一般服务都会crash，业务日志会有OutOfMemoryError。OOM一般都是出现了内存泄露，需要查看OOM时候的jvm堆的快照，如果配置了-XX:+HeapDumpOnOutOfMemoryError, 在发生OOM的时候会在-XX:HeapDumpPath生成堆的dump文件，结合MAT，可以对dump文件进行分析，查找出发生OOM的原因. 关于MAT使用不详述了，google上一堆（http://inter12.iteye.com/blog/1407492）。ps.1、服务器的内存一般较大，所以要保证服务器的磁盘空间大于内存大小2、另外手动dump堆快照，可以使用命令jmap -dump:format=b,file=file_name pid
+3.2 死锁死锁原因是两个或者多个线程相互等待资源，现象一般是出现线程hung住，更严重会出现线程数暴涨，系统出现api ah6ve报警等。查看死锁最好的方法就是分析当时的线程栈。具体case 可以参考jstack命令里面的例子用到的命令：jps -vjstack -l pid
+3.3 线程block、线程数暴涨 jstack -l pid |wc -ljstack -l pid |grep “BLOCKED”|wc -ljstack -l pid |grep “Waiting on condition”|wc -l
 线程block问题一般是等待io、等待网络、等待监视器锁等造成，可能会导致请求超时、造成造成线程数暴涨导致系统502等。如果出现这种问题，主要是关注jstack 出来的BLOCKED、Waiting on condition、Waiting on monitor entry等状态信息。如果大量线程在“waiting for monitor entry”：可能是一个全局锁阻塞住了大量线程。如果短时间内打印的 thread dump 文件反映，随着时间流逝，waiting for monitor entry 的线程越来越多，没有减少的趋势，可能意味着某些线程在临界区里呆的时间太长了，以至于越来越多新线程迟迟无法进入临界区。如果大量线程在“waiting on condition”：可能是它们又跑去获取第三方资源，迟迟获取不到Response，导致大量线程进入等待状态。所以如果你发现有大量的线程都处在 Wait on condition，从线程堆栈看，正等待网络读写，这可能是一个网络瓶颈的征兆，因为网络阻塞导致线程无法执行。
-3.4 gc时间过长todo先贴一个文章占坑：&lt;a href= http://www.oracle.com/technetwork/cn/articles/java/g1gc-1984535-zhs.html&gt;传送门4、服务器问题4.1 CPUtop命令(参考https://h6nux.cn/article-2352-1.html)主要关注cpu的load，以及比较耗cpu的进程由于现在服务器都是虚拟机，还要关注st（st 的全称是 Steal Time ，是分配给运行在其它虚拟机上的任务的实际 CPU 时间）123456789常用交互命令：h 帮助，十分有用R: 反向排序x：将排序字段高亮显示（纵列）y 将运行进程高亮显示（横行）shift+&gt; 或shift+&lt;:切换排序字段 d或s: 设置显示的刷新间隔f: 字段管理 设置显示的字段k:kill进程4.2 内存free命令：free -m -c10 -s1-m：以MB为单位显示，其他的有-k -g -b-s: 间隔多少秒持续观察内存使用状况-c:观察多少次vmstat命令：(http://man.h6nuxde.net/vmstat)vmstat 1 101表示每隔1s输出一次,10 表示输出10次两个参数需要关注r: 运行队列中进程数量，这个值也可以判断是否需要增加CPU。（长期大于1）b: 等待IO的进程数量。4.3 IO
-
-iostat 命令（http://www.orczhou.com/index.php/2010/03/iostat-detail/）iostat -m 1 10-m：某些使用block为单位的列强制使用MB为单位1 10：数据显示每隔1秒刷新一次，共显示10次
+3.4 gc时间过长先贴一个文章占坑：&lt;a href= http://www.oracle.com/technetwork/cn/articles/java/g1gc-1984535-zhs.html&gt;传送门
+4、服务器问题
+4.1 CPUtop命令(参考https://h6nux.cn/article-2352-1.html)主要关注cpu的load，以及比较耗cpu的进程由于现在服务器都是虚拟机，还要关注st（st 的全称是 Steal Time ，是分配给运行在其它虚拟机上的任务的实际 CPU 时间）常用交互命令：h 帮助，十分有用R: 反向排序x：将排序字段高亮显示（纵列）y 将运行进程高亮显示（横行）shift+&gt; 或shift+&lt;:切换排序字段d或s: 设置显示的刷新间隔f: 字段管理 设置显示的字段k:kill进程
+4.2 内存free命令：free -m -c10 -s1-m：以MB为单位显示，其他的有-k -g -b-s: 间隔多少秒持续观察内存使用状况-c:观察多少次vmstat命令：(http://man.h6nuxde.net/vmstat)vmstat 1 101表示每隔1s输出一次,10 表示输出10次两个参数需要关注r: 运行队列中进程数量，这个值也可以判断是否需要增加CPU。（长期大于1）b: 等待IO的进程数量。
+4.3 IOiostat 命令（http://www.orczhou.com/index.php/2010/03/iostat-detail/）iostat -m 1 10-m：某些使用block为单位的列强制使用MB为单位1 10：数据显示每隔1秒刷新一次，共显示10次
 4.4 网络netstat 命令（http://www.cnblogs.com/ggjucheng/archive/2012/01/08/2316661.html）netstat -antp 
--a (all)显示所有选项，默认不显示h6STEN相关
--t (tcp)仅显示tcp相关选项
--u (udp)仅显示udp相关选项
--n 拒绝显示别名，能显示数字的全部转化成数字。
--l 仅列出有在 h6sten (监听) 的服服务状态
--p 显示建立相关链接的程序名
+-a (all)显示所有选项，默认不显示h6STEN相关-t (tcp)仅显示tcp相关选项-u (udp)仅显示udp相关选项-n 拒绝显示别名，能显示数字的全部转化成数字。-l 仅列出有在 h6sten (监听) 的服服务状态-p 显示建立相关链接的程序名
 显示tcp各个状态数量： netstat -ant |awk ‘{print $6}’|sort|uniq -c
 查看连接某服务端口最多的的IP地址netstat -nat | grep “10.32.45.35:8924” |awk ‘{print $5}’|awk -F: ‘{print $4}’|sort|uniq -c|sort -nr|head -10
-</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#undefined"><span class="nav-number">0.3.</span> <span class="nav-text">tail -f filename 查看实时的最新内容ps:切忌vim直接打开大日志文件，因为会直接加载到内存的2、数据库相关java应用很多瓶颈在数据库，一条sql没写好导致慢查询，可能就会带来应用带来致命危害。如果出现Could not get JDBC Connection 、接口响应慢、线程打满等，需要登录线上库，查看数据库连接情况：show processh6st，查看当前数据库的连接情况，确实由于慢查询造成，需要手动kill3、JVM相关java虚拟机相关的问题一般多是以下几种问题：gc时间过长、OOM、死锁、线程block、线程数暴涨等问题。一般通过以下几个工具都能定位出问题。jps命令 作用是显示当前用户,当前系统的java进程情况，及其id号常用命令-m/-l/-v 查看运行参数jstat命令 显示进程中的类装载、内存、垃圾收集、JIT编译等运行数据。常用指令jstat -gc 3331 250 20 ：查询进程2764的垃圾收集情况，每250毫秒查询一次，一共查询20次。jstat -gccause：额外输出上次GC原因jstat -calss：件事类装载、类卸载、总空间以及所消耗的时间jstack命令功能生成当前时刻的线程快照。常用指令jstack 3331：查看线程情况jstack -F 3331：正常输出不被响应时，使用该指令jstack -l 3331：除堆栈外，显示关于锁的附件信息jmap命令功能生成堆转储快照（heapdump）常用指令jmap -heap 3331：查看java 堆（heap）使用情况jmap -histo 3331：查看堆内存(histogram)中的对象数量及大小jmap -histo:h6ve 3331：JVM会先触发gc，然后再统计信息jmap -dump:format=b,file=heapDump 3331：将内存使用的详细情况输出到文件，之后一般使用其他工具进行分析。jhat命令 略
-
-3.1 OOM问题或者频繁GC问题发生OOM问题一般服务都会crash，业务日志会有OutOfMemoryError。OOM一般都是出现了内存泄露，需要查看OOM时候的jvm堆的快照，如果配置了-XX:+HeapDumpOnOutOfMemoryError, 在发生OOM的时候会在-XX:HeapDumpPath生成堆的dump文件，结合MAT，可以对dump文件进行分析，查找出发生OOM的原因. 关于MAT使用不详述了，google上一堆（http://inter12.iteye.com/blog/1407492）。ps.1、服务器的内存一般较大，所以要保证服务器的磁盘空间大于内存大小2、另外手动dump堆快照，可以使用命令jmap -dump:format=b,file=file_name pid3.2 死锁
-
-死锁原因是两个或者多个线程相互等待资源，现象一般是出现线程hung住，更严重会出现线程数暴涨，系统出现api ah6ve报警等。
-查看死锁最好的方法就是分析当时的线程栈。具体case 可以参考jstack命令里面的例子用到的命令：jps -vjstack -l pid
-3.3 线程block、线程数暴涨 
-
-jstack -l pid |wc -ljstack -l pid |grep “BLOCKED”|wc -ljstack -l pid |grep “Waiting on condition”|wc -l
-
+</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#undefined"><span class="nav-number">0.3.</span> <span class="nav-text">tail -f filename 查看实时的最新内容
+ps:切忌vim直接打开大日志文件，因为会直接加载到内存的
+2、数据库相关java应用很多瓶颈在数据库，一条sql没写好导致慢查询，可能就会带来应用带来致命危害。如果出现Could not get JDBC Connection 、接口响应慢、线程打满等，需要登录线上库，查看数据库连接情况：show processh6st，查看当前数据库的连接情况，确实由于慢查询造成，需要手动kill
+3、JVM相关java虚拟机相关的问题一般多是以下几种问题：gc时间过长、OOM、死锁、线程block、线程数暴涨等问题。一般通过以下几个工具都能定位出问题。
+jps命令 作用是显示当前用户,当前系统的java进程情况，及其id号常用命令-m/-l/-v 查看运行参数
+jstat命令 显示进程中的类装载、内存、垃圾收集、JIT编译等运行数据。常用指令jstat -gc 3331 250 20 ：查询进程2764的垃圾收集情况，每250毫秒查询一次，一共查询20次。jstat -gccause：额外输出上次GC原因jstat -calss：件事类装载、类卸载、总空间以及所消耗的时间
+jstack命令功能生成当前时刻的线程快照。常用指令jstack 3331：查看线程情况jstack -F 3331：正常输出不被响应时，使用该指令jstack -l 3331：除堆栈外，显示关于锁的附件信息
+jmap命令功能生成堆转储快照（heapdump）常用指令jmap -heap 3331：查看java 堆（heap）使用情况jmap -histo 3331：查看堆内存(histogram)中的对象数量及大小jmap -histo:h6ve 3331：JVM会先触发gc，然后再统计信息jmap -dump:format=b,file=heapDump 3331：将内存使用的详细情况输出到文件，之后一般使用其他工具进行分析。
+jhat命令 略
+3.1 OOM问题或者频繁GC问题发生OOM问题一般服务都会crash，业务日志会有OutOfMemoryError。OOM一般都是出现了内存泄露，需要查看OOM时候的jvm堆的快照，如果配置了-XX:+HeapDumpOnOutOfMemoryError, 在发生OOM的时候会在-XX:HeapDumpPath生成堆的dump文件，结合MAT，可以对dump文件进行分析，查找出发生OOM的原因. 关于MAT使用不详述了，google上一堆（http://inter12.iteye.com/blog/1407492）。ps.1、服务器的内存一般较大，所以要保证服务器的磁盘空间大于内存大小2、另外手动dump堆快照，可以使用命令jmap -dump:format=b,file=file_name pid
+3.2 死锁死锁原因是两个或者多个线程相互等待资源，现象一般是出现线程hung住，更严重会出现线程数暴涨，系统出现api ah6ve报警等。查看死锁最好的方法就是分析当时的线程栈。具体case 可以参考jstack命令里面的例子用到的命令：jps -vjstack -l pid
+3.3 线程block、线程数暴涨 jstack -l pid |wc -ljstack -l pid |grep “BLOCKED”|wc -ljstack -l pid |grep “Waiting on condition”|wc -l
 线程block问题一般是等待io、等待网络、等待监视器锁等造成，可能会导致请求超时、造成造成线程数暴涨导致系统502等。如果出现这种问题，主要是关注jstack 出来的BLOCKED、Waiting on condition、Waiting on monitor entry等状态信息。如果大量线程在“waiting for monitor entry”：可能是一个全局锁阻塞住了大量线程。如果短时间内打印的 thread dump 文件反映，随着时间流逝，waiting for monitor entry 的线程越来越多，没有减少的趋势，可能意味着某些线程在临界区里呆的时间太长了，以至于越来越多新线程迟迟无法进入临界区。如果大量线程在“waiting on condition”：可能是它们又跑去获取第三方资源，迟迟获取不到Response，导致大量线程进入等待状态。所以如果你发现有大量的线程都处在 Wait on condition，从线程堆栈看，正等待网络读写，这可能是一个网络瓶颈的征兆，因为网络阻塞导致线程无法执行。
-3.4 gc时间过长todo先贴一个文章占坑：&lt;a href= http://www.oracle.com/technetwork/cn/articles/java/g1gc-1984535-zhs.html&gt;传送门4、服务器问题4.1 CPUtop命令(参考https://h6nux.cn/article-2352-1.html)主要关注cpu的load，以及比较耗cpu的进程由于现在服务器都是虚拟机，还要关注st（st 的全称是 Steal Time ，是分配给运行在其它虚拟机上的任务的实际 CPU 时间）123456789常用交互命令：h 帮助，十分有用R: 反向排序x：将排序字段高亮显示（纵列）y 将运行进程高亮显示（横行）shift+&gt; 或shift+&lt;:切换排序字段 d或s: 设置显示的刷新间隔f: 字段管理 设置显示的字段k:kill进程4.2 内存free命令：free -m -c10 -s1-m：以MB为单位显示，其他的有-k -g -b-s: 间隔多少秒持续观察内存使用状况-c:观察多少次vmstat命令：(http://man.h6nuxde.net/vmstat)vmstat 1 101表示每隔1s输出一次,10 表示输出10次两个参数需要关注r: 运行队列中进程数量，这个值也可以判断是否需要增加CPU。（长期大于1）b: 等待IO的进程数量。4.3 IO
-
-iostat 命令（http://www.orczhou.com/index.php/2010/03/iostat-detail/）iostat -m 1 10-m：某些使用block为单位的列强制使用MB为单位1 10：数据显示每隔1秒刷新一次，共显示10次
+3.4 gc时间过长先贴一个文章占坑：&lt;a href= http://www.oracle.com/technetwork/cn/articles/java/g1gc-1984535-zhs.html&gt;传送门
+4、服务器问题
+4.1 CPUtop命令(参考https://h6nux.cn/article-2352-1.html)主要关注cpu的load，以及比较耗cpu的进程由于现在服务器都是虚拟机，还要关注st（st 的全称是 Steal Time ，是分配给运行在其它虚拟机上的任务的实际 CPU 时间）常用交互命令：h 帮助，十分有用R: 反向排序x：将排序字段高亮显示（纵列）y 将运行进程高亮显示（横行）shift+&gt; 或shift+&lt;:切换排序字段d或s: 设置显示的刷新间隔f: 字段管理 设置显示的字段k:kill进程
+4.2 内存free命令：free -m -c10 -s1-m：以MB为单位显示，其他的有-k -g -b-s: 间隔多少秒持续观察内存使用状况-c:观察多少次vmstat命令：(http://man.h6nuxde.net/vmstat)vmstat 1 101表示每隔1s输出一次,10 表示输出10次两个参数需要关注r: 运行队列中进程数量，这个值也可以判断是否需要增加CPU。（长期大于1）b: 等待IO的进程数量。
+4.3 IOiostat 命令（http://www.orczhou.com/index.php/2010/03/iostat-detail/）iostat -m 1 10-m：某些使用block为单位的列强制使用MB为单位1 10：数据显示每隔1秒刷新一次，共显示10次
 4.4 网络netstat 命令（http://www.cnblogs.com/ggjucheng/archive/2012/01/08/2316661.html）netstat -antp 
--a (all)显示所有选项，默认不显示h6STEN相关
--t (tcp)仅显示tcp相关选项
--u (udp)仅显示udp相关选项
--n 拒绝显示别名，能显示数字的全部转化成数字。
--l 仅列出有在 h6sten (监听) 的服服务状态
--p 显示建立相关链接的程序名
+-a (all)显示所有选项，默认不显示h6STEN相关-t (tcp)仅显示tcp相关选项-u (udp)仅显示udp相关选项-n 拒绝显示别名，能显示数字的全部转化成数字。-l 仅列出有在 h6sten (监听) 的服服务状态-p 显示建立相关链接的程序名
 显示tcp各个状态数量： netstat -ant |awk ‘{print $6}’|sort|uniq -c
 查看连接某服务端口最多的的IP地址netstat -nat | grep “10.32.45.35:8924” |awk ‘{print $5}’|awk -F: ‘{print $4}’|sort|uniq -c|sort -nr|head -10
-</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#undefined"><span class="nav-number">0.4.</span> <span class="nav-text">ps:切忌vim直接打开大日志文件，因为会直接加载到内存的2、数据库相关java应用很多瓶颈在数据库，一条sql没写好导致慢查询，可能就会带来应用带来致命危害。如果出现Could not get JDBC Connection 、接口响应慢、线程打满等，需要登录线上库，查看数据库连接情况：show processh6st，查看当前数据库的连接情况，确实由于慢查询造成，需要手动kill3、JVM相关java虚拟机相关的问题一般多是以下几种问题：gc时间过长、OOM、死锁、线程block、线程数暴涨等问题。一般通过以下几个工具都能定位出问题。jps命令 作用是显示当前用户,当前系统的java进程情况，及其id号常用命令-m/-l/-v 查看运行参数jstat命令 显示进程中的类装载、内存、垃圾收集、JIT编译等运行数据。常用指令jstat -gc 3331 250 20 ：查询进程2764的垃圾收集情况，每250毫秒查询一次，一共查询20次。jstat -gccause：额外输出上次GC原因jstat -calss：件事类装载、类卸载、总空间以及所消耗的时间jstack命令功能生成当前时刻的线程快照。常用指令jstack 3331：查看线程情况jstack -F 3331：正常输出不被响应时，使用该指令jstack -l 3331：除堆栈外，显示关于锁的附件信息jmap命令功能生成堆转储快照（heapdump）常用指令jmap -heap 3331：查看java 堆（heap）使用情况jmap -histo 3331：查看堆内存(histogram)中的对象数量及大小jmap -histo:h6ve 3331：JVM会先触发gc，然后再统计信息jmap -dump:format=b,file=heapDump 3331：将内存使用的详细情况输出到文件，之后一般使用其他工具进行分析。jhat命令 略
-
-3.1 OOM问题或者频繁GC问题发生OOM问题一般服务都会crash，业务日志会有OutOfMemoryError。OOM一般都是出现了内存泄露，需要查看OOM时候的jvm堆的快照，如果配置了-XX:+HeapDumpOnOutOfMemoryError, 在发生OOM的时候会在-XX:HeapDumpPath生成堆的dump文件，结合MAT，可以对dump文件进行分析，查找出发生OOM的原因. 关于MAT使用不详述了，google上一堆（http://inter12.iteye.com/blog/1407492）。ps.1、服务器的内存一般较大，所以要保证服务器的磁盘空间大于内存大小2、另外手动dump堆快照，可以使用命令jmap -dump:format=b,file=file_name pid3.2 死锁
-
-死锁原因是两个或者多个线程相互等待资源，现象一般是出现线程hung住，更严重会出现线程数暴涨，系统出现api ah6ve报警等。
-查看死锁最好的方法就是分析当时的线程栈。具体case 可以参考jstack命令里面的例子用到的命令：jps -vjstack -l pid
-3.3 线程block、线程数暴涨 
-
-jstack -l pid |wc -ljstack -l pid |grep “BLOCKED”|wc -ljstack -l pid |grep “Waiting on condition”|wc -l
-
+</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#undefined"><span class="nav-number">0.4.</span> <span class="nav-text">ps:切忌vim直接打开大日志文件，因为会直接加载到内存的
+2、数据库相关java应用很多瓶颈在数据库，一条sql没写好导致慢查询，可能就会带来应用带来致命危害。如果出现Could not get JDBC Connection 、接口响应慢、线程打满等，需要登录线上库，查看数据库连接情况：show processh6st，查看当前数据库的连接情况，确实由于慢查询造成，需要手动kill
+3、JVM相关java虚拟机相关的问题一般多是以下几种问题：gc时间过长、OOM、死锁、线程block、线程数暴涨等问题。一般通过以下几个工具都能定位出问题。
+jps命令 作用是显示当前用户,当前系统的java进程情况，及其id号常用命令-m/-l/-v 查看运行参数
+jstat命令 显示进程中的类装载、内存、垃圾收集、JIT编译等运行数据。常用指令jstat -gc 3331 250 20 ：查询进程2764的垃圾收集情况，每250毫秒查询一次，一共查询20次。jstat -gccause：额外输出上次GC原因jstat -calss：件事类装载、类卸载、总空间以及所消耗的时间
+jstack命令功能生成当前时刻的线程快照。常用指令jstack 3331：查看线程情况jstack -F 3331：正常输出不被响应时，使用该指令jstack -l 3331：除堆栈外，显示关于锁的附件信息
+jmap命令功能生成堆转储快照（heapdump）常用指令jmap -heap 3331：查看java 堆（heap）使用情况jmap -histo 3331：查看堆内存(histogram)中的对象数量及大小jmap -histo:h6ve 3331：JVM会先触发gc，然后再统计信息jmap -dump:format=b,file=heapDump 3331：将内存使用的详细情况输出到文件，之后一般使用其他工具进行分析。
+jhat命令 略
+3.1 OOM问题或者频繁GC问题发生OOM问题一般服务都会crash，业务日志会有OutOfMemoryError。OOM一般都是出现了内存泄露，需要查看OOM时候的jvm堆的快照，如果配置了-XX:+HeapDumpOnOutOfMemoryError, 在发生OOM的时候会在-XX:HeapDumpPath生成堆的dump文件，结合MAT，可以对dump文件进行分析，查找出发生OOM的原因. 关于MAT使用不详述了，google上一堆（http://inter12.iteye.com/blog/1407492）。ps.1、服务器的内存一般较大，所以要保证服务器的磁盘空间大于内存大小2、另外手动dump堆快照，可以使用命令jmap -dump:format=b,file=file_name pid
+3.2 死锁死锁原因是两个或者多个线程相互等待资源，现象一般是出现线程hung住，更严重会出现线程数暴涨，系统出现api ah6ve报警等。查看死锁最好的方法就是分析当时的线程栈。具体case 可以参考jstack命令里面的例子用到的命令：jps -vjstack -l pid
+3.3 线程block、线程数暴涨 jstack -l pid |wc -ljstack -l pid |grep “BLOCKED”|wc -ljstack -l pid |grep “Waiting on condition”|wc -l
 线程block问题一般是等待io、等待网络、等待监视器锁等造成，可能会导致请求超时、造成造成线程数暴涨导致系统502等。如果出现这种问题，主要是关注jstack 出来的BLOCKED、Waiting on condition、Waiting on monitor entry等状态信息。如果大量线程在“waiting for monitor entry”：可能是一个全局锁阻塞住了大量线程。如果短时间内打印的 thread dump 文件反映，随着时间流逝，waiting for monitor entry 的线程越来越多，没有减少的趋势，可能意味着某些线程在临界区里呆的时间太长了，以至于越来越多新线程迟迟无法进入临界区。如果大量线程在“waiting on condition”：可能是它们又跑去获取第三方资源，迟迟获取不到Response，导致大量线程进入等待状态。所以如果你发现有大量的线程都处在 Wait on condition，从线程堆栈看，正等待网络读写，这可能是一个网络瓶颈的征兆，因为网络阻塞导致线程无法执行。
-3.4 gc时间过长todo先贴一个文章占坑：&lt;a href= http://www.oracle.com/technetwork/cn/articles/java/g1gc-1984535-zhs.html&gt;传送门4、服务器问题4.1 CPUtop命令(参考https://h6nux.cn/article-2352-1.html)主要关注cpu的load，以及比较耗cpu的进程由于现在服务器都是虚拟机，还要关注st（st 的全称是 Steal Time ，是分配给运行在其它虚拟机上的任务的实际 CPU 时间）123456789常用交互命令：h 帮助，十分有用R: 反向排序x：将排序字段高亮显示（纵列）y 将运行进程高亮显示（横行）shift+&gt; 或shift+&lt;:切换排序字段 d或s: 设置显示的刷新间隔f: 字段管理 设置显示的字段k:kill进程4.2 内存free命令：free -m -c10 -s1-m：以MB为单位显示，其他的有-k -g -b-s: 间隔多少秒持续观察内存使用状况-c:观察多少次vmstat命令：(http://man.h6nuxde.net/vmstat)vmstat 1 101表示每隔1s输出一次,10 表示输出10次两个参数需要关注r: 运行队列中进程数量，这个值也可以判断是否需要增加CPU。（长期大于1）b: 等待IO的进程数量。4.3 IO
-
-iostat 命令（http://www.orczhou.com/index.php/2010/03/iostat-detail/）iostat -m 1 10-m：某些使用block为单位的列强制使用MB为单位1 10：数据显示每隔1秒刷新一次，共显示10次
+3.4 gc时间过长先贴一个文章占坑：&lt;a href= http://www.oracle.com/technetwork/cn/articles/java/g1gc-1984535-zhs.html&gt;传送门
+4、服务器问题
+4.1 CPUtop命令(参考https://h6nux.cn/article-2352-1.html)主要关注cpu的load，以及比较耗cpu的进程由于现在服务器都是虚拟机，还要关注st（st 的全称是 Steal Time ，是分配给运行在其它虚拟机上的任务的实际 CPU 时间）常用交互命令：h 帮助，十分有用R: 反向排序x：将排序字段高亮显示（纵列）y 将运行进程高亮显示（横行）shift+&gt; 或shift+&lt;:切换排序字段d或s: 设置显示的刷新间隔f: 字段管理 设置显示的字段k:kill进程
+4.2 内存free命令：free -m -c10 -s1-m：以MB为单位显示，其他的有-k -g -b-s: 间隔多少秒持续观察内存使用状况-c:观察多少次vmstat命令：(http://man.h6nuxde.net/vmstat)vmstat 1 101表示每隔1s输出一次,10 表示输出10次两个参数需要关注r: 运行队列中进程数量，这个值也可以判断是否需要增加CPU。（长期大于1）b: 等待IO的进程数量。
+4.3 IOiostat 命令（http://www.orczhou.com/index.php/2010/03/iostat-detail/）iostat -m 1 10-m：某些使用block为单位的列强制使用MB为单位1 10：数据显示每隔1秒刷新一次，共显示10次
 4.4 网络netstat 命令（http://www.cnblogs.com/ggjucheng/archive/2012/01/08/2316661.html）netstat -antp 
--a (all)显示所有选项，默认不显示h6STEN相关
--t (tcp)仅显示tcp相关选项
--u (udp)仅显示udp相关选项
--n 拒绝显示别名，能显示数字的全部转化成数字。
--l 仅列出有在 h6sten (监听) 的服服务状态
--p 显示建立相关链接的程序名
+-a (all)显示所有选项，默认不显示h6STEN相关-t (tcp)仅显示tcp相关选项-u (udp)仅显示udp相关选项-n 拒绝显示别名，能显示数字的全部转化成数字。-l 仅列出有在 h6sten (监听) 的服服务状态-p 显示建立相关链接的程序名
 显示tcp各个状态数量： netstat -ant |awk ‘{print $6}’|sort|uniq -c
 查看连接某服务端口最多的的IP地址netstat -nat | grep “10.32.45.35:8924” |awk ‘{print $5}’|awk -F: ‘{print $4}’|sort|uniq -c|sort -nr|head -10
-</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">2、数据库相关</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">3、JVM相关</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#undefined"><span class="nav-number">2.1.</span> <span class="nav-text">jps命令 </span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#undefined"><span class="nav-number">2.2.</span> <span class="nav-text">jstat命令 </span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#undefined"><span class="nav-number">2.3.</span> <span class="nav-text">jstack命令</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#undefined"><span class="nav-number">2.4.</span> <span class="nav-text">jmap命令</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#undefined"><span class="nav-number">2.5.</span> <span class="nav-text">jhat命令 略</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#undefined"><span class="nav-number">2.6.</span> <span class="nav-text">3.1 OOM问题或者频繁GC问题</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#undefined"><span class="nav-number">2.7.</span> <span class="nav-text">3.2 死锁</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#undefined"><span class="nav-number">2.8.</span> <span class="nav-text">3.3 线程block、线程数暴涨 </span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#undefined"><span class="nav-number">2.9.</span> <span class="nav-text">jstack -l pid |wc -l</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#undefined"><span class="nav-number">2.10.</span> <span class="nav-text">jstack -l pid |grep “BLOCKED”|wc -l</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#undefined"><span class="nav-number">2.11.</span> <span class="nav-text">jstack -l pid |grep “Waiting on condition”|wc -l</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#undefined"><span class="nav-number">2.12.</span> <span class="nav-text">3.4 gc时间过长</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#undefined"><span class="nav-number">3.</span> <span class="nav-text">4、服务器问题</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#undefined"><span class="nav-number">3.1.</span> <span class="nav-text">4.1 CPU</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#undefined"><span class="nav-number">3.2.</span> <span class="nav-text">4.2 内存</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#undefined"><span class="nav-number">3.3.</span> <span class="nav-text">4.3 IO</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#undefined"><span class="nav-number">3.4.</span> <span class="nav-text">4.4 网络</span></a></li></ol></li></ol></div>
+</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#undefined"><span class="nav-number">1.</span> <span class="nav-text">2、数据库相关</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#undefined"><span class="nav-number">2.</span> <span class="nav-text">3、JVM相关</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#undefined"><span class="nav-number">2.1.</span> <span class="nav-text">jps命令 </span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#undefined"><span class="nav-number">2.2.</span> <span class="nav-text">jstat命令 </span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#undefined"><span class="nav-number">2.3.</span> <span class="nav-text">jstack命令</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#undefined"><span class="nav-number">2.4.</span> <span class="nav-text">jmap命令</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#undefined"><span class="nav-number">2.5.</span> <span class="nav-text">jhat命令 略</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#undefined"><span class="nav-number">2.6.</span> <span class="nav-text">3.1 OOM问题或者频繁GC问题</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#undefined"><span class="nav-number">2.7.</span> <span class="nav-text">3.2 死锁</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#undefined"><span class="nav-number">2.8.</span> <span class="nav-text">3.3 线程block、线程数暴涨 </span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#undefined"><span class="nav-number">2.9.</span> <span class="nav-text">3.4 gc时间过长</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#undefined"><span class="nav-number">2.10.</span> <span class="nav-text">4.1 CPU</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#undefined"><span class="nav-number">2.11.</span> <span class="nav-text">4.2 内存</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#undefined"><span class="nav-number">2.12.</span> <span class="nav-text">4.3 IO</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#undefined"><span class="nav-number">2.13.</span> <span class="nav-text">4.4 网络</span></a></li></ol></li></ol></div>
             
 
           </div>
