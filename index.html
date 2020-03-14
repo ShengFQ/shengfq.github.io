@@ -232,6 +232,262 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2020/03/14/Fastjson详解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="盛富强">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="shengfq's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/03/14/Fastjson详解/" itemprop="url">阿里巴巴Fastjson详解</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-03-14T00:00:00+08:00">
+                2020-03-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>###什么是 Fastjson?<br>阿里官方给的定义是， fastjson 是阿里巴巴的开源JSON解析库，它可以解析 JSON 格式的字符串，支持将 Java Bean 序列化为 JSON 字符串，也可以从 JSON 字符串反序列化到 JavaBean。</p>
+<p>###Fastjson 的优点</p>
+<p>####速度快<br>fastjson相对其他JSON库的特点是快，从2011年fastjson发布1.1.x版本之后，其性能从未被其他Java实现的JSON库超越。</p>
+<p>####使用广泛<br>fastjson在阿里巴巴大规模使用，在数万台服务器上部署，fastjson在业界被广泛接受。在2012年被开源中国评选为最受欢迎的国产开源软件之一。</p>
+<p>####测试完备<br>fastjson有非常多的testcase，在1.2.11版本中，testcase超过3321个。每次发布都会进行回归测试，保证质量稳定。</p>
+<p>####使用简单<br>fastjson的 API 十分简洁。</p>
+<p>####功能完备<br>支持泛型，支持流处理超大文本，支持枚举，支持序列化和反序列化扩展。</p>
+<p>###怎么获得 Fastjson<br>你可以通过如下地方下载fastjson:</p>
+<ol>
+<li>maven中央仓库:[地址] (<a href="http://central.maven.org/maven2/com/alibaba/fastjson/" target="_blank" rel="noopener">http://central.maven.org/maven2/com/alibaba/fastjson/</a>)</li>
+<li>在maven项目的pom文件中直接配置fastjson依赖<br>fastjson最新版本都会发布到maven中央仓库，你可以直接依赖。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">     &lt;groupId&gt;com.alibaba&lt;/groupId&gt;</span><br><span class="line">     &lt;artifactId&gt;fastjson&lt;/artifactId&gt;</span><br><span class="line">     &lt;version&gt;x.x.x&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+<p>其中x.x.x是版本号，根据需要使用特定版本，建议使用最新版本。</p>
+<h3 id="Fastjson-主要的API"><a href="#Fastjson-主要的API" class="headerlink" title="Fastjson 主要的API"></a>Fastjson 主要的API</h3><p>Fastjson入口类是 com.alibaba.fastjson.JSON，主要的 API 是 JSON.toJSONString 和 parseObject。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">package com.alibaba.fastjson;</span><br><span class="line">public abstract class JSON &#123;</span><br><span class="line">      // Java对象转换为JSON字符串</span><br><span class="line">      public static final String toJSONString(Object object);</span><br><span class="line">      //JSON字符串转换为Java对象</span><br><span class="line">      public static final &lt;T&gt; T parseObject(String text, Class&lt;T&gt; clazz, Feature... features);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>序列化：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String jsonString = JSON.toJSONString(obj);</span><br></pre></td></tr></table></figure></p>
+<p>反序列化：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">VO vo = JSON.parseObject(&quot;...&quot;, VO.class);</span><br></pre></td></tr></table></figure></p>
+<p>泛型反序列化：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import com.alibaba.fastjson.TypeReference;</span><br><span class="line"></span><br><span class="line">List&lt;VO&gt; list = JSON.parseObject(&quot;...&quot;, new TypeReference&lt;List&lt;VO&gt;&gt;() &#123;&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>###Fastjson 的性能<br>fastjson是目前java语言中最快的json库，比自称最快的jackson速度还要快，第三方独立测试结果看这里：<a href="https://github.com/eishay/jvm-serializers/wiki" target="_blank" rel="noopener">这里</a></p>
+<p>自行做性能测试时，需关闭循环引用检测的功能。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">JSON.toJSONString(obj, SerializerFeature.DisableCircularReferenceDetect)</span><br><span class="line">VO vo = JSON.parseObject(&quot;...&quot;, VO.class, Feature.DisableCircularReferenceDetect)</span><br></pre></td></tr></table></figure></p>
+<p>另外，Fastjson 比 Gson 快大约6倍，测试结果可以看这里：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">Checking correctness…</span><br><span class="line">[done]</span><br><span class="line">Pre-warmup… java-built-in hessian kryo protostuff-runtime avro-generic msgpack json/jackson/databind json/jackson/databind-strings json/jackson/db-afterburner json/google-gson/databind json/svenson-databind json/flexjson/databind json/fastjson/databind smile/jackson/databind smile/jackson/db-afterburner smile/protostuff-runtime bson/jackson/databind xml/xstream+c xml/jackson/databind-aalto</span><br><span class="line">[done]</span><br><span class="line">pre. create ser deser shal +deep total size +dfl</span><br><span class="line">java-built-in 63 5523 27765 28084 28162 33686 889 514</span><br><span class="line">hessian 64 3776 6459 6505 6690 10466 501 313</span><br><span class="line">kryo 63 809 962 937 1001 1810 214 133</span><br><span class="line">protostuff-runtime 62 671 903 920 957 1627 241 151</span><br><span class="line">avro-generic 436 1234 1122 1416 1760 2994 221 133</span><br><span class="line">msgpack 61 789 1369 1385 1449 2238 233 146</span><br><span class="line">json/jackson/databind 60 1772 3089 3113 3246 5018 485 261</span><br><span class="line">json/jackson/databind-strings 64 2346 3739 3791 3921 6267 485 261</span><br><span class="line">json/jackson/db-afterburner 64 1482 2220 2233 2323 3805 485 261</span><br><span class="line">json/google-gson/databind 64 7076 4894 4962 5000 12076 486 259</span><br><span class="line">json/svenson-databind 64 5422 12387 12569 12468 17890 495 266</span><br><span class="line">json/flexjson/databind 62 20923 26853 26873 27272 48195 503 273</span><br><span class="line">json/fastjson/databind 63 1250 1208 1206 1247 2497 486 262</span><br><span class="line">smile/jackson/databind 60 1697 2117 2290 2298 3996 338 241</span><br><span class="line">smile/jackson/db-afterburner 60 1300 1614 1648 1703 3003 352 252</span><br><span class="line">smile/protostuff-runtime 61 1275 1612 1638 1685 2961 335 235</span><br><span class="line">bson/jackson/databind 63 5151 6729 6977 6918 12069 506 286</span><br><span class="line">xml/xstreamc 62 6358 13208 13319 13516 19874 487 244</span><br><span class="line">xml/jackson/databind-aalto 62 2955 5332 5465 5584 8539 683 286</span><br></pre></td></tr></table></figure></p>
+<p>###Fastjson 使用示例<br>我们创建一个班级的对象，和一个学生对象如下：</p>
+<p>班级对象<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public class Grade &#123;</span><br><span class="line"></span><br><span class="line">    private Long id;</span><br><span class="line">    private String name;</span><br><span class="line">    private List&lt;Student&gt; users = new ArrayList&lt;Student&gt;();</span><br><span class="line"></span><br><span class="line">    // 省略 setter、getter</span><br><span class="line">    </span><br><span class="line">    public void addStudent(Student student) &#123;</span><br><span class="line">        users.add(student);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        return &quot;Grade&#123;&quot; +</span><br><span class="line">                &quot;id=&quot; + id +</span><br><span class="line">                &quot;, name=&apos;&quot; + name + &apos;\&apos;&apos; +</span><br><span class="line">                &quot;, users=&quot; + users +</span><br><span class="line">                &apos;&#125;&apos;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>学生对象<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public class Student &#123;</span><br><span class="line"></span><br><span class="line">    private Long   id;</span><br><span class="line">    private String name;</span><br><span class="line"></span><br><span class="line">    // 省略 setter、getter</span><br><span class="line">    </span><br><span class="line">    @Override</span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        return &quot;Student&#123;&quot; +</span><br><span class="line">                &quot;id=&quot; + id +</span><br><span class="line">                &quot;, name=&apos;&quot; + name + &apos;\&apos;&apos; +</span><br><span class="line">                &apos;&#125;&apos;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>运行的 Main 函数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">public class MainTest &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Grade group = new Grade();</span><br><span class="line">        group.setId(0L);</span><br><span class="line">        group.setName(&quot;admin&quot;);</span><br><span class="line"></span><br><span class="line">        Student student = new Student();</span><br><span class="line">        student.setId(2L);</span><br><span class="line">        student.setName(&quot;guest&quot;);</span><br><span class="line"></span><br><span class="line">        Student rootUser = new Student();</span><br><span class="line">        rootUser.setId(3L);</span><br><span class="line">        rootUser.setName(&quot;root&quot;);</span><br><span class="line"></span><br><span class="line">        group.addStudent(student);</span><br><span class="line">        group.addStudent(rootUser);</span><br><span class="line"></span><br><span class="line">        // 转换为 JSON</span><br><span class="line">        String jsonString = JSON.toJSONString(group);</span><br><span class="line">        System.out.println(&quot;JSON字符串：&quot; + jsonString);</span><br><span class="line"></span><br><span class="line">        // 转换为 对象BEAN</span><br><span class="line">        Grade grade = JSON.parseObject(jsonString, Grade.class);</span><br><span class="line">        System.out.println(&quot;JavaBean对象：&quot; + grade);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>最后的运行结果如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">JSON字符串：</span><br><span class="line">&#123;&quot;id&quot;:0,&quot;name&quot;:&quot;admin&quot;,&quot;users&quot;:[&#123;&quot;id&quot;:2,&quot;name&quot;:&quot;guest&quot;&#125;,&#123;&quot;id&quot;:3,&quot;name&quot;:&quot;root&quot;&#125;]&#125;</span><br><span class="line"></span><br><span class="line">JavaBean对象：</span><br><span class="line">Grade&#123;id=0, name=&apos;admin&apos;, users=[Student&#123;id=2, name=&apos;guest&apos;&#125;, Student&#123;id=3, name=&apos;root&apos;&#125;]&#125;</span><br></pre></td></tr></table></figure></p>
+<p>###将对象中的空值输出<br>在fastjson中，缺省是不输出空值的。无论Map中的null和对象属性中的null，序列化的时候都会被忽略不输出，这样会减少产生文本的大小。但如果需要输出空值怎么做呢？</p>
+<p>如果你需要输出空值，需要使用<br><strong>SerializerFeature.WriteMapNullValue </strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Model obj = ...;</span><br><span class="line">JSON.toJSONString(obj, SerializerFeature.WriteMapNullValue);</span><br></pre></td></tr></table></figure>
+<p>几种空值特别处理方式：</p>
+<p>|SerializerFeature    |描述|<br>|WriteNullListAsEmpty |:    将Collection类型字段的字段空值输出为[]:|<br>|WriteNullStringAsEmpty    |将字符串类型字段的空值输出为空字符串 “”<br>|WriteNullNumberAsZero    |将数值类型字段的空值输出为0|<br>|WriteNullBooleanAsFalse|    将Boolean类型字段的空值输出为false|</p>
+<p>具体的示例参考如下，可以同时选择多个：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">class Model &#123;</span><br><span class="line">      public List&lt;Objec&gt; items;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Model obj = ....;</span><br><span class="line"></span><br><span class="line">String text = JSON.toJSONString(obj, SerializerFeature.WriteMapNullValue, SerializerFeature.WriteNullListAsEmpty);</span><br></pre></td></tr></table></figure>
+<p>###Fastjson 处理日期<br>Fastjson 处理日期的API很简单，例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">JSON.toJSONStringWithDateFormat(date, &quot;yyyy-MM-dd HH:mm:ss.SSS&quot;)</span><br></pre></td></tr></table></figure>
+<p>使用ISO-8601日期格式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">JSON.toJSONString(obj, SerializerFeature.UseISO8601DateFormat);</span><br></pre></td></tr></table></figure>
+<p>全局修改日期格式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">JSON.DEFFAULT_DATE_FORMAT = &quot;yyyy-MM-dd&quot;;</span><br><span class="line">JSON.toJSONString(obj, SerializerFeature.WriteDateUseDateFormat);</span><br></pre></td></tr></table></figure>
+<p>反序列化能够自动识别如下日期格式：</p>
+<ul>
+<li>ISO-8601日期格式</li>
+<li>yyyy-MM-dd</li>
+<li>yyyy-MM-dd HH:mm:ss</li>
+<li>yyyy-MM-dd HH:mm:ss.SSS</li>
+<li>毫秒数字</li>
+<li>毫秒数字字符串</li>
+<li>.NET JSON日期格式</li>
+<li>new Date(198293238)<br>虽然上面处理了单个的日期类型和全局的日期类型格式的配置，但是有时候我们需要的是对象中个别的日期类型差异化，并不一定是同一种格式的。那如何处理呢？接下来介绍 Fastjson 的定制序列化。</li>
+</ul>
+<p>###Fastjson 定制序列化</p>
+<p>####简介<br>fastjson支持多种方式定制序列化。</p>
+<ul>
+<li>通过@JSONField定制序列化</li>
+<li>通过@JSONType定制序列化</li>
+<li>通过SerializeFilter定制序列化</li>
+<li>通过ParseProcess定制反序列化<br>####使用@JSONField配置<br>####1.JSONField 注解介绍</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">package com.alibaba.fastjson.annotation;</span><br><span class="line"></span><br><span class="line">public @interface JSONField &#123;</span><br><span class="line">    // 配置序列化和反序列化的顺序，1.1.42版本之后才支持</span><br><span class="line">    int ordinal() default 0;</span><br><span class="line"></span><br><span class="line">     // 指定字段的名称</span><br><span class="line">    String name() default &quot;&quot;;</span><br><span class="line"></span><br><span class="line">    // 指定字段的格式，对日期格式有用</span><br><span class="line">    String format() default &quot;&quot;;</span><br><span class="line"></span><br><span class="line">    // 是否序列化</span><br><span class="line">    boolean serialize() default true;</span><br><span class="line"></span><br><span class="line">    // 是否反序列化</span><br><span class="line">    boolean deserialize() default true;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>####2.JSONField配置方式<br>可以把@JSONField配置在字段或者getter/setter方法上，例如：</p>
+<p>配置在字段上</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public class VO &#123;</span><br><span class="line">     @JSONField(name=&quot;ID&quot;)</span><br><span class="line">     private int id;</span><br><span class="line"></span><br><span class="line">     @JSONField(name=&quot;birthday&quot;,format=&quot;yyyy-MM-dd&quot;)</span><br><span class="line">     public Date date;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>配置在 Getter/Setter 上</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public class VO &#123;</span><br><span class="line">    private int id;</span><br><span class="line"></span><br><span class="line">    @JSONField(name=&quot;ID&quot;)</span><br><span class="line">    public int getId() &#123; return id;&#125;</span><br><span class="line"></span><br><span class="line">    @JSONField(name=&quot;ID&quot;)</span><br><span class="line">    public void setId(int id) &#123;this.id = id;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意：若属性是私有的，必须有set*方法。否则无法反序列化。</p>
+<p>3、使用format配置日期格式化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">可以定制化配置各个日期字段的格式化</span><br><span class="line"> public class A &#123;</span><br><span class="line">      // 配置date序列化和反序列使用yyyyMMdd日期格式</span><br><span class="line">      @JSONField(format=&quot;yyyyMMdd&quot;)</span><br><span class="line">      public Date date;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>4、使用serialize/deserialize指定字段不序列化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public class A &#123;</span><br><span class="line">      @JSONField(serialize=false)</span><br><span class="line">      public Date date;</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> public class A &#123;</span><br><span class="line">      @JSONField(deserialize=false)</span><br><span class="line">      public Date date;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>5、使用ordinal指定字段的顺序<br>缺省Fastjson序列化一个java bean，是根据fieldName的字母序进行序列化的，你可以通过ordinal指定字段的顺序。这个特性需要1.1.42以上版本。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public static class VO &#123;</span><br><span class="line">    @JSONField(ordinal = 3)</span><br><span class="line">    private int f0;</span><br><span class="line"></span><br><span class="line">    @JSONField(ordinal = 2)</span><br><span class="line">    private int f1;</span><br><span class="line"></span><br><span class="line">    @JSONField(ordinal = 1)</span><br><span class="line">    private int f2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>6、使用serializeUsing制定属性的序列化类<br>在fastjson 1.2.16版本之后，JSONField支持新的定制化配置serializeUsing，可以单独对某一个类的某个属性定制序列化，比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public static class Model &#123;</span><br><span class="line">    @JSONField(serializeUsing = ModelValueSerializer.class)</span><br><span class="line">    public int value;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public static class ModelValueSerializer implements ObjectSerializer &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void write(JSONSerializer serializer, Object object, Object fieldName, Type fieldType,</span><br><span class="line">                      int features) throws IOException &#123;</span><br><span class="line">        Integer value = (Integer) object;</span><br><span class="line">        String text = value + &quot;元&quot;;</span><br><span class="line">        serializer.write(text);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>测试代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Model model = new Model();</span><br><span class="line">model.value = 100;</span><br><span class="line">String json = JSON.toJSONString(model);</span><br><span class="line">Assert.assertEquals(&quot;&#123;\&quot;value\&quot;:\&quot;100元\&quot;&#125;&quot;, json);</span><br></pre></td></tr></table></figure>
+<p>####|3使用@JSONType配置<br>和JSONField类似，但JSONType配置在类上，而不是field或者getter/setter方法上。</p>
+<p>####|4通过SerializeFilter定制序列化<br>1、简介</p>
+<ul>
+<li>SerializeFilter是通过编程扩展的方式定制序列化。fastjson支持6种SerializeFilter，用于不同场景的定制序列化</li>
+<li>PropertyPreFilter 根据PropertyName判断是否序列化</li>
+<li>PropertyFilter 根据PropertyName和PropertyValue来判断是否序列化</li>
+<li>NameFilter 修改Key，如果需要修改Key,process返回值则可</li>
+<li>ValueFilter 修改Value</li>
+<li>BeforeFilter 序列化时在最前添加内容</li>
+<li>AfterFilter 序列化时在最后添加内容<br>2、PropertyFilter 根据PropertyName和PropertyValue来判断是否序列化<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public interface PropertyFilter extends SerializeFilter &#123;</span><br><span class="line">   boolean apply(Object object, String propertyName, Object propertyValue);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>可以通过扩展实现根据object或者属性名称或者属性值进行判断是否需要序列化。例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">PropertyFilter filter = new PropertyFilter() &#123;</span><br><span class="line"></span><br><span class="line">    public boolean apply(Object source, String name, Object value) &#123;</span><br><span class="line">        if (&quot;id&quot;.equals(name)) &#123;</span><br><span class="line">            int id = ((Integer) value).intValue();</span><br><span class="line">            return id &gt;= 100;</span><br><span class="line">        &#125;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">JSON.toJSONString(obj, filter); // 序列化的时候传入filter</span><br></pre></td></tr></table></figure>
+<p>3、PropertyPreFilter 根据PropertyName判断是否序列化</p>
+<p>和PropertyFilter不同只根据object和name进行判断，在调用getter之前，这样避免了getter调用可能存在的异常。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public interface PropertyPreFilter extends SerializeFilter &#123;</span><br><span class="line">     boolean apply(JSONSerializer serializer, Object object, String name);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>4、NameFilter 序列化时修改Key</p>
+<p>如果需要修改Key,process返回值则可</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public interface NameFilter extends SerializeFilter &#123;</span><br><span class="line">    String process(Object object, String propertyName, Object propertyValue);</span><br><span class="line">&#125;</span><br><span class="line">fastjson内置一个PascalNameFilter，用于输出将首字符大写的Pascal风格。 例如：</span><br><span class="line"></span><br><span class="line">import com.alibaba.fastjson.serializer.PascalNameFilter;</span><br><span class="line"></span><br><span class="line">Object obj = ...;</span><br><span class="line">String jsonStr = JSON.toJSONString(obj, new PascalNameFilter());</span><br></pre></td></tr></table></figure>
+<p>5、ValueFilter 序列化时修改Value</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public interface ValueFilter extends SerializeFilter &#123;</span><br><span class="line">  Object process(Object object, String propertyName, Object propertyValue);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>6、BeforeFilter 序列化时在最前添加内容<br>在序列化对象的所有属性之前执行某些操作,例如调用 writeKeyValue 添加内容<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public abstract class BeforeFilter implements SerializeFilter &#123;</span><br><span class="line">   protected final void writeKeyValue(String key, Object value) &#123; ... &#125;</span><br><span class="line">    // 需要实现的抽象方法，在实现中调用writeKeyValue添加内容</span><br><span class="line">    public abstract void writeBefore(Object object);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>7、AfterFilter 序列化时在最后添加内容<br>在序列化对象的所有属性之后执行某些操作,例如调用 writeKeyValue 添加内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> public abstract class AfterFilter implements SerializeFilter &#123;</span><br><span class="line">  protected final void writeKeyValue(String key, Object value) &#123; ... &#125;</span><br><span class="line">    // 需要实现的抽象方法，在实现中调用writeKeyValue添加内容</span><br><span class="line">    public abstract void writeAfter(Object object);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>####通过ParseProcess定制反序列化<br>1、简介</p>
+<ul>
+<li>ParseProcess是编程扩展定制反序列化的接口。fastjson支持如下ParseProcess：</li>
+<li>ExtraProcessor 用于处理多余的字段</li>
+<li>ExtraTypeProvider 用于处理多余字段时提供类型信息</li>
+</ul>
+<p>2、使用ExtraProcessor 处理多余字段</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">public static class VO &#123;</span><br><span class="line">    private int id;</span><br><span class="line">    private Map&lt;String, Object&gt; attributes = new HashMap&lt;String, Object&gt;();</span><br><span class="line">    public int getId() &#123; return id; &#125;</span><br><span class="line">    public void setId(int id) &#123; this.id = id;&#125;</span><br><span class="line">    public Map&lt;String, Object&gt; getAttributes() &#123; return attributes;&#125;</span><br><span class="line">&#125;</span><br><span class="line">    </span><br><span class="line">ExtraProcessor processor = new ExtraProcessor() &#123;</span><br><span class="line">    public void processExtra(Object object, String key, Object value) &#123;</span><br><span class="line">        VO vo = (VO) object;</span><br><span class="line">        vo.getAttributes().put(key, value);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">    </span><br><span class="line">VO vo = JSON.parseObject(&quot;&#123;\&quot;id\&quot;:123,\&quot;name\&quot;:\&quot;abc\&quot;&#125;&quot;, VO.class, processor);</span><br><span class="line">Assert.assertEquals(123, vo.getId());</span><br><span class="line">Assert.assertEquals(&quot;abc&quot;, vo.getAttributes().get(&quot;name&quot;));</span><br></pre></td></tr></table></figure>
+<p>3、使用ExtraTypeProvider 为多余的字段提供类型</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">public static class VO &#123;</span><br><span class="line">    private int id;</span><br><span class="line">    private Map&lt;String, Object&gt; attributes = new HashMap&lt;String, Object&gt;();</span><br><span class="line">    public int getId() &#123; return id; &#125;</span><br><span class="line">    public void setId(int id) &#123; this.id = id;&#125;</span><br><span class="line">    public Map&lt;String, Object&gt; getAttributes() &#123; return attributes;&#125;</span><br><span class="line">&#125;</span><br><span class="line">    </span><br><span class="line">class MyExtraProcessor implements ExtraProcessor, ExtraTypeProvider &#123;</span><br><span class="line">    public void processExtra(Object object, String key, Object value) &#123;</span><br><span class="line">        VO vo = (VO) object;</span><br><span class="line">        vo.getAttributes().put(key, value);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public Type getExtraType(Object object, String key) &#123;</span><br><span class="line">        if (&quot;value&quot;.equals(key)) &#123;</span><br><span class="line">            return int.class;</span><br><span class="line">        &#125;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">ExtraProcessor processor = new MyExtraProcessor();</span><br><span class="line">    </span><br><span class="line">VO vo = JSON.parseObject(&quot;&#123;\&quot;id\&quot;:123,\&quot;value\&quot;:\&quot;123456\&quot;&#125;&quot;, VO.class, processor);</span><br><span class="line">Assert.assertEquals(123, vo.getId());</span><br><span class="line">Assert.assertEquals(123456, vo.getAttributes().get(&quot;value&quot;)); // value本应该是字符串类型的，通过getExtraType的处理变成Integer类型了。</span><br></pre></td></tr></table></figure>
+<p>####在 Spring MVC 中集成 Fastjson</p>
+<p>如果你使用 Spring MVC 来构建 Web 应用并对性能有较高的要求的话，可以使用 Fastjson 提供的FastJsonHttpMessageConverter 来替换 Spring MVC 默认的 HttpMessageConverter 以提高 @RestController @ResponseBody @RequestBody 注解的 JSON序列化速度。下面是配置方式，非常简单。</p>
+<p>XML式<br>如果是使用 XML 的方式配置 Spring MVC 的话，只需在 Spring MVC 的 XML 配置文件中加入下面配置即可</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;mvc:annotation-driven&gt;</span><br><span class="line">    &lt;mvc:message-converters&gt;</span><br><span class="line">        &lt;bean class=&quot;com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter&quot;/&gt;      </span><br><span class="line">    &lt;/mvc:message-converters&gt;</span><br><span class="line">&lt;/mvc:annotation-driven&gt;</span><br></pre></td></tr></table></figure>
+<p>通常默认配置已经可以满足大部分使用场景，如果你想对它进行自定义配置的话，你可以添加 FastJsonConfig Bean。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;mvc:annotation-driven&gt;</span><br><span class="line">    &lt;mvc:message-converters&gt;</span><br><span class="line">        &lt;bean class=&quot;com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter&quot;&gt;</span><br><span class="line">            &lt;property name=&quot;fastJsonConfig&quot; ref=&quot;fastJsonConfig&quot;/&gt;</span><br><span class="line">        &lt;/bean&gt;</span><br><span class="line">    &lt;/mvc:message-converters&gt;</span><br><span class="line">&lt;/mvc:annotation-driven&gt;</span><br><span class="line"></span><br><span class="line">&lt;bean id=&quot;fastJsonConfig&quot; class=&quot;com.alibaba.fastjson.support.config.FastJsonConfig&quot;&gt;</span><br><span class="line">    &lt;!--   自定义配置...   --&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+<p>编程式</p>
+<p>如果是使用编程的方式（通常是基于 Spring Boot 项目）配置 Spring MVC 的话只需继承 WebMvcConfigurerAdapter覆写configureMessageConverters方法即可，就像下面这样。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@Configuration</span><br><span class="line">public class WebMvcConfigurer extends WebMvcConfigurerAdapter &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void configureMessageConverters(List&lt;HttpMessageConverter&lt;?&gt;&gt; converters) &#123;</span><br><span class="line">        FastJsonHttpMessageConverter converter = new FastJsonHttpMessageConverter();</span><br><span class="line">        //自定义配置...</span><br><span class="line">        //FastJsonConfig config = new FastJsonConfig();</span><br><span class="line">        //config.set ...</span><br><span class="line">        //converter.setFastJsonConfig(config);</span><br><span class="line">        converters.add(0, converter);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意：</p>
+<ol>
+<li><p>如果你使用的 Fastjson 版本小于1.2.36的话(强烈建议使用最新版本)，在与Spring MVC 4.X 版本集成时需使用 FastJsonHttpMessageConverter4。</p>
+</li>
+<li><p>SpringBoot 2.0.1版本中加载WebMvcConfigurer的顺序发生了变动，故需使用converters.add(0, converter);指定FastJsonHttpMessageConverter在converters内的顺序，否则在SpringBoot 2.0.1及之后的版本中将优先使用Jackson处理。</p>
+</li>
+</ol>
+<p>####在 Spring Data Redis 中集成 Fastjson</p>
+<p>通常我们在 Spring 中使用 Redis 是通过 Spring Data Redis 提供的 RedisTemplate 来进行的，如果你准备使用 JSON 作为对象序列/反序列化的方式并对序列化速度有较高的要求的话，建议使用 Fastjson 提供的 GenericFastJsonRedisSerializer 或 FastJsonRedisSerializer 作为 RedisTemplate 的 RedisSerializer。下面是配置方式，非常简单。</p>
+<p>XML式<br>如果是使用 XML 的方式配置 Spring Data Redis 的话，只需将 RedisTemplate 中的 Serializer 替换为 GenericFastJsonRedisSerializer 即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;redisTemplate&quot; class=&quot;org.springframework.data.redis.core.RedisTemplate&quot;&gt;</span><br><span class="line">    &lt;property name=&quot;connectionFactory&quot; ref=&quot;jedisConnectionFactory&quot;/&gt;</span><br><span class="line">    &lt;property name=&quot;defaultSerializer&quot;&gt;</span><br><span class="line">        &lt;bean class=&quot;com.alibaba.fastjson.support.spring.GenericFastJsonRedisSerializer&quot;/&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+<p>下面是完整的 Spring 集成 Redis 配置供参考。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- Redis 连接池配置(可选) --&gt;</span><br><span class="line">&lt;bean id=&quot;jedisPoolConfig&quot; class=&quot;redis.clients.jedis.JedisPoolConfig&quot;&gt;</span><br><span class="line">    &lt;property name=&quot;maxTotal&quot; value=&quot;$&#123;redis.pool.maxActive&#125;&quot;/&gt;</span><br><span class="line">    &lt;property name=&quot;maxIdle&quot; value=&quot;$&#123;redis.pool.maxIdle&#125;&quot;/&gt;</span><br><span class="line">    &lt;property name=&quot;maxWaitMillis&quot; value=&quot;$&#123;redis.pool.maxWait&#125;&quot;/&gt;</span><br><span class="line">    &lt;property name=&quot;testOnBorrow&quot; value=&quot;$&#123;redis.pool.testOnBorrow&#125;&quot;/&gt;</span><br><span class="line">     &lt;!-- 更多连接池配置...--&gt;</span><br><span class="line">&lt;/bean&gt;</span><br><span class="line">&lt;!-- Redis 连接工厂配置 --&gt;</span><br><span class="line">&lt;bean id=&quot;jedisConnectionFactory&quot; class=&quot;org.springframework.data.redis.connection.jedis.JedisConnectionFactory&quot;&gt;</span><br><span class="line">    &lt;!--设置连接池配置，不设置的话会使用默认的连接池配置，若想禁用连接池可设置 usePool = false --&gt;   </span><br><span class="line">    &lt;property name=&quot;poolConfig&quot; ref=&quot;jedisPoolConfig&quot; /&gt;  </span><br><span class="line">    &lt;property name=&quot;hostName&quot; value=&quot;$&#123;host&#125;&quot;/&gt;</span><br><span class="line">    &lt;property name=&quot;port&quot; value=&quot;$&#123;port&#125;&quot;/&gt;</span><br><span class="line">    &lt;property name=&quot;password&quot; value=&quot;$&#123;password&#125;&quot;/&gt;</span><br><span class="line">    &lt;property name=&quot;database&quot; value=&quot;$&#123;database&#125;&quot;/&gt;</span><br><span class="line">    &lt;!-- 更多连接工厂配置...--&gt;</span><br><span class="line">&lt;/bean&gt;</span><br><span class="line">&lt;!-- RedisTemplate 配置 --&gt;</span><br><span class="line">&lt;bean id=&quot;redisTemplate&quot; class=&quot;org.springframework.data.redis.core.RedisTemplate&quot;&gt;</span><br><span class="line">    &lt;!-- 设置 Redis 连接工厂--&gt;</span><br><span class="line">    &lt;property name=&quot;connectionFactory&quot; ref=&quot;jedisConnectionFactory&quot;/&gt;</span><br><span class="line">    &lt;!-- 设置默认 Serializer ，包含 keySerializer &amp; valueSerializer --&gt;</span><br><span class="line">    &lt;property name=&quot;defaultSerializer&quot;&gt;</span><br><span class="line">        &lt;bean class=&quot;com.alibaba.fastjson.support.spring.GenericFastJsonRedisSerializer&quot;/&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;!-- 单独设置 keySerializer --&gt;</span><br><span class="line">    &lt;property name=&quot;keySerializer&quot;&gt;</span><br><span class="line">        &lt;bean class=&quot;com.alibaba.fastjson.support.spring.GenericFastJsonRedisSerializer&quot;/&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;!-- 单独设置 valueSerializer --&gt;</span><br><span class="line">    &lt;property name=&quot;valueSerializer&quot;&gt;</span><br><span class="line">        &lt;bean class=&quot;com.alibaba.fastjson.support.spring.GenericFastJsonRedisSerializer&quot;/&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+<p>编程式</p>
+<p>如果是使用编程的方式（通常是基于 Spring Boot 项目）配置 RedisTemplate 的话只需在你的配置类(被@Configuration注解修饰的类)中显式创建 RedisTemplate Bean，设置 Serializer 即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@Bean</span><br><span class="line">public RedisTemplate redisTemplate(RedisConnectionFactory redisConnectionFactory) &#123;</span><br><span class="line">    RedisTemplate redisTemplate = new RedisTemplate();</span><br><span class="line">    redisTemplate.setConnectionFactory(redisConnectionFactory);</span><br><span class="line"></span><br><span class="line">    GenericFastJsonRedisSerializer fastJsonRedisSerializer = new GenericFastJsonRedisSerializer();</span><br><span class="line">    redisTemplate.setDefaultSerializer(fastJsonRedisSerializer);//设置默认的Serialize，包含 keySerializer &amp; valueSerializer</span><br><span class="line"></span><br><span class="line">    //redisTemplate.setKeySerializer(fastJsonRedisSerializer);//单独设置keySerializer</span><br><span class="line">    //redisTemplate.setValueSerializer(fastJsonRedisSerializer);//单独设置valueSerializer</span><br><span class="line">    return redisTemplate;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通常使用 GenericFastJsonRedisSerializer 即可满足大部分场景，如果你想定义特定类型专用的 RedisTemplate 可以使用 FastJsonRedisSerializer来代替 GenericFastJsonRedisSerializer，配置是类似的。</p>
+<p>参考：<a href="https://github.com/alibaba/fastjson/wiki" target="_blank" rel="noopener">https://github.com/alibaba/fastjson/wiki</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2019/08/21/(Reactor)异步非阻塞多路IO复用模型/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1517,133 +1773,6 @@ The searched-for class definition existed when the currently executing class was
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2018/05/24/aboutme/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="盛富强">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="shengfq's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/24/aboutme/" itemprop="url">aboutme</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-24T19:29:54+08:00">
-                2018-05-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><li>盛富强</li></p>
-<p><li>java开发工程师</li></p>
-<p><li>联系电话:+86 166-2512-0553</li></p>
-<p><li>电子邮箱:<a href="mailto:shengfu.qiang@163.com" target="_blank" rel="noopener">shengfu.qiang@163.com</a></li></p>
-<p><li>个人博客:<a href="https://shengfq.github.io/" target="_blank" rel="noopener">https://shengfq.github.io/</a></li></p>
-<p><li>github:<a href="https://github.com/shengfq" target="_blank" rel="noopener">https://github.com/shengfq</a></li></p>
-<p></p><h4>自我描述</h4><p></p>
-<h5>我是一名热爱分享,爱开源,爱交流的JAVA开发者.</h5>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1694,7 +1823,7 @@ The searched-for class definition existed when the currently executing class was
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-count">17</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -1707,7 +1836,7 @@ The searched-for class definition existed when the currently executing class was
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
@@ -1754,7 +1883,7 @@ The searched-for class definition existed when the currently executing class was
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

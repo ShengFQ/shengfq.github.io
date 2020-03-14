@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="翻译," />
+  <meta name="keywords" content="Hexo, NexT" />
 
 
 
@@ -79,18 +79,16 @@
 
 
 
-<meta name="description" content="异常的层级 多catch块抛出条款设计异常的层级概要在java和c#中异常能够通过层级关系分类.这种关系一般是一个或多个异常继承自其他异常.在java中FileNotFoundException 就是IOException异常的子类.下面就是一自定义异常:public class MyException extends Exception{    //constructors etc.} 如你所见">
-<meta name="keywords" content="翻译">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Exception Hierarchies">
-<meta property="og:url" content="https://www.shengfq.github.io/2018/05/14/异常的层级/index.html">
+<meta name="description" content="blogs and research">
+<meta property="og:type" content="website">
+<meta property="og:title" content="shengfq&#39;s blog">
+<meta property="og:url" content="https://www.shengfq.github.io/archives/2020/03/index.html">
 <meta property="og:site_name" content="shengfq&#39;s blog">
-<meta property="og:description" content="异常的层级 多catch块抛出条款设计异常的层级概要在java和c#中异常能够通过层级关系分类.这种关系一般是一个或多个异常继承自其他异常.在java中FileNotFoundException 就是IOException异常的子类.下面就是一自定义异常:public class MyException extends Exception{    //constructors etc.} 如你所见">
+<meta property="og:description" content="blogs and research">
 <meta property="og:locale" content="zn-han">
-<meta property="og:updated_time" content="2019-03-29T13:13:18.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Exception Hierarchies">
-<meta name="twitter:description" content="异常的层级 多catch块抛出条款设计异常的层级概要在java和c#中异常能够通过层级关系分类.这种关系一般是一个或多个异常继承自其他异常.在java中FileNotFoundException 就是IOException异常的子类.下面就是一自定义异常:public class MyException extends Exception{    //constructors etc.} 如你所见">
+<meta name="twitter:title" content="shengfq&#39;s blog">
+<meta name="twitter:description" content="blogs and research">
 
 
 
@@ -120,13 +118,13 @@
 
 
 
-  <link rel="canonical" href="https://www.shengfq.github.io/2018/05/14/异常的层级/"/>
+  <link rel="canonical" href="https://www.shengfq.github.io/archives/2020/03/"/>
 
 
 
 
 
-  <title>Exception Hierarchies | shengfq's blog</title>
+  <title>Archive | shengfq's blog</title>
   
 
 
@@ -145,7 +143,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-left page-archive">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -219,154 +217,74 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-expand">
-    
+  
+  
+  
+  <div class="post-block archive">
+    <div id="posts" class="posts-collapse">
+      <span class="archive-move-on"></span>
 
-  
+      <span class="archive-page-counter">
+        
+        
+        
+          
+        
+        Um..! 17 posts in total. Keep on posting.
+      </span>
 
-  
-  
-  
+      
+
+        
+        
+        
+
+        
+          
+          <div class="collection-title">
+            <h1 class="archive-year" id="archive-year-2020">2020</h1>
+          </div>
+        
+        
+
+        
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2018/05/14/异常的层级/">
+    <header class="post-header">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="盛富强">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="shengfq's blog">
-    </span>
-
-    
-      <header class="post-header">
-
+      <h2 class="post-title">
         
-        
-          <h1 class="post-title" itemprop="name headline">Exception Hierarchies</h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
+            <a class="post-title-link" href="/2020/03/14/Fastjson详解/" itemprop="url">
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span itemprop="name">阿里巴巴Fastjson详解</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-14T00:00:00+08:00">
-                2018-05-14
-              </time>
-            
+            </a>
+        
+      </h2>
 
-            
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated"
+              datetime="2020-03-14T00:00:00+08:00"
+              content="2020-03-14" >
+          03-14
+        </time>
+      </div>
 
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <p>异常的层级</p>
-<h2 id="多catch块"><a href="#多catch块" class="headerlink" title="多catch块"></a>多catch块</h2><h2 id="抛出条款"><a href="#抛出条款" class="headerlink" title="抛出条款"></a>抛出条款</h2><h2 id="设计异常的层级"><a href="#设计异常的层级" class="headerlink" title="设计异常的层级"></a>设计异常的层级</h2><h2 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h2><p>在java和c#中异常能够通过层级关系分类.这种关系一般是一个或多个异常继承自其他异常.在java中FileNotFoundException 就是IOException异常的子类.下面就是一自定义异常:<br>public class MyException extends Exception{<br>    //constructors etc.<br>}</p>
-<p>如你所见并没有其他内容.更高级的异常层级是你决定catch一个具体的异常,你就能自动的捕获到该异常所有子类发生时触发时点.换句话说,你能catch所有具体的异常只要你声明一个父类异常.在案例中FileNotFoundException,如果你捕获了IOException,你就能捕获到FileNotFoundException.</p>
-<p>##多个catch块<br>你可能知道了已经有一种多catch块的声明异常的方式,这在</p>
-
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/翻译/" rel="tag"># 翻译</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2018/05/14/Catching Multiple Exceptions in Java 7/" rel="next" title="Catching Multiple Exceptions in Java 7">
-                <i class="fa fa-chevron-left"></i> Catching Multiple Exceptions in Java 7
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/05/24/hello-world/" rel="prev" title="Hello World">
-                Hello World <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </div>
-  
-  
-  
+    </header>
   </article>
 
 
 
-    <div class="post-spread">
       
+
     </div>
   </div>
+  
+  
+  
+
+  
+
 
 
           </div>
@@ -374,10 +292,6 @@
 
 
           
-
-  
-
-
 
         </div>
         
@@ -398,17 +312,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            Table of Contents
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            Overview
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -469,22 +374,6 @@
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#多catch块"><span class="nav-number">1.</span> <span class="nav-text">多catch块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#抛出条款"><span class="nav-number">2.</span> <span class="nav-text">抛出条款</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设计异常的层级"><span class="nav-number">3.</span> <span class="nav-text">设计异常的层级</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#概要"><span class="nav-number">4.</span> <span class="nav-text">概要</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
@@ -618,10 +507,6 @@
   
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
-
-
 
   
 
