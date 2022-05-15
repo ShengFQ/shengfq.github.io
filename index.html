@@ -232,6 +232,650 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2022/05/15/编程思维-抽象思维训练方法论/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="盛富强">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="shengfq's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/05/15/编程思维-抽象思维训练方法论/" itemprop="url">编程思维-抽象思维训练方法论</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2022-05-15T00:00:00+08:00">
+                2022-05-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h5>程序员必备的思维能力：抽象思维</h5>
+
+<p>转载自: 原文 <a href="https://mp.weixin.qq.com/s/cJ0odiYcphhNBoAVjqpCZQ" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/cJ0odiYcphhNBoAVjqpCZQ</a></p>
+<blockquote>
+<p>若想捉大鱼，就得潜入深渊。深渊里的鱼更有力，也更纯净。硕大而抽象，且非常美丽。——大卫·林奇</p>
+</blockquote>
+<p>抽象思维是我们工程师最重要的思维能力。因为软件技术 本质上就是一门抽象的艺术。我们的工作是存思维的“游戏”，虽然我们在使用键盘、显示器，打开电脑可以看到主板、硬盘等硬件。但我们即看不到程序如何被执行，也看不到0101是如何被CPU处理的。</p>
+<p>我们工程师每天都要动用抽象思维，对问题域进行分析、归纳、综合、判断、推理。从而抽象出各种概念，挖掘概念和概念之间的关系，对问题域进行建模，然后通过编程语言实现业务功能。所以，我们大部分的时间并不是在写代码，而是在梳理需求，理清概念，当然，也包括尝试看懂那些“该死的、别人写的”代码。</p>
+<p>在我接触的工程师中，能深入理解抽象概念的并不多，能把抽象和面向对象、架构设计进行有机结合，能用抽象思维进行问题分析、化繁为简的同学更是凤毛麟角。</p>
+<p>对于我本人而言，每当我对抽象有进一步的理解和认知，我都能切身感受到它给我在编码和设计上带来的质的变化。同时感慨之前对抽象的理解为什么如此肤浅。如果时间可以倒流的话，我希望我在我职业生涯的早期，就能充分意识到抽象的重要性，能多花时间认真的研究它，深刻的理解它，这样应该可以少走很多弯路。</p>
+<h1 id="1-1-什么是抽象"><a href="#1-1-什么是抽象" class="headerlink" title="1.1 什么是抽象"></a>1.1 什么是抽象</h1><p>关于抽象的定义，百度百科是这样说的：</p>
+<blockquote>
+<p>抽象是从众多的事物中抽取出共同的、本质性的特征，而舍弃其非本质的特征的过程。具体地说，抽象就是人们在实践的基础上，对于丰富的感性材料通过去粗取精、去伪存真、由此及彼、由表及里的加工制作，形成概念、判断、推理等思维形式，以反映事物的本质和规律的方法。<br>实际上，抽象是与具体相对应的概念，具体是事物的多种属性的总和，因而抽象亦可理解为由具体事物的多种属性中舍弃了若干属性而固定了另一些属性的思维活动。[1]</p>
+</blockquote>
+<p>Wikipedia的解释是：</p>
+<blockquote>
+<p>抽象是指为了某种目的，对一个概念或一种现象包含的信息进行过滤，移除不相关的信息，只保留与某种最终目的相关的信息。例如，一个皮质的足球，我们可以过滤它的质料等信息，得到更一般性的概念，也就是球。从另外一个角度看，抽象就是简化事物，抓住事物本质的过程。[2]</p>
+</blockquote>
+<p>简单而言，“抽”就是抽离，“象”就是具象，字面上理解抽象，抽象的过程就是从“具象”事物中归纳出共同特征，“抽取”得到一般化（Generalization）的概念的过程。英文的抽象——abstract来自拉丁文abstractio，它的原意是排除、抽出。</p>
+<p>为了更好的方便你理解抽象，让我们先来看一幅毕加索的画，如下图所示，图的左边是一头水牛，是具象的，右边是毕加索画，是抽象的。怎么样，是不是感觉自己一下子理解了抽象画的含义。 <img src="https://mmbiz.qpic.cn/mmbiz_png/iadkjxbLay4icWxjfM8Zo7y2icbjLiapvwzJjbcuCCn581lnvdod3lazYEJHaAVwcp3RvWjx25jnNCQufWk2EEl6pA/640?wx_fmt=png&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1" alt="图片"></p>
+<p>可以看到，抽象牛只有几根线条，不过这几根线条是做了高度抽象之后的线条，过滤了水牛的绝大部分细节，保留了牛最本质特征，比如牛角，牛头，牛鞭、牛尾巴等等。这种对细节的舍弃使得“抽象牛”具有更好的泛化（Generalization）能力。可以说，抽象更接近问题的本质。也就是说所有的牛都逃不过这几根线条。</p>
+<h1 id="1-2-抽象和语言是一体的"><a href="#1-2-抽象和语言是一体的" class="headerlink" title="1.2 抽象和语言是一体的"></a>1.2 抽象和语言是一体的</h1><p>关于抽象思维，我们在百度百科上可以看到如下的定义：</p>
+<blockquote>
+<p>抽象思维，又称词（概念）的思维或者逻辑思维，是指用词（概念）进行判断、推理并得出结论的过程。抽象思维以词（概念）为中介来反映现实。这是思维的最本质特征，也是人的思维和动物心理的根本区别。[3]</p>
+</blockquote>
+<p>之所以把抽象思维称为词思维或者概念思维，是因为语言和抽象是一体的。当我们说“牛”的时候，说的就是“牛”的抽象，他代表了所有牛共有的特征。同样，当你在程序中创建Cow这个类的时候，道理也是一样。在生活中，我们只见过一头一头具象的牛，“牛”作为抽象的存在，即看不见也摸不着。</p>
+<p>这种把抽象概念作为世界本真的看法，也是古希腊哲学家柏拉图的最重要哲学思想。柏拉图认为，我们所有用感觉感知到的事物，都源于相应的理念。他认为具体事物的“名”，也就是他说的“理念世界”才是本真的东西，具体的一头牛，有大有小，有公有母，颜色、性情、外形各自不同。因此我们不好用个体感觉加以概括，但是这些牛既然都被统称为“牛”，则说明它们必然都源于同一个“理念”，即所谓“牛的理念”或者“理念的牛”，所以它们可以用“牛”加以概括。尚且不论“理念世界”是否真的存在，这是一个哲学问题，但有一点可以确定，我们的思考，对概念的表达都离不开语言。[4]</p>
+<p>这也是为什么，我在做设计和代码审查（Code Review）的时候，会特别关注命名是否合理的原因。因为命名的好坏，在很大程度上反应了我们对一个概念的思考是否清晰，我们的抽象是否合理，反应在代码上就是，代码的可读性、可理解性是不是良好，以及我们的设计是不是到位。</p>
+<p>有人做过一个调查，问程序员最头痛的事情是什么，通过Quora和Ubuntu Forum的调查结果显示，程序员最头疼的事情是命名。如果你曾经为了一个命名而绞尽脑汁，就不会对这个结果感到意外。</p>
+<p>就像Stack Overflow的创始人Joel Spolsky所说的：“起一个好名字应该很难，因为，一个好名字需要把要义浓缩在一到两个词。（Creating good names is hard, but it should be hard, because a great name captures essential meaning in just one or two words）。”</p>
+<p>是的，这个浓缩的过程就是抽象的过程。我不止一次的发现，当我觉得一个地方的命名有些别扭的时候，往往就意味着要么这个地方我没有思考清楚，要么是我的抽象弄错了。</p>
+<p>关于如何命名，我在《代码精进之路》里已经有比较详尽的阐述，这里就不赘述了。</p>
+<p>我想强调的是语言是明晰概念的基础，也是抽象思维的基础，在构建一个系统时，值得我们花很多时间去斟酌、去推敲语言。在我做过的一个项目中，就曾为一个关键实体讨论了两天，因为那是一个新概念，尝试了很多名字，始终感觉到别扭、不好理解。随着我们讨论的深入，对问题域理解的深入，我们最终找到了一个相对比较合适的名字，才肯罢休。</p>
+<p>这样的斟酌是有意义的，因为明晰关键概念，是我们设计中的重要工作。虽然不合理的命名，不合理的抽象也能实现业务功能。但其代价就是维护系统时，极高的认知负荷。随着时间的推移，就没人能搞懂系统的设计了。</p>
+<h1 id="1-3-抽象的层次性"><a href="#1-3-抽象的层次性" class="headerlink" title="1.3 抽象的层次性"></a>1.3 抽象的层次性</h1><p>回到毕加索的抽象画，如下图所示，如果映射到面向对象编程，抽象牛就是抽象类（Abstract Class），代表了所有牛的抽象。抽象牛可以泛化成更多的牛，比如水牛、奶牛、牦牛等。每一种牛都代表了一类（Class）牛，对于每一类牛，我们可以通过实例化，得到一头具体的牛实例（Instance）。 <img src="https://mmbiz.qpic.cn/mmbiz_png/iadkjxbLay4icWxjfM8Zo7y2icbjLiapvwzJ7GdAIzQz3Cl3BdXR5YNHicFQF5w5rLs4R67uQBQHxsDmeM3GialzN3wA/640?wx_fmt=png&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1" alt="图片"></p>
+<p>从这个简单的案例中，我们可以到抽象的三个特点：</p>
+<ol>
+<li>第一，抽象是忽略细节的。抽象类是最抽象的，忽略的细节也最多，就像抽象牛，只是几根线条而已。在代码中，这种抽象可以是Abstract Class，也可以是Interface。</li>
+<li>第二，抽象代表了共同性质。类（Class）代表了一组实例（Instance）的共同性质，抽象类（Abstract Class）代表了一组类的共同性质。对于我们上面的案例来说，这些共同性质就是抽象牛的那几根线条。</li>
+<li>第三，抽象具有层次性。抽象层次越高，内涵越小，外延越大，也就是说它的涵义越小，泛化能力越强。比如，牛就要比水牛更抽象，因为它可以表达所有的牛，水牛只是牛的一个种类（Class）。</li>
+</ol>
+<p>抽象的这种层次性，是除了抽象概念之外，另一个我们必须要深入理解的概念，因为小到一个方法要怎么写，大到 一个系统要如何架构，以及我们后面第三章要介绍的结构化思维，都离不开抽象层次的概念。</p>
+<p>在进一步介绍抽象层次之前，我们先来理解一下外延和内涵的意思：</p>
+<p><em>抽象是以概念（词语）来反映现实的过程，每一个概念都有一定的外延和内涵．概念的外延就是适合这个概念的一切对象的范围，而概念的内涵就是这个概念所反映的对象的本质属性的总和．例如“平行四边形”这个概念，它的外延包含着一切正方形、菱形、矩形以及一般的平行四边形，而它的内涵包含着一切平行四边形所共有的“有四条边，两组对边互相平行”这两个本质属性。</em></p>
+<p><em>一个概念的内涵愈广，则其外延愈狭；反之，内涵愈狭，则其外延愈广。例如，“平行四边形”的内涵是“有四条边，两组对边互相平行”，而“菱形”的内涵除了这两条本质属性外，还包含着“四边相等”这一本质属性。“菱形”的内涵比“平行四边形”的内涵广，而“菱形”的外延要比“平行四边形”的外延狭。</em></p>
+<p>所谓的抽象层次就体现在概念的外延和内涵上，这种层次性，基本可以体现在任何事物上，比如一份报纸就存在多个层次上的抽象，“出版品”最抽象，其内涵最小，但外延最大，“出版品”可以是报纸也可以是期刊杂志等。</p>
+<ol>
+<li>一个出版品</li>
+<li>一份报纸</li>
+<li>《旧金山纪事报》</li>
+<li>5 月 18 日的《旧金山纪事报》</li>
+</ol>
+<p>当我要统计美国有多少个出版品，那么就要用到最上面第一层“出版品”的抽象，如果我要查询旧金山5月18日当天的新闻，就要用到最下面第四层的抽象。</p>
+<p>每一个抽象层次都有它的用途，对于我们工程师来说，如何拿捏这个抽象层次是对我们设计能力的考验，抽象层次太高和太低都不行。</p>
+<p>比如，现在要写一个水果程序，我们需要对水果进行抽象，因为水果里面有红色的苹果，我们当然可以建一个RedApple的类，但是这个抽象层次有点低，只能用来表达“红色的苹果”。来一个绿色的苹果，你还得新建一个GreenApple类。</p>
+<p>为了提升抽象层次，我们可以把RedApple类改成Apple类，让颜色变成Apple的属性，这样红色和绿色的苹果就都能表达了。再继续往上抽象，我们还可以得到水果类、植物类等。再往上抽象就是生物、物质了。</p>
+<p>你可以看到，抽象层次越高，内涵越小，外延越大，泛化能力越强。然而，其代价就是业务语义表达能力越弱。 <img src="https://mmbiz.qpic.cn/mmbiz_png/iadkjxbLay4icWxjfM8Zo7y2icbjLiapvwzJJEoGUJEibQvh65NYkb67cgYFLeIEg0K6IG5dv0cTxaj4B6VXzGBicstg/640?wx_fmt=png&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1" alt="图片"></p>
+<p>具体要抽象到哪个层次，要视具体的情况而定了，比如这个程序是专门研究苹果的可能到Apple就够了，如果是卖水果的可能需要到Fruit，如果是植物研究的可能要到Plant，但很少需要到Object。</p>
+<p>我经常开玩笑说，你把所有的类都叫Object，把所有的参数都叫Map的系统最通用，因为Object和Map的内涵最小，其延展性最强，可以适配所有的扩展。从原理上来说，这种抽象也是对的，万物皆对象嘛。但是这种抽象又有什么意义呢？它没有表达出任何想表达的东西，只是一句正确的废话而已。</p>
+<p>越抽象，越通用，可扩展性越强，然而其语义的表达能力越弱。越具体，越不好延展，然而其语义表达能力很强。所以，对于抽象层次的权衡，是我们系统设计的关键所在，也是区分普通程序员和优秀程序员的关键所在。</p>
+<h1 id="1-4-软件中的分层抽象无处不在"><a href="#1-4-软件中的分层抽象无处不在" class="headerlink" title="1.4 软件中的分层抽象无处不在"></a>1.4 软件中的分层抽象无处不在</h1><p>越是复杂的问题越需要分层抽象，分层是分而治之，抽象是问题域的合理划分和概念语义的表达。不同层次提供不同的抽象，下层对上层隐藏实现细节，通过这种层次结构，我们才有可能应对像网络通信、云计算等超级复杂的问题。</p>
+<p>网络通信是互联网最重要的基础实施，但同时它又是一个很复杂的过程，你要知道把数据包传给谁——IP协议，你要知道在这个不可靠的网络上出现状况要怎么办——TCP协议。有这么多的事情需要处理，我们可不可以在一个层次中都做掉呢？当然是可以的，但显然不科学。因此，ISO制定了网络通信的七层参考模型，每一层只处理一件事情，低层为上层提供服务，直到应用层把HTTP，FTP等方便理解和使用的协议暴露给用户。 <img src="https://mmbiz.qpic.cn/mmbiz_png/iadkjxbLay4icWxjfM8Zo7y2icbjLiapvwzJNYz9rzLDcpR0lopPmcrQoNsibOswociaRaEffdXoToaiad7AITZHaL9JA/640?wx_fmt=png&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1" alt="图片"></p>
+<p>编程语言的发展史也是一个典型的分层抽象的演化史。</p>
+<p>机器能理解的只有机器语言，即各种二进制的01指令。如果我们采用O1的输入方式，其编程效率极低（学过数字电路的同学，体会下用开关实现加减法）。所以我们用汇编语言抽象了二进制指令。然而汇编还是很底层，于是我们用C语言抽象了汇编语言。而高级语言Java是类似于C这样低级语言的进一步抽象，这种逐层抽象极大的提升了我们的编程效率。 <img src="https://mmbiz.qpic.cn/mmbiz_png/iadkjxbLay4icWxjfM8Zo7y2icbjLiapvwzJlTnrKwia3EyPoxgOSictBD4v6nuOIzKd6xd9pgPbjQpNvhYNzk6NNarw/640?wx_fmt=png&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1" alt="图片"></p>
+<h1 id="1-5-重复代码是抽象的缺失"><a href="#1-5-重复代码是抽象的缺失" class="headerlink" title="1.5 重复代码是抽象的缺失"></a>1.5 重复代码是抽象的缺失</h1><p>如果说抽象的本质是共性的话，那么我们代码中的重复代码，是不是就意味着抽象的缺失呢？</p>
+<p>是这样的，重复代码是典型的代码坏味道，其本质问题就是抽象的缺失。因为我们Ctrl+C加Ctrl+V的工作习惯，导致没有对共性代码进行抽取，或者虽然抽取了，只是简单的用了一个Util名字，没有给到一个合适的名字，没有正确的反应这段代码所体现的抽象概念，都属于抽象不到位。</p>
+<p>有一次，我在Review团队代码的时候，发现有一段组装搜索条件的代码，在几十个地方都有重复。这个搜索条件还比较复杂，是以元数据的形式存在数据库中，因此组装的过程是这样的：</p>
+<ul>
+<li>首先，我们要从缓存中把搜索条件列表取出来；</li>
+<li>然后，遍历这些条件，将搜索的值填充进去；</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">//取默认搜索条件</span><br><span class="line">List&lt;String&gt; defaultConditions = searchConditionCacheTunnel.getJsonQueryByLabelKey(labelKey);</span><br><span class="line">for(String jsonQuery : defaultConditions)&#123;</span><br><span class="line">	jsonQuery = jsonQuery.replaceAll(SearchConstants.SEARCH_DEFAULT_PUBLICSEA_ENABLE_TIME, String.valueOf(System.currentTimeMillis() / 1000));</span><br><span class="line">	jsonQueryList.add(jsonQuery);</span><br><span class="line">&#125;</span><br><span class="line">//取主搜索框的搜索条件</span><br><span class="line">if(StringUtils.isNotEmpty(cmd.getContent()))&#123;</span><br><span class="line">    List&lt;String&gt; jsonValues = searchConditionCacheTunnel.getJsonQueryByLabelKey(SearchConstants.ICBU_SALES_MAIN_SEARCH);</span><br><span class="line">    for (String value : jsonValues) &#123;</span><br><span class="line">		String content = StringUtil.transferQuotation(cmd.getContent());</span><br><span class="line">		value = StringUtil.replaceAll(value, SearchConstants.SEARCH_DEFAULT_MAIN, content);</span><br><span class="line">    	jsonQueryList.add(value);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>简单的重构无外乎就是把这段代码提取出来，放到一个Util类里面给大家复用。然而我认为这样的重构只是完成了工作的一半，我们只是做了简单的归类，并没有做抽象提炼。</p>
+<p>简单分析，不难发现，此处我们是缺失了两个概念：一个是用来表达搜索条件的类——<code>SearchCondition</code>；另一个是用来组装搜索条件的类——<code>SearchConditionAssembler</code>。只有配合命名，显性化的将这两个概念表达出来，才是一个完整的重构。</p>
+<p>重构后，搜索条件的组装会变成一种非常简洁的形式，几十处的复用只需要引用<code>SearchConditionAssembler</code>就好了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public class SearchConditionAssembler &#123;</span><br><span class="line">    public static SearchCondition assemble(String labelKey)&#123;</span><br><span class="line">        String jsonSearchCondition =  getJsonSearchConditionFromCache(labelKey);</span><br><span class="line">        SearchCondition sc = assembleSearchCondition(jsonSearchCondition);</span><br><span class="line">        return sc;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由此可见，提取重复代码只是我们重构工作的第一步。对重复代码进行概念抽象，寻找有意义的命名才是我们工作的重点。</p>
+<p>因此，每一次遇到重复代码的时候，你都应该感到兴奋，想着，这是一次锻炼抽象能力的绝佳机会，当然，测试代码除外。</p>
+<h1 id="1-6-强制类型转换是抽象层次有问题"><a href="#1-6-强制类型转换是抽象层次有问题" class="headerlink" title="1.6 强制类型转换是抽象层次有问题"></a>1.6 强制类型转换是抽象层次有问题</h1><p>面向对象设计里面有一个著名的SOLID原则是由Bob大叔（Robert Martin）提出来的，其中的L代表LSP，就是Liskov Substitution Principle（里氏替换原则）。简单来说，里氏替换原则就是子类应该可以替换任何父类能够出现的地方，并且经过替换以后，代码还能正常工作。</p>
+<p>思考一下，我们在写代码的过程中，什么时候会用到强制类型转换呢？当然是LSP不能被满足的时候，也就是说子类的方法超出了父类的类型定义范围，为了能使用到子类的方法，只能使用类型强制转换将类型转成子类类型。</p>
+<p>举个例子，在苹果（Apple）类上，有一个isSweet()方法是用来判断水果甜不甜的；西瓜（Watermelon）类上，有一个isJuicy()是来判断水分是否充足的；同时，它们都共同继承一个水果（Fruit）类</p>
+<p>此时，我们需要挑选出甜的水果和有水分的习惯，我们会写一个如下的程序：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public class FruitPicker &#123;</span><br><span class="line"></span><br><span class="line">    public List&lt;Fruit&gt; pickGood(List&lt;Fruit&gt; fruits)&#123;</span><br><span class="line">        return fruits.stream().filter(e -&gt; check(e)).</span><br><span class="line">                collect(Collectors.toList());</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    private boolean check(Fruit e) &#123;</span><br><span class="line">        if(e instanceof Apple)&#123;</span><br><span class="line">            if(((Apple) e).isSweet())&#123;</span><br><span class="line">                return true;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        if(e instanceof Watermelon)&#123;</span><br><span class="line">            if(((Watermelon) e).isJuicy())&#123;</span><br><span class="line">                return true;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因为pick方法的入参的类型是Fruit，所以为了获得Apple和Watermelon上的特有方法，我们不得不使用instanceof做一个类型判断，然后使用强制类型转换转成子类类型，以便获得他们的专有方法，很显然，这是违背了里式替换原则的。</p>
+<p>这里问题出在哪里？对于这样的代码我们要如何去优化呢？仔细分析一下，我们可以发现，根本原因是因为isSweet和isJuicy的抽象层次不够，站在更高抽象层次也就是Fruit的视角看，我们挑选的就是可口的水果，只是具体到苹果我们看甜度，具体到西瓜我们看水分而已。</p>
+<p>因此，解决方法就是对isSweet和isJuicy进行抽象，并提升一个层次，在Fruit上创建一个isTasty()的抽象方法，然后让苹果和西瓜类分别去实现这个抽象方法就好了。 </p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/iadkjxbLay4icWxjfM8Zo7y2icbjLiapvwzJ2NSOtFF5ZIWOoqvDEAPDCjiaTfTLWY4tg6XibQjkymkW0zxTUxoia5QAQ/640?wx_fmt=png&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1" alt="图片"></p>
+<p>下面是重构后的代码，通过抽象层次的提升我们消除了instanceof判断和强制类型转换，让代码重新满足了里式替换原则。抽象层次的提升使得代码重新变得优雅了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public class FruitPicker &#123;</span><br><span class="line"></span><br><span class="line">    public List&lt;Fruit&gt; pickGood(List&lt;Fruit&gt; fruits)&#123;</span><br><span class="line">        return fruits.stream().filter(e -&gt; check(e)).</span><br><span class="line">                collect(Collectors.toList());</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    //不再需要instanceof和强制类型转换</span><br><span class="line">    private boolean check(Fruit e) &#123;</span><br><span class="line">        return e.isTasty();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>所以，每当我们在程序中准备使用instanceof做类型判断，或者用cast做强制类型转换的时候。每当我们的程序不满足LSP的时候。你都应该警醒一下，好家伙，这又是一次锻炼抽象能力的绝佳机会。</p>
+<h1 id="1-7-如何提升抽象思维能力"><a href="#1-7-如何提升抽象思维能力" class="headerlink" title="1.7 如何提升抽象思维能力"></a>1.7 如何提升抽象思维能力</h1><p>抽象思维能力是我们人类特有的、与生俱来的能力，除了上面说的在编码过程中可以锻炼抽象能力之外，我们还可以通过一些其他的练习，不断的提升我们的抽象能力。</p>
+<h2 id="多阅读"><a href="#多阅读" class="headerlink" title="多阅读"></a>多阅读</h2><p>为什么阅读书籍比看电视更好呢？因为图像比文字更加具象，阅读的过程可以锻炼我们的抽象能力、想象能力，而看画面的时候会将你的大脑铺满，较少需要抽象和想象。</p>
+<p>这也是为什么我们不提倡让小孩子过多的暴露在电视或手机屏幕前的原因，因为这样不利于他抽象思维的锻炼。</p>
+<p>抽象思维的差别让孩子们的学习成绩从初中开始分化，许多不能适应这种抽象层面训练的，就去读技校了，因为技校比大学会更加具象：车铣刨磨、零部件都能看得见摸得着。体力劳动要比脑力劳动来的简单。</p>
+<h2 id="多总结沉淀"><a href="#多总结沉淀" class="headerlink" title="多总结沉淀"></a>多总结沉淀</h2><p>小时候不理解，语文老师为什么总是要求我们总结段落大意、中心思想什么的。现在回想起来，这种思维训练在基础教育中是非常必要的，其实质就是帮助学生提升抽象思维能力。</p>
+<p>记录也是很好的总结习惯。就拿读书笔记来说，最好不要原文摘录书中的内容，而是要用自己的话总结归纳书中的内容，这样不仅可以加深理解，而且还可以提升自己的抽象思维能力。</p>
+<p>我从四年前开始系统的记录笔记，做总结沉淀，构建自己的知识体系。这种思维训练的好处显而易见，可以说我之前写的《从码农到工匠》和现在正在写的《程序员必备的思维能力》都离不开我总结沉淀的习惯。</p>
+<h2 id="命名训练"><a href="#命名训练" class="headerlink" title="命名训练"></a>命名训练</h2><p>每一次的变量命名、方法命名、类命名都是一次难得的抽象思维训练机会，前面已经说过了，语言和抽象是一体的，命名的好坏直接反应了我们的问题域思考的是否清晰，反应了我们抽象的是否合理。</p>
+<p>现实情况是，我们很多的工程师常常忽略了命名的重要性，只要能实现业务功能，名字从来就不是重点。</p>
+<p>实际上，这是对系统的不负责任，也是对自己的不负责任，更是对后期维护系统的人不负责任。写程序和写文章有很大的相似性，本质上都是在用语言阐述一件事情。试想下，如果文章中用的都是些词不达意的句子，这样的文章谁能看得懂，谁又愿意去看呢。</p>
+<p>同样，我一直强调代码要显性化的表达业务语义，其中命名在这个过程中扮演了极其重要的角色。为了代码的可读性，为了系统的长期可维护性，为了我们自身抽象思维的训练，我们都不应该放过任何一个带有歧义、表达模糊、意不清的命名。</p>
+<h2 id="领域建模训练"><a href="#领域建模训练" class="headerlink" title="领域建模训练"></a>领域建模训练</h2><p>对于技术同学，我们还有一个非常好的提升抽象能力的手段——领域建模。当我们对问题域进行分析、整理和抽象的时候，当我们对领域进行划分和建模的时候，实际上也是在锻炼我们的抽象能力。</p>
+<p>我们可以对自己工作中的问题域进行建模，当然也可以通过阅读一些优秀源码背后的模型设计来学习如何抽象、如何建模。比如，我们知道Spring的核心功能是Bean容器，那么在看Spring源码的时候，我们可以着重去看它是如何进行Bean管理的？它使用的核心抽象是什么？不难发现，Spring是使用了BeanDefinition、BeanFactory、BeanDefinitionRegistry、BeanDefinitionReader等核心抽象实现了Bean的定义、获取和创建。抓住了这些核心抽象，我们就抓住了Spring设计主脉。</p>
+<p>除此之外，我们还可以进一步深入思考，它为什么要这么抽象？这样抽象的好处是什么？以及它是如何支持XML和Annotation（注解）这两种关于Bean的定义的。</p>
+<p>这样的抽象思维锻炼和思考，对提升我们的抽象能力和建模能力非常重要。关于这一点，我深有感触，初入职场的时候，当我尝试对问题域进行抽象和建模的时候，会觉得无从下手，建出来的模型也感觉很别扭。然而，经过长期的、刻意的学习和锻炼之后，很明显可以感觉到我的建模能力和抽象能力都有很大的提升。不但分析问题的速度更快了，而且建出来的模型也更加优雅了。</p>
+<h1 id="1-8-小结"><a href="#1-8-小结" class="headerlink" title="1.8 小结"></a>1.8 小结</h1><ul>
+<li>抽象思维是程序员最重要的思维能力，抽象的过程就是寻找共性、归纳总结、综合分析，提炼出相关概念的过程。</li>
+<li>语言和抽象是一体的，抽象思维也叫词思维，因为抽象的概念只能通过语言才能表达出来。</li>
+<li>抽象是有层次性的，抽象层次越高，内涵越小，外延越大，扩展性越好；反之，抽象层次越低，内涵越大，外延越小，扩展性越差，但语义表达能力越强。</li>
+<li>对抽象层次的拿捏，体现了我们的设计功力，视具体情况而定，抽象层次既不能太高，也不能太低。</li>
+<li>重复代码意味着抽象缺失，强制类型转换意味着抽象层次有问题，我们可以利用这些信号来重构代码，让代码重新变的优雅。</li>
+<li>我们可以通过刻意练习来提升抽象能力，这些练习包括阅读、总结、命名训练、建模训练等。</li>
+</ul>
+<p>参考文档</p>
+<blockquote>
+<p>[1] <a href="https://baike.baidu.com/item/抽象/9021828" target="_blank" rel="noopener">https://baike.baidu.com/item/抽象/9021828</a></p>
+</blockquote>
+<blockquote>
+<p>[2] <a href="https://zh.wikipedia.org/wiki/抽象化" target="_blank" rel="noopener">https://zh.wikipedia.org/wiki/抽象化</a></p>
+</blockquote>
+<blockquote>
+<p>[3] <a href="https://baike.baidu.com/item/抽象思维" target="_blank" rel="noopener">https://baike.baidu.com/item/抽象思维</a></p>
+</blockquote>
+<blockquote>
+<p>[4] <a href="https://www.sohu.com/a/359915387_260616" target="_blank" rel="noopener">https://www.sohu.com/a/359915387_260616</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2021/07/05/XX公司生产事故复盘分析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="盛富强">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="shengfq's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/07/05/XX公司生产事故复盘分析/" itemprop="url">XX公司生产事故-高并发下访问redis一个key</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-07-05T00:00:00+08:00">
+                2021-07-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>故障分析:<br>在分布式服务部署环境,高并发访问时,一个seq生成到临界点了,单秒订单记录重复,然后引发了一系列的问题</p>
+<p>问题代码:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public string getSeq()&#123;</span><br><span class="line">    long seq=redisClient.incr(SN_REDIS_KEY);</span><br><span class="line">    if(seq&gt;999999)&#123;</span><br><span class="line">      seq=1;</span><br><span class="line">      redisClient.del(SN_REDIS_KEY);</span><br><span class="line">      seq=redisClient.incr(SN_REDIS_KEY);</span><br><span class="line">    &#125;</span><br><span class="line">    return string.format(&quot;%06d&quot;,seq);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>原因:<br>这段代码是redis客户端执行del操作,下一步是incr操作,如果是在高并发场景下,没有加锁控制,会导致服务副本不安全执行上面的代码导致redis客户端返回的数据是脏数据,从而程序的执行逻辑出现异常.</p>
+<p>解决:<br>这段代码如果是单体服务,要做进程内的加锁操作,可以使用sync(低效率简单),也可以使用可重入锁.<br>如果是在分布式多副本环境下,要做分布式锁操作,方案有三个:<br>使用zk实现分布式锁,在锁环境下操作上述代码.<br>使用redis实现全局原子性操作,redis可以分发分布式锁,redis可以执行lua脚本,保障全局下,这段代码操作的原子性.</p>
+<p>秦老师的解决方案:<br>ringbuffer,imax方案,单机tps达到600万.</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2021/03/19/关于自我感受力的思考/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="盛富强">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="shengfq's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/03/19/关于自我感受力的思考/" itemprop="url">关于自我感受力的思考</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-03-19T00:00:00+08:00">
+                2021-03-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>主题:关于自我感受力的思考<br>日期:2021-03-18<br>作者:shengfq<br>偶然看到知乎优秀答主@程墨Morgan在聊”只关注自我,又不知道表达自我,你会吃亏的”这个话题.<br>人如果不思考,脑袋就会秀逗了,就无法在这个社会上混得好.<br>在跟外界别人沟通的时候,如果过于自我,凡事只顾自己的感受,就算自己犯错了,第一反应不是道歉,减小别人的误解.而是想让对方减小对自己的损失.<br>这在人性中是行不通的,别人没有义务要帮助你或者配合你,在寻求帮助的时候要提出请求,付出要即使没有成功也要感谢,如果花费了对方巨大的精力,要<br>用实际行动来感谢对方的付出.这是基本的道德.</p>
+<p>在价值,归属,使命,愿景,价值观的时候,进行自我批判和反省.深入了解自己想要什么,能做什么,擅长什么,如果三者高度统一,那恭喜你.如果达不到也不要急,<br>一步一个脚印,去接近自己的目标,达到自己的愿景,实现自己的使命.当然这需要超乎常人的努力,没人陪伴,没人肯定,更没有人给你鼓励,我一路走来就是这样,但我<br>深刻的体会到,知识就是力量,落后就要挨打的教训.我要掌握自己的命运,在这条基本框架下,没有妥协,没得商量,必须下功夫.</p>
+<p>什么样的行业是有前景的行业?<br>潜意识里希望押宝,把自己的时间和经历都忽略掉,以为误打误撞加入一个行业,自己就能成功,以为学习别人的路就能成功,以为掌握了成功的捷径,以为懂点破道理就离成功更近了.<br>其实都是自欺欺人,每个行业都有混的不行和混的顶尖的人.人跟人之间最大的区别就是认知,一个人可能出生很穷,但是通过后天的努力和强烈的使命感,是可以补齐先天的不足,达到人生的成功,而有的人也可以生在富二代,但是就是灯红酒绿,只懂挥霍青春,醉纸金迷的享乐人间,被欲望吞噬.把家族好几代创下的基业挥霍掉.<br>所以,我们需要正确的引导,教育给我的是如何打工,如何做好一个员工,如何当个小白兔,不惹事.<br>那些行业顶尖的人才,从来都不是按部就班的听天由命,都是自己的愿景和使命感驱动自己在这个领域做到行业顶尖,接下来思考的是如何做到顶尖,没有人能生而知之.要想超过行业里90%的人,就得具备别人不具备的打铁技能,专业程度,思维高度.他们永远都在想着如何做得更好.</p>
+<p>我觉得人的成长,分阶段,阶段性的目标都不同<br>小时候,我们是第一次接触这个世界,对世界好奇,就要去探索自然.<br>上学了,知识文化素质教育,是我们了解人类文明和科学知识的过程.<br>毕业后,社会的多元化教会我们如何与组织沟通,如何与自己沟通.<br>25岁后,坚定自己的人生目标,科学技术是第一生产力毫不动摇,落后就要挨打.<br>30岁后,少就是多,不再轻易的切换行业,而是在自己的领域做深度探索.<br>35岁后,从技术专家转变为行家,抽象出行业里的模型,进行聚合归纳分类,形成认知.</p>
+<p>作者：kimmking<br>链接：<a href="https://www.zhihu.com/question/315201616/answer/1756148937" target="_blank" rel="noopener">https://www.zhihu.com/question/315201616/answer/1756148937</a><br>来源：知乎<br>以下几个任何一个都可以超过90%程序员：<br>1.把事情想明白，说清楚，跟别人商量好<br>2.写代码，注意边界条件和编码规范，写单测，基本做到无bug提测<br>3.工作中做好计划和进度跟踪，沟通和汇报，不把问题遗留到变成事故<br>4.思考和分析，如何优化目前的工作流程，引入工具和方法，提升生产效率<br>5.把自己工作中用到的技术用熟，搞清楚原理，优点短处，适用场景<br>6.不断接触新技术思想和工具，完善自身知识体系结构<br>7.深入学习至少一个常用开源项目，源码层面系统掌握这项技术<br>8.持续坚持学习和技术内容输出，每个星期产出2篇原创技术文章</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2020/06/07/Java8-Lambda表达式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="盛富强">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="shengfq's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/07/Java8-Lambda表达式/" itemprop="url">java8Lambda详解</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-06-07T00:00:00+08:00">
+                2020-06-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>###什么是 lambda?</p>
+<p>#####百度百科<br>Lambda 表达式（lambda expression）是一个匿名函数，Lambda表达式基于数学中的λ演算得名，直接对应于其中的lambda抽象（lambda abstraction），是一个匿名函数，即没有函数名的函数。Lambda表达式可以表示闭包（注意和数学传统意义上的不同）。</p>
+<p>###lambda 的优点</p>
+<ol>
+<li><p>没有使用Lambda表达式之前</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public class OldThread &#123;</span><br><span class="line"> public static void main(String[] args) &#123;</span><br><span class="line">   new Thread(new Runnable() &#123;</span><br><span class="line">     public void run() &#123;</span><br><span class="line">       System.out.println(&quot;Hello World!&quot;);</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;).start();</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用了Lambda表达式之后</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public class LambdaThread &#123;</span><br><span class="line">	  public static void main(String[] args) &#123;</span><br><span class="line">	    new Thread(() -&gt; System.out.println(&quot;Hello World!&quot;)).start();</span><br><span class="line">	  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>我们发现使用lambda只需一行代码就搞定了之前需要一个匿名类需要完成的事情，所以，Lambda 表达式是创建匿名内部类的语法糖。在编译器的帮助下，可以让开发人员用更少的代码来完成工作。</p>
+<p>###lambda 的语法风格</p>
+<p>#####Lambda表达式由三部分组成：<br>参数列表<br><br>箭头<br><br>主体<br></p>
+<p>有两种风格，分别是：</p>
+<p>#####表达式-风格<br>(parameters) -&gt; expression</p>
+<p>#####块-风格<br>(parameters) -&gt; { statements; }</p>
+<p><br>依据上面的风格介绍，来试着判断下面给出的示例是否有效：<br></p>
+<ul><br><li>() -&gt; {}</li><br><li>() -&gt; “Apple” </li><br><li>() -&gt; { return “Apple”; } </li><br><li>(Integer i) -&gt; return “Apple” + i </li><br><li>(String s) -&gt; { “Apple”; } </li><br></ul>
+
+<p>解析：</p>
+<p><li>（1）是块风格，没有语句；</li></p>
+<p><li>（2）是表达式风格，一个字符串表达式；</li></p>
+<p><li>（3）是块风格，有花括号和返回语句；</li></p>
+<p><li>（4）非有效，写了返回语句，但缺少花括号，补上花括号和分号，为块风格，而去掉return则为表达式风格；</li></p>
+<p><li>（5）非有效，”Apple”是一个字符串表达式，不是一个语句，加上return，或者去掉分号和花括号。</li></p>
+<p>###函数式编程接口<br>Lambda表达式写好了，我们要知道哪里能用Lambda表达式。已知Lambda表达式可看作是匿名内部类的实现，那对于匿名内部类来说最重要的是类所实现的接口，而Lambda表达式是否可用于所有接口？答案“不是的”，Lambda表达式对接口有一定的要求，必须是函数式接口。</p>
+<p>所谓的函数式接口指的是只定义一个抽象方法的接口<br>例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public interface Comparator&lt;T&gt; &#123;</span><br><span class="line">    int compare(T o1, T o2);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public interface Runnable &#123;</span><br><span class="line">    void run();</span><br><span class="line">&#125;</span><br><span class="line">public interface Callable&lt;V&gt; &#123;</span><br><span class="line">    V call() throws Exception;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>###复合Lambda表达式</p>
+<p>参考：<a href="https://github.com/alibaba/fastjson/wiki" target="_blank" rel="noopener">https://github.com/alibaba/fastjson/wiki</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2020/03/14/Fastjson详解/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -761,6 +1405,163 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2019/08/18/集合框架详解一/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="盛富强">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="shengfq's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/08/18/集合框架详解一/" itemprop="url">集合框架总结一</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-08-18T00:00:00+08:00">
+                2019-08-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>##1. 集合的定义<br>什么是集合呢？<br><br>定义：集合是一个存放对象的引用的容器。<br>在Java中，集合位于java.util包下。<br></p>
+<p>##2. 集合和数组的区别(面试常问)<br>提到容器，就会想起数组，那么集合和数组的区别是什么呢？（这里是重点，面试可能问的比较多）</p>
+<li>数组和集合都是Java中的容器<br><br></li><li>数组的长度是固定的，集合的长度是可变的<br><br></li><li>数组只能存储相同数据类型的数据，这里的数据类型可以是基本数据类型，也可以是引用类型<br><br></li><li>集合可以存储不同数据类型的对象的引用(但一般情况下，我们会使用泛型来约定只使用1种数据类型)，但不能存储基本数据类型<br><br><br>空口无凭，我们来点代码配合理解，首先，我们看下如下的数组代码：<br><br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">String[] platformArray = new String[3];</span><br><span class="line">platformArray[0] = &quot;博客园&quot;;</span><br><span class="line">platformArray[1] = &quot;掘金&quot;;</span><br><span class="line">platformArray[2] = &quot;微信公众号&quot;;</span><br><span class="line">platformArray[3] = &quot;个人博客&quot;;</span><br></pre></td></tr></table></figure><br><br>复制代码运行代码就会发现<br><br><pre>platformArray[3] = “个人博客”;</pre>会引发java.lang.ArrayIndexOutOfBoundsException异常。<br><br>而使用集合时就不存在这个问题，因为集合在声明时不需要指定长度并且长度会根据放入元素的多少而变化：<br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; platformList = new ArrayList&lt;&gt;();</span><br><span class="line">platformList.add(&quot;博客园&quot;);</span><br><span class="line">platformList.add(&quot;掘金&quot;);</span><br><span class="line">platformList.add(&quot;微信公众号&quot;);</span><br><span class="line">platformList.add(&quot;个人博客&quot;);</span><br><span class="line">复制代码观察上面声明数组的代码，我们可以推断出下面的代码肯定是编译不通过的：</span><br><span class="line">String[] platformArray = new String[3];</span><br><span class="line">platformArray[0] = &quot;博客园&quot;;</span><br><span class="line">platformArray[1] = &quot;掘金&quot;;</span><br><span class="line">platformArray[2] = 1;</span><br><span class="line">复制代码因为数组声明时用的是String类型，而platformArray[2] = 1;赋值时却使用了int类型。</span><br><span class="line">再来看下下面的集合代码：</span><br><span class="line">List&lt;int&gt; intList = new ArrayList&lt;int&gt;();</span><br><span class="line">intList.add(1);</span><br><span class="line">intList.add(2);</span><br><span class="line">intList.add(3);</span><br><span class="line">复制代码这段代码也是编译不通过的，在IDEA中，鼠标悬停时会提示如下的错误信息：</span><br><span class="line"></span><br><span class="line">意思是类型参数不能是原始类型(基本数据类型)，那怎么使用呢？总不能不让我使用int型的集合吧？</span><br><span class="line">当然不会，Java为每种基本数据类型都提供了对应的包装类，这里修改为int类型对应的包装类Integer即可：</span><br><span class="line">List&lt;Integer&gt; intList = new ArrayList&lt;Integer&gt;();</span><br><span class="line">intList.add(1);</span><br><span class="line">intList.add(2);</span><br><span class="line">intList.add(3);</span><br></pre></td></tr></table></figure><br><br>复制代码以下为Java的原始类型(基本数据类型)与其对应的包装类：<br><br><br><br>|原始类型|包装类|<br>| :——– | ——–: |<br>|byte |Byte|<br>|short|Short|<br>|int|Integer|<br>|long|Long|<br>|float|Float|<br>|double|Double|<br>|char|Character|<br>|boolean|Boolean|<br><br>##3. 集合的分类<br>在Java中，集合主要分为以下3种：<br></li><li> List集合</li><br><li>Set集合</li><br><li>Map集合</li>
+
+<p>它们之间的继承关系可以参考下图。</p>
+<p>从上图可以总结出如下几点：</p>
+<li>Java集合的根接口是Collection，它又继承了迭代接口Iterable</li><br><li>List接口和Set接口继承了Collection接口</li><br><li>Map接口是独立的接口，并没有继承Collection接口  （这里是重点，面试可能问的比较多）</li><br><li>List接口常用的实现类有：ArrayList、LinkedList、Vector</li><br><li>Set接口常用的实现类有：HashSet、LinkedHashSet、TreeSet</li><br><li>Map接口常用的实现类有：HashMap、HashTable、TreeMap</li>
+
+<p>##4. List集合<br>List集合包括List接口以及List接口的所有实现类。List集合具有以下特点：</p>
+<p><li>集合中的元素允许重复</li></p>
+<p><li>集合中的元素是有顺序的，各元素插入的顺序就是各元素的顺序</li></p>
+<p><li>集合中的元素可以通过索引来访问或者设置</li></p>
+<p><li>List接口常用的实现类有：ArrayList、LinkedList、Vector。</li></p>
+<p>我们先看下如下示例了解下List集合的用法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">package collection;</span><br><span class="line"></span><br><span class="line">import java.util.*;</span><br><span class="line"></span><br><span class="line">public class Muster &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        List&lt;String&gt; strList = new ArrayList&lt;&gt;();</span><br><span class="line">        strList.add(&quot;a&quot;);</span><br><span class="line">        strList.add(&quot;b&quot;);</span><br><span class="line">        strList.add(&quot;c&quot;);</span><br><span class="line"></span><br><span class="line">        int i = (int) (Math.random() * strList.size());</span><br><span class="line">        System.out.println(&quot;随机获取数组中的元素：&quot; + strList.get(i));</span><br><span class="line"></span><br><span class="line">        strList.remove(2);</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;将索引为2的元素从列表移除后，数组中的元素是:&quot;);</span><br><span class="line">        for (int j = 0; j &lt; strList.size(); j++) &#123;</span><br><span class="line">            System.out.println(strList.get(j));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>复制代码以上代码的输出结果为：</p>
+<p><pre><br>随机获取数组中的元素：a<br>将索引为2的元素从列表移除后，数组中的元素是:<br>a<br>b<br></pre><br><a href="##"><br>关于List集合的详细用法，ArrayList、LinkedList、Vector的区别（这里是重点，面试可能问的比较多），后续会单独写文总结，敬请期待。<br></a></p>
+<p>##5. Set集合<br>Set集合包括Set接口以及Set接口的所有实现类。Set集合具有以下特点：</p>
+<p><li>集合中不包含重复元素(你可以重复添加，但只会保留第1个)</li></p>
+<p><li>集合中的元素不一定保证有序</li></p>
+<p><li>Set接口常用的实现类有：HashSet、LinkedHashSet、TreeSet。</li></p>
+<p>我们先看下如下示例了解下Set集合的用法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">package collection;</span><br><span class="line"></span><br><span class="line">import java.util.*;</span><br><span class="line"></span><br><span class="line">public class Muster &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Set&lt;String&gt; platformList = new HashSet&lt;&gt;();</span><br><span class="line">        platformList.add(&quot;博客园&quot;);</span><br><span class="line">        platformList.add(&quot;掘金&quot;);</span><br><span class="line">        platformList.add(&quot;微信公众号&quot;);</span><br><span class="line">        platformList.add(&quot;个人博客&quot;);</span><br><span class="line"></span><br><span class="line">        // 尝试添加重复元素</span><br><span class="line">        platformList.add(&quot;博客园&quot;);</span><br><span class="line">        platformList.add(&quot;掘金&quot;);</span><br><span class="line"></span><br><span class="line">        for (String platform : platformList) &#123;</span><br><span class="line">            System.out.println(platform);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>复制代码以上代码的输出结果为：</p>
+<p><pre><br>博客园<br>个人博客<br>掘金<br>微信公众号<br></pre><br>可以看出，虽然我们尝试添加了重复元素，但并没有添加成功并且输出的元素没有顺序。<br>因此当你的集合中不允许有重复元素并且对排序也没有要求的话，可以使用Set集合。<br><a href="##">关于Set集合的详细用法，HashSet、LinkedHashSet、TreeSet的区别（这里是重点，面试可能问的比较多），后续会单独写文总结，敬请期待。</a></p>
+<p>##6. Map集合<br>Map集合包括Map接口以及Map接口的所有实现类。<br>Map集合具有以下特点：</p>
+<p><li>Map接口并没有继承Collection接口，提供的是key到value的映射</li></p>
+<p><li>Map中不能包含相同的key</li></p>
+<p><li>Map接口常用的实现类有：HashMap、HashTable、TreeMap。</li></p>
+<p>我们先看下如下示例了解下Map集合的用法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">package collection;</span><br><span class="line"></span><br><span class="line">import java.util.*;</span><br><span class="line"></span><br><span class="line">public class Muster &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Map&lt;Integer, String&gt; platformMap = new HashMap&lt;&gt;();</span><br><span class="line">        platformMap.put(1, &quot;博客园&quot;);</span><br><span class="line">        platformMap.put(2, &quot;掘金&quot;);</span><br><span class="line">        platformMap.put(3, &quot;微信公众号&quot;);</span><br><span class="line">        platformMap.put(4, &quot;个人博客&quot;);</span><br><span class="line"></span><br><span class="line">        // 尝试添加重复Map</span><br><span class="line">        platformMap.put(4, &quot;个人博客&quot;);</span><br><span class="line"></span><br><span class="line">        // 获取所有的key</span><br><span class="line">        Set&lt;Integer&gt; keys = platformMap.keySet();</span><br><span class="line">        for (Integer integer : keys) &#123;</span><br><span class="line">            System.out.println(&quot;Key:&quot; + integer + &quot;,Value:&quot; + platformMap.get(integer));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>复制代码以上代码的输出结果为：</p>
+<p><li>Key:1,Value:博客园</li></p>
+<p><li>Key:2,Value:掘金</li></p>
+<p><li>Key:3,Value:微信公众号</li></p>
+<p><li>Key:4,Value:个人博客</li></p>
+<p><li>从日志可以看出，当我们尝试重加重复Map时，并没有添加成功。</li></p>
+<p><li><a href="##">关于Map集合的详细用法，HashMap、HashTable、TreeMap的区别（这里是重点，面试可能问的比较多），后续会单独写文总结，敬请期待。</a></li></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2019/08/18/一次生产问题的排查解决/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -873,163 +1674,6 @@
 <p>显示tcp各个状态数量：<br> netstat -ant |awk ‘{print $6}’|sort|uniq -c</p>
 <p>查看连接某服务端口最多的的IP地址<br>netstat -nat | grep “10.32.45.35:8924” |awk ‘{print $5}’|awk -F: ‘{print $4}’|sort|uniq -c|sort -nr|head -10</p>
 </h6></h6></h6></h6></h4>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2019/08/18/集合框架详解一/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="盛富强">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="shengfq's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/08/18/集合框架详解一/" itemprop="url">集合框架总结一</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-08-18T00:00:00+08:00">
-                2019-08-18
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>##1. 集合的定义<br>什么是集合呢？<br><br>定义：集合是一个存放对象的引用的容器。<br>在Java中，集合位于java.util包下。<br></p>
-<p>##2. 集合和数组的区别(面试常问)<br>提到容器，就会想起数组，那么集合和数组的区别是什么呢？（这里是重点，面试可能问的比较多）</p>
-<li>数组和集合都是Java中的容器<br><br></li><li>数组的长度是固定的，集合的长度是可变的<br><br></li><li>数组只能存储相同数据类型的数据，这里的数据类型可以是基本数据类型，也可以是引用类型<br><br></li><li>集合可以存储不同数据类型的对象的引用(但一般情况下，我们会使用泛型来约定只使用1种数据类型)，但不能存储基本数据类型<br><br><br>空口无凭，我们来点代码配合理解，首先，我们看下如下的数组代码：<br><br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">String[] platformArray = new String[3];</span><br><span class="line">platformArray[0] = &quot;博客园&quot;;</span><br><span class="line">platformArray[1] = &quot;掘金&quot;;</span><br><span class="line">platformArray[2] = &quot;微信公众号&quot;;</span><br><span class="line">platformArray[3] = &quot;个人博客&quot;;</span><br></pre></td></tr></table></figure><br><br>复制代码运行代码就会发现<br><br><pre>platformArray[3] = “个人博客”;</pre>会引发java.lang.ArrayIndexOutOfBoundsException异常。<br><br>而使用集合时就不存在这个问题，因为集合在声明时不需要指定长度并且长度会根据放入元素的多少而变化：<br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; platformList = new ArrayList&lt;&gt;();</span><br><span class="line">platformList.add(&quot;博客园&quot;);</span><br><span class="line">platformList.add(&quot;掘金&quot;);</span><br><span class="line">platformList.add(&quot;微信公众号&quot;);</span><br><span class="line">platformList.add(&quot;个人博客&quot;);</span><br><span class="line">复制代码观察上面声明数组的代码，我们可以推断出下面的代码肯定是编译不通过的：</span><br><span class="line">String[] platformArray = new String[3];</span><br><span class="line">platformArray[0] = &quot;博客园&quot;;</span><br><span class="line">platformArray[1] = &quot;掘金&quot;;</span><br><span class="line">platformArray[2] = 1;</span><br><span class="line">复制代码因为数组声明时用的是String类型，而platformArray[2] = 1;赋值时却使用了int类型。</span><br><span class="line">再来看下下面的集合代码：</span><br><span class="line">List&lt;int&gt; intList = new ArrayList&lt;int&gt;();</span><br><span class="line">intList.add(1);</span><br><span class="line">intList.add(2);</span><br><span class="line">intList.add(3);</span><br><span class="line">复制代码这段代码也是编译不通过的，在IDEA中，鼠标悬停时会提示如下的错误信息：</span><br><span class="line"></span><br><span class="line">意思是类型参数不能是原始类型(基本数据类型)，那怎么使用呢？总不能不让我使用int型的集合吧？</span><br><span class="line">当然不会，Java为每种基本数据类型都提供了对应的包装类，这里修改为int类型对应的包装类Integer即可：</span><br><span class="line">List&lt;Integer&gt; intList = new ArrayList&lt;Integer&gt;();</span><br><span class="line">intList.add(1);</span><br><span class="line">intList.add(2);</span><br><span class="line">intList.add(3);</span><br></pre></td></tr></table></figure><br><br>复制代码以下为Java的原始类型(基本数据类型)与其对应的包装类：<br><br><br><br>|原始类型|包装类|<br>| :——– | ——–: |<br>|byte |Byte|<br>|short|Short|<br>|int|Integer|<br>|long|Long|<br>|float|Float|<br>|double|Double|<br>|char|Character|<br>|boolean|Boolean|<br><br>##3. 集合的分类<br>在Java中，集合主要分为以下3种：<br></li><li> List集合</li><br><li>Set集合</li><br><li>Map集合</li>
-
-<p>它们之间的继承关系可以参考下图。</p>
-<p>从上图可以总结出如下几点：</p>
-<li>Java集合的根接口是Collection，它又继承了迭代接口Iterable</li><br><li>List接口和Set接口继承了Collection接口</li><br><li>Map接口是独立的接口，并没有继承Collection接口  （这里是重点，面试可能问的比较多）</li><br><li>List接口常用的实现类有：ArrayList、LinkedList、Vector</li><br><li>Set接口常用的实现类有：HashSet、LinkedHashSet、TreeSet</li><br><li>Map接口常用的实现类有：HashMap、HashTable、TreeMap</li>
-
-<p>##4. List集合<br>List集合包括List接口以及List接口的所有实现类。List集合具有以下特点：</p>
-<p><li>集合中的元素允许重复</li></p>
-<p><li>集合中的元素是有顺序的，各元素插入的顺序就是各元素的顺序</li></p>
-<p><li>集合中的元素可以通过索引来访问或者设置</li></p>
-<p><li>List接口常用的实现类有：ArrayList、LinkedList、Vector。</li></p>
-<p>我们先看下如下示例了解下List集合的用法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">package collection;</span><br><span class="line"></span><br><span class="line">import java.util.*;</span><br><span class="line"></span><br><span class="line">public class Muster &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        List&lt;String&gt; strList = new ArrayList&lt;&gt;();</span><br><span class="line">        strList.add(&quot;a&quot;);</span><br><span class="line">        strList.add(&quot;b&quot;);</span><br><span class="line">        strList.add(&quot;c&quot;);</span><br><span class="line"></span><br><span class="line">        int i = (int) (Math.random() * strList.size());</span><br><span class="line">        System.out.println(&quot;随机获取数组中的元素：&quot; + strList.get(i));</span><br><span class="line"></span><br><span class="line">        strList.remove(2);</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;将索引为2的元素从列表移除后，数组中的元素是:&quot;);</span><br><span class="line">        for (int j = 0; j &lt; strList.size(); j++) &#123;</span><br><span class="line">            System.out.println(strList.get(j));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>复制代码以上代码的输出结果为：</p>
-<p><pre><br>随机获取数组中的元素：a<br>将索引为2的元素从列表移除后，数组中的元素是:<br>a<br>b<br></pre><br><a href="##"><br>关于List集合的详细用法，ArrayList、LinkedList、Vector的区别（这里是重点，面试可能问的比较多），后续会单独写文总结，敬请期待。<br></a></p>
-<p>##5. Set集合<br>Set集合包括Set接口以及Set接口的所有实现类。Set集合具有以下特点：</p>
-<p><li>集合中不包含重复元素(你可以重复添加，但只会保留第1个)</li></p>
-<p><li>集合中的元素不一定保证有序</li></p>
-<p><li>Set接口常用的实现类有：HashSet、LinkedHashSet、TreeSet。</li></p>
-<p>我们先看下如下示例了解下Set集合的用法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">package collection;</span><br><span class="line"></span><br><span class="line">import java.util.*;</span><br><span class="line"></span><br><span class="line">public class Muster &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Set&lt;String&gt; platformList = new HashSet&lt;&gt;();</span><br><span class="line">        platformList.add(&quot;博客园&quot;);</span><br><span class="line">        platformList.add(&quot;掘金&quot;);</span><br><span class="line">        platformList.add(&quot;微信公众号&quot;);</span><br><span class="line">        platformList.add(&quot;个人博客&quot;);</span><br><span class="line"></span><br><span class="line">        // 尝试添加重复元素</span><br><span class="line">        platformList.add(&quot;博客园&quot;);</span><br><span class="line">        platformList.add(&quot;掘金&quot;);</span><br><span class="line"></span><br><span class="line">        for (String platform : platformList) &#123;</span><br><span class="line">            System.out.println(platform);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>复制代码以上代码的输出结果为：</p>
-<p><pre><br>博客园<br>个人博客<br>掘金<br>微信公众号<br></pre><br>可以看出，虽然我们尝试添加了重复元素，但并没有添加成功并且输出的元素没有顺序。<br>因此当你的集合中不允许有重复元素并且对排序也没有要求的话，可以使用Set集合。<br><a href="##">关于Set集合的详细用法，HashSet、LinkedHashSet、TreeSet的区别（这里是重点，面试可能问的比较多），后续会单独写文总结，敬请期待。</a></p>
-<p>##6. Map集合<br>Map集合包括Map接口以及Map接口的所有实现类。<br>Map集合具有以下特点：</p>
-<p><li>Map接口并没有继承Collection接口，提供的是key到value的映射</li></p>
-<p><li>Map中不能包含相同的key</li></p>
-<p><li>Map接口常用的实现类有：HashMap、HashTable、TreeMap。</li></p>
-<p>我们先看下如下示例了解下Map集合的用法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">package collection;</span><br><span class="line"></span><br><span class="line">import java.util.*;</span><br><span class="line"></span><br><span class="line">public class Muster &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Map&lt;Integer, String&gt; platformMap = new HashMap&lt;&gt;();</span><br><span class="line">        platformMap.put(1, &quot;博客园&quot;);</span><br><span class="line">        platformMap.put(2, &quot;掘金&quot;);</span><br><span class="line">        platformMap.put(3, &quot;微信公众号&quot;);</span><br><span class="line">        platformMap.put(4, &quot;个人博客&quot;);</span><br><span class="line"></span><br><span class="line">        // 尝试添加重复Map</span><br><span class="line">        platformMap.put(4, &quot;个人博客&quot;);</span><br><span class="line"></span><br><span class="line">        // 获取所有的key</span><br><span class="line">        Set&lt;Integer&gt; keys = platformMap.keySet();</span><br><span class="line">        for (Integer integer : keys) &#123;</span><br><span class="line">            System.out.println(&quot;Key:&quot; + integer + &quot;,Value:&quot; + platformMap.get(integer));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>复制代码以上代码的输出结果为：</p>
-<p><li>Key:1,Value:博客园</li></p>
-<p><li>Key:2,Value:掘金</li></p>
-<p><li>Key:3,Value:微信公众号</li></p>
-<p><li>Key:4,Value:个人博客</li></p>
-<p><li>从日志可以看出，当我们尝试重加重复Map时，并没有添加成功。</li></p>
-<p><li><a href="##">关于Map集合的详细用法，HashMap、HashTable、TreeMap的区别（这里是重点，面试可能问的比较多），后续会单独写文总结，敬请期待。</a></li></p>
-
           
         
       
@@ -1215,569 +1859,11 @@ new ThreadPoolExecutor.CallerRunsPolicy());
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2019/03/10/JUC-Java实现生产者消费者模型/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="盛富强">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="shengfq's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/03/10/JUC-Java实现生产者消费者模型/" itemprop="url">JUC系列-Java实现生产者消费者模型</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-03-10T00:00:00+08:00">
-                2019-03-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3>JUC系列-Java实现生产者-消费者模型</h3><br>有如下考点:<br><br>1.对java并发模型的理解<br><br>2.对并发编程接口的熟练程度<br><br><code>jdk: oracle java 1.8.0_102</code><br><br>本文主要归纳了3种写法，阅读后，最好在白板上练习几遍，检查自己是否掌握。这4种写法或者编程接口不同，或者并发粒度不同，但本质是相同的——都是在使用或实现BlockingQueue。<br><br><h3>生产者-消费者模型</h3><br>网上有很多生产者-消费者模型的定义和实现。本文研究最常用的有界生产者-消费者模型，简单概括如下：<br><ol><br><li>生产者持续生产，直到缓冲区满，阻塞；缓冲区不满后，继续生产</li><br><li>消费者持续消费，直到缓冲区空，阻塞；缓冲区不空后，继续消费</li><br><li>生产者可以有多个，消费者也可以有多个</li><br><br>可通过如下条件验证模型实现的正确性：<br><li>同一产品的消费行为一定发生在生产行为之后</li><br><li>任意时刻，缓冲区大小不小于0，不大于限制容量</li><br><li>该模型的应用和变种非常多，不赘述。</li><br></ol><br><br><h4>准备</h4><br>关键部分需要实现,抽象，如AbstractConsumer。<br><br><br>下面会涉及多种生产者-消费者模型的实现，可以先抽象出关键的接口，并实现一些抽象类<br><pre><br><br>public interface Consumer {<br>  void consume() throws InterruptedException;<br>}<br><br><br>public interface Producer {<br>  void produce() throws InterruptedException;<br>}<br><br>abstract class AbstractConsumer implements Consumer, Runnable {<br>  @Override<br>  public void run() {<br>    while (true) {<br>      try {<br>        consume();<br>      } catch (InterruptedException e) {<br>        e.printStackTrace();<br>        break;<br>      }<br>    }<br>  }<br>}<br><br>abstract class AbstractProducer implements Producer, Runnable {<br>  @Override<br>  public void run() {<br>    while (true) {<br>      try {<br>        produce();<br>      } catch (InterruptedException e) {<br>        e.printStackTrace();<br>        break;<br>      }<br>    }<br>  }<br>}<br><br></pre><br><br>不同的模型实现中，生产者、消费者的具体实现也不同，所以需要为模型定义抽象工厂方法：<br><br><pre><br><br>public interface Model {<br>  Runnable newRunnableConsumer();<br>  Runnable newRunnableProducer();<br>}<br><br>我们将Task作为生产和消费的单位<br>public class Task {<br>  public int no;<br>  public Task(int no) {<br>    this.no = no;<br>  }<br>}<br><br></pre><br><br>如果需求还不明确（这符合大部分工程工作的实际情况），建议边实现边抽象，不要“面向未来编程”。<br><br><h3>实现一：BlockingQueue</h3>
-
-<p>BlockingQueue的写法最简单。核心思想是，把并发和容量控制封装在缓冲区中。而BlockingQueue的性质天生满足这个要求。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">public class BlockingQueueModel implements Model &#123;</span><br><span class="line">  private final BlockingQueue&lt;Task&gt; queue;</span><br><span class="line">  private final AtomicInteger increTaskNo = new AtomicInteger(0);</span><br><span class="line">  public BlockingQueueModel(int cap) &#123;</span><br><span class="line">    // LinkedBlockingQueue 的队列不 init，入队时检查容量；ArrayBlockingQueue 在创建时 init</span><br><span class="line">    this.queue = new LinkedBlockingQueue&lt;&gt;(cap);</span><br><span class="line">  &#125;</span><br><span class="line">  @Override</span><br><span class="line">  public Runnable newRunnableConsumer() &#123;</span><br><span class="line">    return new ConsumerImpl();</span><br><span class="line">  &#125;</span><br><span class="line">  @Override</span><br><span class="line">  public Runnable newRunnableProducer() &#123;</span><br><span class="line">    return new ProducerImpl();</span><br><span class="line">  &#125;</span><br><span class="line">  private class ConsumerImpl extends AbstractConsumer implements Consumer, Runnable &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void consume() throws InterruptedException &#123;</span><br><span class="line">      Task task = queue.take();</span><br><span class="line">      // 固定时间范围的消费，模拟相对稳定的服务器处理过程</span><br><span class="line">      Thread.sleep(500 + (long) (Math.random() * 500));</span><br><span class="line">      System.out.println(&quot;consume: &quot; + task.no);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  private class ProducerImpl extends AbstractProducer implements Producer, Runnable &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void produce() throws InterruptedException &#123;</span><br><span class="line">      // 不定期生产，模拟随机的用户请求</span><br><span class="line">      Thread.sleep((long) (Math.random() * 1000));</span><br><span class="line">      Task task = new Task(increTaskNo.getAndIncrement());</span><br><span class="line">      System.out.println(&quot;produce: &quot; + task.no);</span><br><span class="line">      queue.put(task);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  public static void main(String[] args) &#123;</span><br><span class="line">    Model model = new BlockingQueueModel(3);</span><br><span class="line">    for (int i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">      new Thread(model.newRunnableConsumer()).start();</span><br><span class="line">    &#125;</span><br><span class="line">    for (int i = 0; i &lt; 5; i++) &#123;</span><br><span class="line">      new Thread(model.newRunnableProducer()).start();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">截取前面的一部分输出：</span><br><span class="line">produce: 0</span><br><span class="line">produce: 4</span><br><span class="line">produce: 2</span><br><span class="line">produce: 3</span><br><span class="line">produce: 5</span><br><span class="line">consume: 0</span><br><span class="line">produce: 1</span><br><span class="line">consume: 4</span><br><span class="line">produce: 7</span><br><span class="line">consume: 2</span><br><span class="line">produce: 8</span><br><span class="line">consume: 3</span><br><span class="line">produce: 6</span><br><span class="line">consume: 5</span><br><span class="line">produce: 9</span><br><span class="line">consume: 1</span><br><span class="line">produce: 10</span><br><span class="line">consume: 7</span><br></pre></td></tr></table></figure>
-<p></p><h4>验证条件</h4><br>由于操作“出队/入队+日志输出”不是原子的，所以上述日志的绝对顺序与实际的出队/入队顺序有出入，但对于同一个任务号task.no，其consume日志一定出现在其produce日志之后，即：同一任务的消费行为一定发生在生产行为之后。缓冲区的容量留给读者验证。符合两个验证条件。<p></p>
-<p>BlockingQueue写法的核心只有两行代码，并发和容量控制都封装在了BlockingQueue中，正确性由BlockingQueue保证。</p>
-<p></p><h3>实现二：wait &amp;&amp; notify</h3><br>如果不能将并发与容量控制都封装在缓冲区中，就只能由消费者与生产者完成。最简单的方案是使用朴素的<code>wait &amp;&amp; notify</code>机制。<p></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">public class WaitNotifyModel implements Model &#123;</span><br><span class="line">  private final Object BUFFER_LOCK = new Object();</span><br><span class="line">  private final Queue&lt;Task&gt; buffer = new LinkedList&lt;&gt;();</span><br><span class="line">  private final int cap;</span><br><span class="line">  private final AtomicInteger increTaskNo = new AtomicInteger(0);</span><br><span class="line">  public WaitNotifyModel(int cap) &#123;</span><br><span class="line">    this.cap = cap;</span><br><span class="line">  &#125;</span><br><span class="line">  @Override</span><br><span class="line">  public Runnable newRunnableConsumer() &#123;</span><br><span class="line">    return new ConsumerImpl();</span><br><span class="line">  &#125;</span><br><span class="line">  @Override</span><br><span class="line">  public Runnable newRunnableProducer() &#123;</span><br><span class="line">    return new ProducerImpl();</span><br><span class="line">  &#125;</span><br><span class="line">  private class ConsumerImpl extends AbstractConsumer implements Consumer, Runnable &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void consume() throws InterruptedException &#123;</span><br><span class="line">      synchronized (BUFFER_LOCK) &#123;</span><br><span class="line">        while (buffer.size() == 0) &#123;</span><br><span class="line">          BUFFER_LOCK.wait();</span><br><span class="line">        &#125;</span><br><span class="line">        Task task = buffer.poll();</span><br><span class="line">        assert task != null;</span><br><span class="line">        // 固定时间范围的消费，模拟相对稳定的服务器处理过程</span><br><span class="line">        Thread.sleep(500 + (long) (Math.random() * 500));</span><br><span class="line">        System.out.println(&quot;consume: &quot; + task.no);</span><br><span class="line">        BUFFER_LOCK.notifyAll();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  private class ProducerImpl extends AbstractProducer implements Producer, Runnable &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void produce() throws InterruptedException &#123;</span><br><span class="line">      // 不定期生产，模拟随机的用户请求</span><br><span class="line">      Thread.sleep((long) (Math.random() * 1000));</span><br><span class="line">      synchronized (BUFFER_LOCK) &#123;</span><br><span class="line">        while (buffer.size() == cap) &#123;</span><br><span class="line">          BUFFER_LOCK.wait();</span><br><span class="line">        &#125;</span><br><span class="line">        Task task = new Task(increTaskNo.getAndIncrement());</span><br><span class="line">        buffer.offer(task);</span><br><span class="line">        System.out.println(&quot;produce: &quot; + task.no);</span><br><span class="line">        BUFFER_LOCK.notifyAll();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  public static void main(String[] args) &#123;</span><br><span class="line">    Model model = new WaitNotifyModel(3);</span><br><span class="line">    for (int i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">      new Thread(model.newRunnableConsumer()).start();</span><br><span class="line">    &#125;</span><br><span class="line">    for (int i = 0; i &lt; 5; i++) &#123;</span><br><span class="line">      new Thread(model.newRunnableProducer()).start();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p></p><h3>实现三：简单的Lock &amp;&amp; Condition</h3><br>我们要保证理解wait &amp;&amp; notify机制。实现时可以使用Object类提供的wait()方法与notifyAll()方法，但更推荐的方式是使用java.util.concurrent包提供的Lock &amp;&amp; Condition。<p></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">public class LockConditionModel1 implements Model &#123;</span><br><span class="line">  private final Lock BUFFER_LOCK = new ReentrantLock();</span><br><span class="line">  private final Condition BUFFER_COND = BUFFER_LOCK.newCondition();</span><br><span class="line">  private final Queue&lt;Task&gt; buffer = new LinkedList&lt;&gt;();</span><br><span class="line">  private final int cap;</span><br><span class="line">  private final AtomicInteger increTaskNo = new AtomicInteger(0);</span><br><span class="line">  public LockConditionModel1(int cap) &#123;</span><br><span class="line">    this.cap = cap;</span><br><span class="line">  &#125;</span><br><span class="line">  @Override</span><br><span class="line">  public Runnable newRunnableConsumer() &#123;</span><br><span class="line">    return new ConsumerImpl();</span><br><span class="line">  &#125;</span><br><span class="line">  @Override</span><br><span class="line">  public Runnable newRunnableProducer() &#123;</span><br><span class="line">    return new ProducerImpl();</span><br><span class="line">  &#125;</span><br><span class="line">  private class ConsumerImpl extends AbstractConsumer implements Consumer, Runnable &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void consume() throws InterruptedException &#123;</span><br><span class="line">      BUFFER_LOCK.lockInterruptibly();</span><br><span class="line">      try &#123;</span><br><span class="line">        while (buffer.size() == 0) &#123;</span><br><span class="line">          BUFFER_COND.await();</span><br><span class="line">        &#125;</span><br><span class="line">        Task task = buffer.poll();</span><br><span class="line">        assert task != null;</span><br><span class="line">        // 固定时间范围的消费，模拟相对稳定的服务器处理过程</span><br><span class="line">        Thread.sleep(500 + (long) (Math.random() * 500));</span><br><span class="line">        System.out.println(&quot;consume: &quot; + task.no);</span><br><span class="line">        BUFFER_COND.signalAll();</span><br><span class="line">      &#125; finally &#123;</span><br><span class="line">        BUFFER_LOCK.unlock();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  private class ProducerImpl extends AbstractProducer implements Producer, Runnable &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void produce() throws InterruptedException &#123;</span><br><span class="line">      // 不定期生产，模拟随机的用户请求</span><br><span class="line">      Thread.sleep((long) (Math.random() * 1000));</span><br><span class="line">      BUFFER_LOCK.lockInterruptibly();</span><br><span class="line">      try &#123;</span><br><span class="line">        while (buffer.size() == cap) &#123;</span><br><span class="line">          BUFFER_COND.await();</span><br><span class="line">        &#125;</span><br><span class="line">        Task task = new Task(increTaskNo.getAndIncrement());</span><br><span class="line">        buffer.offer(task);</span><br><span class="line">        System.out.println(&quot;produce: &quot; + task.no);</span><br><span class="line">        BUFFER_COND.signalAll();</span><br><span class="line">      &#125; finally &#123;</span><br><span class="line">        BUFFER_LOCK.unlock();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  public static void main(String[] args) &#123;</span><br><span class="line">    Model model = new LockConditionModel1(3);</span><br><span class="line">    for (int i = 0; i &lt; 2; i++) &#123;</span><br><span class="line">      new Thread(model.newRunnableConsumer()).start();</span><br><span class="line">    &#125;</span><br><span class="line">    for (int i = 0; i &lt; 5; i++) &#123;</span><br><span class="line">      new Thread(model.newRunnableProducer()).start();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>该写法的思路与实现二的思路完全相同，仅仅将锁与条件变量换成了Lock和Condition。</p>
-<p></p><h3>总结</h3><br>方法1最简单,线程的并发同步和容量控制全部交给了LinkedBlockingQueue实现,自然美观,封装了复杂度.<p></p>
-<p>方法2和方法3是相同的原理,使用了手动控制并发同步,锁和竞争条件的运用.这对于我深入到阻塞队列实现的阻塞原理有了更加客观的认识.</p>
-<p>如果还有其他的实现方式,欢迎补充探讨,再次感谢阅读并指正.</p>
-<hr>
-<pre>
-author:shengfq
-qq:1085748383
-email: 1085748383@qq.com
-date:2019-03-10
-</pre>
-
-<hr>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2018/11/19/JUC-ArrayBlockingQueue源码分析/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="盛富强">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="shengfq's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/11/19/JUC-ArrayBlockingQueue源码分析/" itemprop="url">JUC多线程系列-ArrayBlockingQueue源码分析</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-11-19T00:00:00+08:00">
-                2018-11-19
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2>JUC多线程系列-ArrayBlockingQueue源码分析</h2><br><h3>背景</h3><br>最近在项目中应用到后台异步任务并发应用,干脆系统的撸一遍JUC,然后应用到项目中实战.<br><br><p>使用阻塞队列实现生产者消费者模式</p><br>优点:阻塞队列实现生产者消费者模式超级简单，它提供开箱即用支持阻塞的方法put()和take()，开发者不需要写困惑的wait-nofity代码去实现通信。BlockingQueue 一个接口，Java5提供了不同的现实，如ArrayBlockingQueue和LinkedBlockingQueue，两者都是先进先出（FIFO）顺序。而ArrayLinkedQueue是自然有界的，LinkedBlockingQueue可选的边界。下面这是一个完整的生产者消费者代码例子，对比传统的wait、nofity代码，它更易于理解。<br><br><br><h3>目录</h3><br><ol><br><li> ArrayBlockingQueue介绍</li><br><li>ArrayBlockingQueue原理和数据结构</li><br><li> ArrayBlockingQueue函数列表</li><br><li> ArrayBlockingQueue源码分析(JDK1.8版本)</li><br><li>ArrayBlockingQueue示例</li><br></ol><br><br><h2>正文</h2><br><h2>1.ArrayBlockingQueue介绍</h2><br>ArrayBlockingQueue是数组实现的线程安全的有界的阻塞队列。<br>线程安全是指，ArrayBlockingQueue内部通过“互斥锁”保护竞争资源，实现了多线程对竞争资源的互斥访问。而有界，则是指ArrayBlockingQueue对应的数组是有界限的。 阻塞队列，是指多线程访问竞争资源时，当竞争资源已被某线程获取时，其它要获取该资源的线程需要阻塞等待；而且，ArrayBlockingQueue是按 FIFO（先进先出）原则对元素进行排序，元素都是从尾部插入到队列，从头部开始返回。<br><br><br><br><a>注意：ArrayBlockingQueue不同于ConcurrentLinkedQueue，ArrayBlockingQueue是数组实现的，并且是有界限的；而ConcurrentLinkedQueue是链表实现的，是无界限的。<br></a><br><br><h2>2.ArrayBlockingQueue原理和数据结构</h2><br><ol><br><li> ArrayBlockingQueue继承于AbstractQueue，并且它实现了BlockingQueue接口。</li><br><li>  ArrayBlockingQueue内部是通过Object[]数组保存数据的，也就是说ArrayBlockingQueue本质上是通过数组实现的。ArrayBlockingQueue的大小，即数组的容量是创建ArrayBlockingQueue时指定的。</li><br><li>  ArrayBlockingQueue与ReentrantLock是组合关系，ArrayBlockingQueue中包含一个ReentrantLock对象(lock)。ReentrantLock是可重入的互斥锁，ArrayBlockingQueue就是根据该互斥锁实现“多线程对竞争资源的互斥访问”。而且，ReentrantLock分为公平锁和非公平锁，关于具体使用公平锁还是非公平锁，在创建ArrayBlockingQueue时可以指定；而且，ArrayBlockingQueue默认会使用非公平锁。</li><br><li>  ArrayBlockingQueue与Condition是组合关系，ArrayBlockingQueue中包含两个Condition对象(notEmpty和notFull)。<br></li><br></ol><br><br><h2>3.ArrayBlockingQueue函数列表</h2>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"> private ArrayBlockingQueue&lt;Integer&gt; queue=new ArrayBlockingQueue&lt;Integer&gt;(size);</span><br><span class="line">// 将指定的元素插入到此队列的尾部（如果立即可行且不会超过该队列的容量），在成功时返回 true，如果此队列已满，则抛出 IllegalStateException。</span><br><span class="line">    private boolean add(Integer num)&#123;</span><br><span class="line">       return queue.add(num);</span><br><span class="line">    &#125;</span><br><span class="line">// 将指定的元素插入到此队列的尾部（如果立即可行且不会超过该队列的容量），在成功时返回 true，如果此队列已满，则返回 false。</span><br><span class="line">    private boolean offer(Integer num)&#123;</span><br><span class="line">        return queue.offer(num);</span><br><span class="line">    &#125;</span><br><span class="line">/ 创建一个带有给定的（固定）容量和默认访问策略的 ArrayBlockingQueue。</span><br><span class="line">ArrayBlockingQueue(int capacity)</span><br><span class="line">// 创建一个具有给定的（固定）容量和指定访问策略的 ArrayBlockingQueue。</span><br><span class="line">ArrayBlockingQueue(int capacity, boolean fair)</span><br><span class="line">// 创建一个具有给定的（固定）容量和指定访问策略的 ArrayBlockingQueue，它最初包含给定 collection 的元素，并以 collection 迭代器的遍历顺序添加元素。</span><br><span class="line">ArrayBlockingQueue(int capacity, boolean fair, Collection&lt;? extends E&gt; c)</span><br><span class="line"></span><br><span class="line">    //TODO 将指定的元素插入此队列的尾部，如果该队列已满，则等待可用的空间。</span><br><span class="line">    private void put(Integer num) throws InterruptedException &#123;</span><br><span class="line">         queue.put(num);</span><br><span class="line">    &#125;</span><br><span class="line">    // 获取但不移除此队列的头；如果此队列为空，则返回 null。</span><br><span class="line">    private Integer peek()&#123;</span><br><span class="line">       return queue.peek();</span><br><span class="line">    &#125;</span><br><span class="line">    // 获取并移除此队列的头，如果此队列为空，则返回 null。</span><br><span class="line">    private Integer poll()&#123;</span><br><span class="line">        return queue.poll();</span><br><span class="line">    &#125;</span><br><span class="line">    //TODO 获取并移除此队列的头部，在元素变得可用之前一直等待（如果有必要）。</span><br><span class="line">    private Integer take() throws InterruptedException&#123;</span><br><span class="line">        return queue.take();</span><br><span class="line">    &#125;</span><br><span class="line">    // 从此队列中移除指定元素的单个实例（如果存在）</span><br><span class="line">    private boolean remove(Integer num)&#123;</span><br><span class="line">        return queue.remove(num);</span><br><span class="line">    &#125;</span><br><span class="line">    // 返回此队列中元素的数量。</span><br><span class="line">    private int getSize()&#123;</span><br><span class="line">      return queue.size();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p></p><h2>4.源码分析</h2><p></p>
-<h3>创建</h3>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">public ArrayBlockingQueue(int capacity, boolean fair) &#123;</span><br><span class="line">        if (capacity &lt;= 0)</span><br><span class="line">            throw new IllegalArgumentException();</span><br><span class="line">        this.items = new Object[capacity];//存放数组</span><br><span class="line">        lock = new ReentrantLock(fair); //互斥锁</span><br><span class="line">        notEmpty = lock.newCondition();//竞争条件</span><br><span class="line">        notFull =  lock.newCondition();//竞争条件</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">添加</span><br><span class="line">   offer() //队列满了返回false</span><br><span class="line">   add() //队列满了抛出异常</span><br><span class="line">   put() //队列慢了,阻塞线程</span><br><span class="line">取出</span><br><span class="line">   poll()//获取并移除此队列的头，如果此队列为空，则返回 null。</span><br><span class="line">   remove()//获取并移除此队列的头，如果为空,返回false</span><br><span class="line">   take() //获取并移除此队列的头部，在元素变得可用之前一直等待（如果有必要）。</span><br><span class="line">遍历</span><br><span class="line">   iterator() //符合Collection 接口</span><br></pre></td></tr></table></figure>
-<p></p><h2>总结</h2><br>    这些API都不需要记忆,因为编程的时候,你可以查看API的实现原理.重点是要花时间把他看懂,知道为什么实现的.<p></p>
-<p>5.思考题ArrayBlockingQueue示例<br>   一个线程打印1-52,一个线程打印A-Z<br>   要求控制台输出A12B34C56….Z5152</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2018/09/23/遗留系统的异常处理办法/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="盛富强">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="shengfq's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/23/遗留系统的异常处理办法/" itemprop="url">遗留系统的异常处理办法</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-09-23T19:43:27+08:00">
-                2018-09-23
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p></p><h5>遗留系统的异常处理办法</h5><p></p>
-<p></p><h5>背景</h5><br>OA7.0是一个跨度较大的版本，拷贝了客户生产环境的webapp/resources/data 就可以在本地搭建其测试环境。<br>根据客户的二开策略，我修改了数据源等个性化配置信息后遇到了些问题：<br>1.启动报各种异常导致无法启动成功<br>2.启动成功后，使用用户名和密码都无法登录成功<br>在这种情形下，就要进入具体的报错点，熟悉类的加载过程。<p></p>
-<pre>java.lang.NoClassDefFoundError: Could not initialize class org.springside.core.Constants
-
-Oracle 的解释是：
-Thrown if the Java Virtual Machine or a ClassLoader instance tries to load in the definition of a class (as part of a normal method call or as part of creating a new instance using the new expression) and no definition of the class could be found.
-The searched-for class definition existed when the currently executing class was compiled, but the definition can no longer be found.
-
-当java虚拟机或者类加载器实例尝试加载定义的类时，却没有找到该类的定义。
-</pre>
-
-<p></p><h5>解决思路</h5><p></p>
-<p></p><p>注释法</p><br>类会先加载static块，采用二分法的方式注释一部分方法调用，看问题是否存在。<p></p>
-<p></p><p>日志法</p><br>生产环境的问题无法debug，但是可以通过详细的日志调用，知道执行了哪些问题。<p></p>
-<p></p><p>反编译法</p><br>因为jar包里面的代码无法打断点，可以将类反编译出来，jdk会优先调用classes目录的字节码。<p></p>
-<p></p><p>异常定位法</p><br>既然是抛出了异常导致启动不成功，那么异常是哪里引起的，可以通过增加try…catch来捕获异常，定位异常点，记录异常信息。<p></p>
-<p></p><h5>最终解决</h5><br>原来是Constants类调用了Lisences.jar里面的方法导致抛出异常而没有处理，导致程序异常中断，static块没有执行完成，类加载器无法<br>初始化Constants实例。所以遗留系统里面的问题就是写了大量的没有异常处理机制的代码，既没有自主处理异常，也没有抛出异常，告知调用者<br>可能会出现的异常，通过上述的四个方法基本上可以找到问题点，解决之。<p></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2018/05/26/socket客户端监控案例/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="盛富强">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="shengfq's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/26/socket客户端监控案例/" itemprop="url">socket客户端监控案例</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-26T19:43:27+08:00">
-                2018-05-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="java-socket-监控案例包含"><a href="#java-socket-监控案例包含" class="headerlink" title="java socket 监控案例包含"></a>java socket 监控案例包含</h3><pre>
-1.客户端
- 1.1 客户端心跳线程
- 1.2 客户端消息发送线程
- 1.3 客户端消息接收线程 
- 1.4 客户端启动,关闭 方法
- 1.5 接收处理器接口(心跳接收,消息接收)
-
-
-2.服务端
-    2.1 服务端链接看门口线程
-    2.2 服务端接收线程
-    2.3 服务端启动,关闭方法
-    2.4 接受处理器接口(心跳接收,消息接收)
-
-3.心跳包
-    3.1 包含的时间戳和id字段
-
-4.普通消息
-    4.4 消息正文,消息类型
-
-5.异常处理
-    5.1套接字异常的处理办法
-
-</pre>
-
-<hr>
-<h4 id="服务端"><a href="#服务端" class="headerlink" title="服务端"></a>服务端</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">package client;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line">import java.io.InputStream;</span><br><span class="line">import java.io.ObjectInputStream;</span><br><span class="line">import java.io.ObjectOutputStream;</span><br><span class="line">import java.net.ServerSocket;</span><br><span class="line">import java.net.Socket;</span><br><span class="line">import java.util.concurrent.ConcurrentHashMap;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Created by sheng on 17/12/4.</span><br><span class="line"> */</span><br><span class="line">public class Server &#123;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 要处理客户端发来的对象，并返回一个对象，可实现该接口。</span><br><span class="line">     */</span><br><span class="line">    public interface ObjectAction&#123;</span><br><span class="line">        Object doAction(Object rev, Server server);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public  final class DefaultObjectAction implements ObjectAction&#123;</span><br><span class="line">        @Override</span><br><span class="line">        public Object doAction(Object rev,Server server) &#123;</span><br><span class="line">            KeepAlive keepAlive=(KeepAlive)rev;</span><br><span class="line">            System.out.println(&quot;接收数据,心跳包处理：\t&quot;+keepAlive.toString());</span><br><span class="line">            //心跳包解析</span><br><span class="line">            return keepAlive;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    public  class MsgObjectAction implements ObjectAction&#123;</span><br><span class="line">        @Override</span><br><span class="line">        public Object doAction(Object obj, Server server) &#123;</span><br><span class="line">            Message message=(Message)obj;</span><br><span class="line">            System.out.println(&quot;接收数据,消息包处理：\t&quot;+message.toString());</span><br><span class="line">            // TODO 消息解析</span><br><span class="line">            return message;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        int port = 65432;</span><br><span class="line">        Server server = new Server(port);</span><br><span class="line">        server.start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private int port;</span><br><span class="line">    //线程运行状态控制</span><br><span class="line">    private volatile boolean running=false;</span><br><span class="line">    //接收超时时间</span><br><span class="line">    private long receiveTimeDelay=3000;</span><br><span class="line">    private ConcurrentHashMap&lt;Class&lt;Object&gt;, ObjectAction&gt; actionMapping = new ConcurrentHashMap&lt;Class&lt;Object&gt;,ObjectAction&gt;();</span><br><span class="line">    private Thread connWatchDog;</span><br><span class="line">    public Server(int port) &#123;</span><br><span class="line">        this.port = port;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void start()&#123;</span><br><span class="line">        if(running)&#123;return;&#125;</span><br><span class="line">        running=true;</span><br><span class="line">        connWatchDog = new Thread(new ConnWatchDog());</span><br><span class="line">        connWatchDog.start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void stop()&#123;</span><br><span class="line">        if(running)&#123;running=false;&#125;</span><br><span class="line">        if(connWatchDog!=null)&#123;connWatchDog.stop();&#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void addActionMap(Class&lt;Object&gt; cls,ObjectAction action)&#123;</span><br><span class="line">        actionMapping.put(cls, action);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    class ConnWatchDog implements Runnable&#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void run()&#123;</span><br><span class="line">            try &#123;</span><br><span class="line">                System.out.println(&quot;server initial....&quot;);</span><br><span class="line">                ServerSocket ss = new ServerSocket(port,5);</span><br><span class="line">                while(running)&#123;</span><br><span class="line">                    Socket s = ss.accept();</span><br><span class="line">                    System.out.println(&quot;server accept one client ....&quot;);</span><br><span class="line">                    new Thread(new ReceiveWatchDogs(s)).start();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; catch (IOException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">                Server.this.stop();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    class ReceiveWatchDogs implements Runnable&#123;</span><br><span class="line">        Socket s;</span><br><span class="line">        boolean run=true;</span><br><span class="line">        long lastReceiveTime = System.currentTimeMillis();</span><br><span class="line">        KeepAlive lastKeepAlive;</span><br><span class="line">        public ReceiveWatchDogs(Socket s) &#123;</span><br><span class="line">            this.s = s;</span><br><span class="line">        &#125;</span><br><span class="line">        @Override</span><br><span class="line">        public void run() &#123;</span><br><span class="line">            while(running &amp;&amp; run)&#123;</span><br><span class="line">                if(System.currentTimeMillis()-lastReceiveTime&gt;receiveTimeDelay)&#123;</span><br><span class="line">                    overThis(lastKeepAlive);</span><br><span class="line">                &#125;else&#123;</span><br><span class="line">                    try &#123;</span><br><span class="line">                        InputStream in = s.getInputStream();</span><br><span class="line">                        if(in.available()&gt;0)&#123;</span><br><span class="line">                            ObjectInputStream ois = new ObjectInputStream(in);</span><br><span class="line">                            Object obj = ois.readObject();</span><br><span class="line">                            lastReceiveTime = System.currentTimeMillis();</span><br><span class="line">                            System.out.println(&quot;server receive... :\t&quot;+obj);</span><br><span class="line">                            if(obj instanceof Message)&#123;</span><br><span class="line">                                addActionMap((Class&lt;Object&gt;) obj.getClass(),new MsgObjectAction());</span><br><span class="line">                            &#125;else if(obj instanceof KeepAlive)&#123;</span><br><span class="line">                                this.lastKeepAlive=(KeepAlive) obj;</span><br><span class="line">                                addActionMap((Class&lt;Object&gt;) obj.getClass(),new DefaultObjectAction());</span><br><span class="line">                            &#125;</span><br><span class="line"></span><br><span class="line">                            ObjectAction oa = actionMapping.get(obj.getClass());</span><br><span class="line">                            oa = oa==null?new DefaultObjectAction():oa;</span><br><span class="line">                            Object out = oa.doAction(obj,Server.this);</span><br><span class="line">                        &#125;else&#123;</span><br><span class="line">                            Thread.sleep(10);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125; catch (Exception e) &#123;</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                        overThis(this.lastKeepAlive);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        private void overThis(KeepAlive keepAlive) &#123;</span><br><span class="line">            if(run)&#123;run=false;&#125;</span><br><span class="line">            if(s!=null)&#123;</span><br><span class="line">                try &#123;</span><br><span class="line">                    s.close();</span><br><span class="line">                &#125; catch (IOException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;System.out.println(&quot;client &quot;+keepAlive.getId()+&quot;  离线&quot;);</span><br><span class="line">            System.out.println(&quot;client connect over time....&quot;+s.getRemoteSocketAddress());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br></pre></td><td class="code"><pre><span class="line">package client;</span><br><span class="line">import java.io.ObjectOutputStream;</span><br><span class="line">import java.net.Socket;</span><br><span class="line">import java.io.IOException;</span><br><span class="line">import java.io.InputStream;</span><br><span class="line">import java.io.ObjectInputStream;</span><br><span class="line">import java.net.UnknownHostException;</span><br><span class="line">import java.util.Scanner;</span><br><span class="line">import java.util.concurrent.ConcurrentHashMap;</span><br><span class="line">import java.util.concurrent.RunnableFuture;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Created by sheng on 17/12/13.</span><br><span class="line"> * 客户端可以发送心跳包/消息包,在 keepAliveDelay毫秒内未发送任何数据,则自动发送一个KeepAlive Object(心跳)给服务器.</span><br><span class="line"> *</span><br><span class="line"> */</span><br><span class="line">public class Client &#123;</span><br><span class="line">    //sendObject 发送</span><br><span class="line"></span><br><span class="line">    //Message Object 消息</span><br><span class="line"></span><br><span class="line">    //keepAliveDelay 延时</span><br><span class="line"></span><br><span class="line">    //KeepAlive Object</span><br><span class="line"></span><br><span class="line">    //addActionMap</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 处理服务端发回的对象，可实现该接口。</span><br><span class="line">     */</span><br><span class="line">    public  interface ObjectAction&#123;</span><br><span class="line">        void doAction(Object obj,Client client);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static final class DefaultObjectAction implements ObjectAction&#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void doAction(Object obj,Client client) &#123;</span><br><span class="line">            KeepAlive alive=(KeepAlive) obj;</span><br><span class="line">            System.out.println(&quot;接收数据,心跳包处理：\t&quot;+alive.toString());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static class MsgObjectAction implements ObjectAction&#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void doAction(Object obj, Client client) &#123;</span><br><span class="line">            Message message=(Message) obj;</span><br><span class="line">            System.out.println(&quot;接收数据,消息包处理：\t&quot;+message.toString());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws UnknownHostException, IOException &#123;</span><br><span class="line">        String serverIp = &quot;127.0.0.1&quot;;</span><br><span class="line">        int port = 65432;</span><br><span class="line">        Client client = new Client(serverIp,port);</span><br><span class="line">        KeepAlive keepAlive=new KeepAlive(&quot;2&quot;,&quot;2&quot;,&quot;2&quot;);</span><br><span class="line">        client.start(keepAlive);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private String serverIp;</span><br><span class="line">    private int port;</span><br><span class="line">    private Socket socket;</span><br><span class="line">    //连接状态</span><br><span class="line">    private boolean running=false;</span><br><span class="line">    //最后一次发送数据的时间</span><br><span class="line">    private long lastSendTime;</span><br><span class="line"></span><br><span class="line">    //用于保存接收消息对象类型及该类型消息处理的对象</span><br><span class="line">    private ConcurrentHashMap&lt;Class, ObjectAction&gt; actionMapping = new ConcurrentHashMap&lt;Class,ObjectAction&gt;();</span><br><span class="line"></span><br><span class="line">    public Client(String serverIp, int port) &#123;</span><br><span class="line">        this.serverIp=serverIp;</span><br><span class="line">        this.port=port;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void start(KeepAlive keepAlive) throws UnknownHostException, IOException &#123;</span><br><span class="line">        if(running)return;</span><br><span class="line">        socket = new Socket(serverIp,port);</span><br><span class="line">        System.out.println(&quot;本地端口：&quot;+socket.getLocalPort());</span><br><span class="line">        lastSendTime=System.currentTimeMillis();</span><br><span class="line">        running=true;</span><br><span class="line">        //保持长连接的线程，每隔2秒项服务器发一个一个保持连接的心跳消息</span><br><span class="line">        new Thread(new KeepAliveWatchDog(keepAlive)).start();</span><br><span class="line">        //接受消息的线程，处理消息</span><br><span class="line">        new Thread(new ReceiveWatchDog()).start();</span><br><span class="line">        //发送消息线程.</span><br><span class="line">        new Thread(new SendMsgPacket()).start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void stop()&#123;</span><br><span class="line">        if(running)running=false;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 添加接收对象的处理对象。</span><br><span class="line">     * @param cls 待处理的对象，其所属的类。</span><br><span class="line">     * @param action 处理过程对象。</span><br><span class="line">     */</span><br><span class="line">    public void addActionMap(Class&lt;? extends Object&gt; cls, ObjectAction action)&#123;</span><br><span class="line">        actionMapping.put(cls, action);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void sendObject(Object obj) throws IOException &#123;</span><br><span class="line">        ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());</span><br><span class="line">        oos.writeObject(obj);</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;client send..：\t&quot;+obj);</span><br><span class="line">        oos.flush();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 心跳包发送</span><br><span class="line">     * */</span><br><span class="line">    class KeepAliveWatchDog implements Runnable&#123;</span><br><span class="line">        KeepAlive keepAlive;</span><br><span class="line">        public KeepAliveWatchDog(KeepAlive keepAlive)&#123;</span><br><span class="line">            this.keepAlive=keepAlive;</span><br><span class="line">        &#125;</span><br><span class="line">        long checkDelay = 10;</span><br><span class="line">        long keepAliveDelay = 2000;</span><br><span class="line">        @Override</span><br><span class="line">        public void run() &#123;</span><br><span class="line">            while(running)&#123;</span><br><span class="line">                if(System.currentTimeMillis()-lastSendTime&gt;keepAliveDelay)&#123;</span><br><span class="line">                    try &#123;</span><br><span class="line">                        KeepAlive alive=this.keepAlive;</span><br><span class="line">                        Client.this.sendObject(alive);</span><br><span class="line">                        addActionMap(alive.getClass(),new DefaultObjectAction());</span><br><span class="line">                    &#125; catch (IOException e) &#123;</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                        Client.this.stop();</span><br><span class="line">                    &#125;</span><br><span class="line">                    lastSendTime = System.currentTimeMillis();</span><br><span class="line">                &#125;else&#123;</span><br><span class="line">                    try &#123;</span><br><span class="line">                        //线程休眠10毫秒</span><br><span class="line">                        Thread.sleep(checkDelay);</span><br><span class="line">                    &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                        Client.this.stop();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    class SendMsgPacket implements Runnable&#123;</span><br><span class="line">        boolean isrunning=true;</span><br><span class="line">        @Override</span><br><span class="line">        public void run() &#123;</span><br><span class="line">            //接收控制台输入</span><br><span class="line">            Scanner input=new Scanner(System.in);</span><br><span class="line">            while(input.hasNext() &amp;&amp; isrunning)&#123;</span><br><span class="line">                String str = input.next();</span><br><span class="line">                if(str.equals(&quot;cancel&quot;))&#123;</span><br><span class="line">                    isrunning=false;</span><br><span class="line">                    Client.this.stop();</span><br><span class="line">                &#125;</span><br><span class="line">                try &#123;</span><br><span class="line">                    Message msg = new Message(str, 0);</span><br><span class="line">                    Client.this.sendObject(msg);</span><br><span class="line">                    addActionMap(msg.getClass(),new MsgObjectAction());</span><br><span class="line">                &#125;catch(IOException e)&#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                    Client.this.stop();</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    class ReceiveWatchDog implements Runnable&#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void run() &#123;</span><br><span class="line">            while(running)&#123;</span><br><span class="line">                try &#123;</span><br><span class="line">                    InputStream in = socket.getInputStream();</span><br><span class="line">                    if(in.available()&gt;0)&#123;</span><br><span class="line">                        ObjectInputStream ois = new ObjectInputStream(in);</span><br><span class="line">                        Object obj = ois.readObject();</span><br><span class="line">                        System.out.println(&quot;client receive ....:\t&quot;+obj);</span><br><span class="line">                        ObjectAction oa = actionMapping.get(obj.getClass());</span><br><span class="line">                        oa = oa==null?new DefaultObjectAction():oa;</span><br><span class="line">                        oa.doAction(obj, Client.this);</span><br><span class="line">                    &#125;else&#123;</span><br><span class="line">                        Thread.sleep(10);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; catch (Exception e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                    Client.this.stop();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="心跳包"><a href="#心跳包" class="headerlink" title="心跳包"></a>心跳包</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">package client;</span><br><span class="line"></span><br><span class="line">import java.io.Serializable;  </span><br><span class="line">import java.text.SimpleDateFormat;  </span><br><span class="line">import java.util.Date;  </span><br><span class="line">  </span><br><span class="line">/**  </span><br><span class="line"> *   </span><br><span class="line"> * 维持连接的消息对象（心跳对象）  </span><br><span class="line"> */  </span><br><span class="line">public class KeepAlive implements Serializable&#123;  </span><br><span class="line">    private String id;</span><br><span class="line">    private String ip;</span><br><span class="line">    private String timestamp=new SimpleDateFormat(&quot;yyyy-MM-dd HH:mm:ss&quot;).format(new Date());</span><br><span class="line">    private String mac;</span><br><span class="line"></span><br><span class="line">    public KeepAlive(String id,String ip,String mac)&#123;</span><br><span class="line">        this.id=id;</span><br><span class="line">        this.ip=ip;</span><br><span class="line">        this.mac=mac;</span><br><span class="line">    &#125;</span><br><span class="line">    private static final long serialVersionUID = -2813120366138988480L;</span><br><span class="line">    public String getId() &#123;</span><br><span class="line">        return id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setId(String id) &#123;</span><br><span class="line">        this.id = id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getIp() &#123;</span><br><span class="line">        return ip;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setIp(String ip) &#123;</span><br><span class="line">        this.ip = ip;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getMac() &#123;</span><br><span class="line">        return mac;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setMac(String mac) &#123;</span><br><span class="line">        this.mac = mac;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getTimestamp() &#123;</span><br><span class="line">        return timestamp;</span><br><span class="line">    &#125;</span><br><span class="line">    /**</span><br><span class="line">     *  覆盖该方法，仅用于测试使用。</span><br><span class="line">     * @see java.lang.Object#toString()  </span><br><span class="line">     */  </span><br><span class="line">    @Override  </span><br><span class="line">    public String toString()</span><br><span class="line">    &#123;</span><br><span class="line">        StringBuffer sb=new StringBuffer(new SimpleDateFormat(&quot;yyyy-MM-dd HH:mm:ss&quot;).format(new Date()));</span><br><span class="line">        sb.append(&quot;||&quot;).append(this.id);</span><br><span class="line">        sb.append(&quot;||&quot;).append(this.ip);</span><br><span class="line">        sb.append(&quot;||&quot;).append(this.mac);</span><br><span class="line">        return sb.toString();</span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="普通消息类型"><a href="#普通消息类型" class="headerlink" title="普通消息类型"></a>普通消息类型</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">package client;</span><br><span class="line"></span><br><span class="line">import java.io.Serializable;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Created by sheng on 17/12/14.</span><br><span class="line"> */</span><br><span class="line">public class Message implements Serializable &#123;</span><br><span class="line">    private static final long serialVersionUID = -2813120366138988480L;</span><br><span class="line">    public Message()&#123;&#125;</span><br><span class="line">    public Message(String msg,Integer type)&#123;</span><br><span class="line">        this.msg=msg;</span><br><span class="line">        this.type=type;</span><br><span class="line">    &#125;</span><br><span class="line">    private String msg;</span><br><span class="line">    private Integer type;</span><br><span class="line"></span><br><span class="line">    public String getMsg() &#123;</span><br><span class="line">        return msg;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setMsg(String msg) &#123;</span><br><span class="line">        this.msg = msg;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public Integer getType() &#123;</span><br><span class="line">        return type;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setType(Integer type) &#123;</span><br><span class="line">        this.type = type;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        return &quot;Message&#123;&quot; +</span><br><span class="line">                &quot;msg=&apos;&quot; + msg + &apos;\&apos;&apos; +</span><br><span class="line">                &quot;, type=&quot; + type +</span><br><span class="line">                &apos;&#125;&apos;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h4><p>socket的异常往往是连接超时引起,如果socket丢失,则操作socket会引起IOException,只需要在异常处理中,将socket释放,将线程的run()结束就行了.</p>
-<p>write by shengfq 17/12/13.</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1823,7 +1909,7 @@ The searched-for class definition existed when the currently executing class was
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-count">21</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -1836,7 +1922,7 @@ The searched-for class definition existed when the currently executing class was
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
@@ -1883,7 +1969,7 @@ The searched-for class definition existed when the currently executing class was
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
