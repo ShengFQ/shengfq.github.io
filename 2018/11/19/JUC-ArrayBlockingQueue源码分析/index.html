@@ -80,10 +80,11 @@
 
 
 <meta name="description" content="JUC多线程系列-ArrayBlockingQueue源码分析背景最近在项目中应用到后台异步任务并发应用,干脆系统的撸一遍JUC,然后应用到项目中实战.使用阻塞队列实现生产者消费者模式优点:阻塞队列实现生产者消费者模式超级简单，它提供开箱即用支持阻塞的方法put()和take()，开发者不需要写困惑的wait-nofity代码去实现通信。BlockingQueue 一个接口，Java5提供了不同的">
+<meta name="keywords" content="技术 博客 随想">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JUC多线程系列-ArrayBlockingQueue源码分析">
 <meta property="og:url" content="https://www.shengfq.github.io/2018/11/19/JUC-ArrayBlockingQueue源码分析/index.html">
-<meta property="og:site_name" content="shengfq&#39;s blog">
+<meta property="og:site_name" content="程序员shengfq">
 <meta property="og:description" content="JUC多线程系列-ArrayBlockingQueue源码分析背景最近在项目中应用到后台异步任务并发应用,干脆系统的撸一遍JUC,然后应用到项目中实战.使用阻塞队列实现生产者消费者模式优点:阻塞队列实现生产者消费者模式超级简单，它提供开箱即用支持阻塞的方法put()和take()，开发者不需要写困惑的wait-nofity代码去实现通信。BlockingQueue 一个接口，Java5提供了不同的">
 <meta property="og:locale" content="zn-han">
 <meta property="og:updated_time" content="2019-03-10T15:09:34.000Z">
@@ -125,7 +126,7 @@
 
 
 
-  <title>JUC多线程系列-ArrayBlockingQueue源码分析 | shengfq's blog</title>
+  <title>JUC多线程系列-ArrayBlockingQueue源码分析 | 程序员shengfq</title>
   
 
 
@@ -155,12 +156,12 @@
     <div class="custom-logo-site-title">
       <a href="/"  class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
-        <span class="site-title">shengfq's blog</span>
+        <span class="site-title">程序员shengfq</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
       
-        <p class="site-subtitle">an developer using java</p>
+        <p class="site-subtitle">技术博客</p>
       
   </div>
 
@@ -241,7 +242,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="shengfq's blog">
+      <meta itemprop="name" content="程序员shengfq">
     </span>
 
     
@@ -421,7 +422,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-count">22</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -434,7 +435,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

@@ -80,14 +80,15 @@
 
 
 <meta name="description" content="blogs and research">
+<meta name="keywords" content="技术 博客 随想">
 <meta property="og:type" content="website">
-<meta property="og:title" content="shengfq&#39;s blog">
+<meta property="og:title" content="程序员shengfq">
 <meta property="og:url" content="https://www.shengfq.github.io/index.html">
-<meta property="og:site_name" content="shengfq&#39;s blog">
+<meta property="og:site_name" content="程序员shengfq">
 <meta property="og:description" content="blogs and research">
 <meta property="og:locale" content="zn-han">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="shengfq&#39;s blog">
+<meta name="twitter:title" content="程序员shengfq">
 <meta name="twitter:description" content="blogs and research">
 
 
@@ -124,7 +125,7 @@
 
 
 
-  <title>shengfq's blog</title>
+  <title>程序员shengfq</title>
   
 
 
@@ -155,12 +156,12 @@
     <div class="custom-logo-site-title">
       <a href="/"  class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
-        <span class="site-title">shengfq's blog</span>
+        <span class="site-title">程序员shengfq</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
       
-        <p class="site-subtitle">an developer using java</p>
+        <p class="site-subtitle">技术博客</p>
       
   </div>
 
@@ -232,6 +233,151 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2022/08/02/springboot+mybatis+mybatisplus多数据源解决方案/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="盛富强">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员shengfq">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/08/02/springboot+mybatis+mybatisplus多数据源解决方案/" itemprop="url">springboot多数据源实现</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2022-08-02T00:00:00+08:00">
+                2022-08-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4>一.多数据库实例集成</h4>
+
+<p>原理:</p>
+<p>springboot支持与mybatis和mybatis-plus的快速自动化配置starter.</p>
+<p>需要初始化定制<b>DataSource</b>,<b>DataSourceTransactionManager</b>,<b>SqlSessionFactory</b>三个对象的实例化.</p>
+<p>基于扫描不同package下的mapper和mapper.xml创建上述的实例.</p>
+<p>其他service层/mapper层跟单独数据源操作写法相同.只是要注意,这是通过package来隔离不同datasource,所以最好把不同的DataSource操作的service/mapper/entity放到各自的业务package中.</p>
+<p>案例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">main/java</span><br><span class="line">com.mybatis.spring.demo</span><br><span class="line">	cms</span><br><span class="line">		entity</span><br><span class="line">		mapper</span><br><span class="line">		service</span><br><span class="line">	open</span><br><span class="line">		entity</span><br><span class="line">		mapper</span><br><span class="line">		service</span><br><span class="line">main/resources</span><br><span class="line">	mapper</span><br><span class="line">		cms</span><br><span class="line">			xxxMapper.xml</span><br><span class="line">		open</span><br><span class="line">			yyyMapper.xml</span><br></pre></td></tr></table></figure>
+<p>单数据源实例化方式:只需要配置:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//application.properties</span><br><span class="line">spring.datasource.url=xxx</span><br><span class="line">spring.datasource.username=xxx</span><br><span class="line">spring.datasource.password=xxx</span><br><span class="line">spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver</span><br></pre></td></tr></table></figure>
+<p>而多数据源实例话方式需要配置各个数据源的jdbc连接</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">//application.properties</span><br><span class="line">spring.datasource.cms.url=jdbc:mysql:xxx</span><br><span class="line">spring.datasource.cms.username=xxx</span><br><span class="line">spring.datasource.cms.password=xxx</span><br><span class="line">spring.datasource.cms.driver-class-name=com.mysql.cj.jdbc.Driver</span><br><span class="line"></span><br><span class="line">spring.datasource.open.url=jdbc:mysql:xxx</span><br><span class="line">spring.datasource.open.username=xxx</span><br><span class="line">spring.datasource.open.password=xxx</span><br><span class="line">spring.datasource.open.driver-class-name=com.mysql.cj.jdbc.Driver</span><br></pre></td></tr></table></figure>
+<p>创建数据源配置类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * MyBatis 在 SpringBoot 中动态多数据源配置</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> sheng</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2022-08-02</span></span><br><span class="line"><span class="comment"> * */</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@ConfigurationProperties</span>(prefix = <span class="string">"spring.datasource.open"</span>)</span><br><span class="line"><span class="meta">@MapperScan</span>(basePackages = <span class="string">"com.mybatis.spring.demo.open.mapper"</span>, sqlSessionFactoryRef = <span class="string">"openSqlSessionFactory"</span>)</span><br><span class="line"><span class="meta">@Setter</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OpenDbConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> DBProperties dbProperties;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 数据库配置息信息</span></span><br><span class="line">    <span class="keyword">private</span> String driverClassName;</span><br><span class="line">    <span class="keyword">private</span> String url;</span><br><span class="line">    <span class="keyword">private</span> String username;</span><br><span class="line">    <span class="keyword">private</span> String password;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span>(name = <span class="string">"openDataSource"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> DataSource <span class="title">unionDataSource</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        HikariDataSource dataSource = <span class="keyword">new</span> HikariDataSource();</span><br><span class="line">        <span class="comment">// 设置数据源信息</span></span><br><span class="line">        dataSource.setDriverClassName(driverClassName);</span><br><span class="line">        dataSource.setJdbcUrl(url);</span><br><span class="line">        dataSource.setUsername(username);</span><br><span class="line">        dataSource.setPassword(password);</span><br><span class="line">        <span class="comment">// 公共属性配置</span></span><br><span class="line">        dataSource.setMinimumIdle(dbProperties.getMinimumIdle());</span><br><span class="line">        dataSource.setIdleTimeout(dbProperties.getIdleTimeout());</span><br><span class="line">        dataSource.setMaximumPoolSize(dbProperties.getMaximumPoolSize());</span><br><span class="line">        dataSource.setAutoCommit(dbProperties.isAutoCommit());</span><br><span class="line">        dataSource.setPoolName(<span class="string">"open_"</span> + dbProperties.getPoolName());</span><br><span class="line">        dataSource.setMaxLifetime(dbProperties.getMaxLifetime());</span><br><span class="line">        dataSource.setConnectionTimeout(dbProperties.getConnectionTimeout());</span><br><span class="line">        dataSource.setConnectionTestQuery(dbProperties.getConnectionTestQuery());</span><br><span class="line">        <span class="keyword">return</span> dataSource;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * union 事务管理器</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Role</span>(<span class="number">100</span>)</span><br><span class="line">    <span class="meta">@Bean</span>(name = CmsConst.TRANSACTION_OPEN)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> DataSourceTransactionManager <span class="title">unionTransactionManager</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> DataSourceTransactionManager(unionDataSource());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * unionDataSource Session工厂类</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> dataSource</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span>(name = <span class="string">"openSqlSessionFactory"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> SqlSessionFactory <span class="title">unionSqlSessionFactory</span><span class="params">(@Qualifier(<span class="string">"openDataSource"</span>)</span> DataSource dataSource)</span></span><br><span class="line"><span class="function">            <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">      <span class="comment">//如果是与mybatis-plus集成就需要使用MybatisSqlSessionFactoryBean来代理实例化SqlSessionFactory</span></span><br><span class="line">        MybatisSqlSessionFactoryBean sessionFactory = <span class="keyword">new</span> MybatisSqlSessionFactoryBean();</span><br><span class="line">        sessionFactory.setDataSource(dataSource);</span><br><span class="line">        MybatisConfiguration config = <span class="keyword">new</span> MybatisConfiguration();</span><br><span class="line">        config.setMapUnderscoreToCamelCase(<span class="keyword">true</span>);</span><br><span class="line">        sessionFactory.setConfiguration(config);</span><br><span class="line">        <span class="comment">//如果不使用xml的方式配置mapper，则可以省去下面这行mapper location的配置。</span></span><br><span class="line">        sessionFactory.setMapperLocations(<span class="keyword">new</span> PathMatchingResourcePatternResolver().getResources(<span class="string">"classpath*:mapper/open/*.xml"</span>));</span><br><span class="line">        <span class="keyword">return</span> sessionFactory.getObject();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>同理,其他的数据源配置文件只需要修改</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//配置参数前缀</span></span><br><span class="line"><span class="meta">@ConfigurationProperties</span>(prefix = <span class="string">"spring.datasource.cms"</span>)</span><br><span class="line"><span class="comment">//扫描包路径</span></span><br><span class="line"><span class="meta">@MapperScan</span>(basePackages = <span class="string">"com.mybatis.spring.demo.cms.mapper"</span>, sqlSessionFactoryRef = <span class="string">"cmsSqlSessionFactory"</span>)</span><br><span class="line"><span class="comment">//Xml文件路径</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//如果不使用xml的方式配置mapper，则可以省去下面这行mapper location的配置。</span></span><br><span class="line">        sessionFactory.setMapperLocations(<span class="keyword">new</span> PathMatchingResourcePatternResolver().getResources(<span class="string">"classpath*:mapper/cms/*.xml"</span>));</span><br></pre></td></tr></table></figure>
+<p>pom.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mybatis.spring.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mybatis-spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.2.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.baomidou<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mybatis-plus-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.5.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>FAQ问题</p>
+<p>1.Spring Boot集成MyBatis报错：Invalid bound statement (not found)…解决方案</p>
+<p>无法识别mybatis-plus包的BaseMapper通用CURD方法</p>
+<p>一.SqlSessionFactory不要使用原生的，请使用MybatisSqlSessionFactory</p>
+<p>2.自定义 SQL 无法执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">application.properties</span><br><span class="line">##mybatis-plus mapper xml 文件地址</span><br><span class="line">mybatis-plus.mapper-locations= classpath*:/mapper/**/*Mapper.xml</span><br><span class="line">##mybatis-plus type-aliases 文件地址</span><br><span class="line">mybatis-plus.type-aliases-package= com.mybatis.spring.demo</span><br></pre></td></tr></table></figure>
+<p>参考资料</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2022/05/15/编程思维-抽象思维训练方法论/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -241,7 +387,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="shengfq's blog">
+      <meta itemprop="name" content="程序员shengfq">
     </span>
 
     
@@ -486,7 +632,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="shengfq's blog">
+      <meta itemprop="name" content="程序员shengfq">
     </span>
 
     
@@ -611,7 +757,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="shengfq's blog">
+      <meta itemprop="name" content="程序员shengfq">
     </span>
 
     
@@ -735,7 +881,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="shengfq's blog">
+      <meta itemprop="name" content="程序员shengfq">
     </span>
 
     
@@ -885,7 +1031,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="shengfq's blog">
+      <meta itemprop="name" content="程序员shengfq">
     </span>
 
     
@@ -1141,7 +1287,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="shengfq's blog">
+      <meta itemprop="name" content="程序员shengfq">
     </span>
 
     
@@ -1285,7 +1431,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="shengfq's blog">
+      <meta itemprop="name" content="程序员shengfq">
     </span>
 
     
@@ -1405,163 +1551,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2019/08/18/集合框架详解一/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="盛富强">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="shengfq's blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/08/18/集合框架详解一/" itemprop="url">集合框架总结一</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-08-18T00:00:00+08:00">
-                2019-08-18
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>##1. 集合的定义<br>什么是集合呢？<br><br>定义：集合是一个存放对象的引用的容器。<br>在Java中，集合位于java.util包下。<br></p>
-<p>##2. 集合和数组的区别(面试常问)<br>提到容器，就会想起数组，那么集合和数组的区别是什么呢？（这里是重点，面试可能问的比较多）</p>
-<li>数组和集合都是Java中的容器<br><br></li><li>数组的长度是固定的，集合的长度是可变的<br><br></li><li>数组只能存储相同数据类型的数据，这里的数据类型可以是基本数据类型，也可以是引用类型<br><br></li><li>集合可以存储不同数据类型的对象的引用(但一般情况下，我们会使用泛型来约定只使用1种数据类型)，但不能存储基本数据类型<br><br><br>空口无凭，我们来点代码配合理解，首先，我们看下如下的数组代码：<br><br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">String[] platformArray = new String[3];</span><br><span class="line">platformArray[0] = &quot;博客园&quot;;</span><br><span class="line">platformArray[1] = &quot;掘金&quot;;</span><br><span class="line">platformArray[2] = &quot;微信公众号&quot;;</span><br><span class="line">platformArray[3] = &quot;个人博客&quot;;</span><br></pre></td></tr></table></figure><br><br>复制代码运行代码就会发现<br><br><pre>platformArray[3] = “个人博客”;</pre>会引发java.lang.ArrayIndexOutOfBoundsException异常。<br><br>而使用集合时就不存在这个问题，因为集合在声明时不需要指定长度并且长度会根据放入元素的多少而变化：<br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; platformList = new ArrayList&lt;&gt;();</span><br><span class="line">platformList.add(&quot;博客园&quot;);</span><br><span class="line">platformList.add(&quot;掘金&quot;);</span><br><span class="line">platformList.add(&quot;微信公众号&quot;);</span><br><span class="line">platformList.add(&quot;个人博客&quot;);</span><br><span class="line">复制代码观察上面声明数组的代码，我们可以推断出下面的代码肯定是编译不通过的：</span><br><span class="line">String[] platformArray = new String[3];</span><br><span class="line">platformArray[0] = &quot;博客园&quot;;</span><br><span class="line">platformArray[1] = &quot;掘金&quot;;</span><br><span class="line">platformArray[2] = 1;</span><br><span class="line">复制代码因为数组声明时用的是String类型，而platformArray[2] = 1;赋值时却使用了int类型。</span><br><span class="line">再来看下下面的集合代码：</span><br><span class="line">List&lt;int&gt; intList = new ArrayList&lt;int&gt;();</span><br><span class="line">intList.add(1);</span><br><span class="line">intList.add(2);</span><br><span class="line">intList.add(3);</span><br><span class="line">复制代码这段代码也是编译不通过的，在IDEA中，鼠标悬停时会提示如下的错误信息：</span><br><span class="line"></span><br><span class="line">意思是类型参数不能是原始类型(基本数据类型)，那怎么使用呢？总不能不让我使用int型的集合吧？</span><br><span class="line">当然不会，Java为每种基本数据类型都提供了对应的包装类，这里修改为int类型对应的包装类Integer即可：</span><br><span class="line">List&lt;Integer&gt; intList = new ArrayList&lt;Integer&gt;();</span><br><span class="line">intList.add(1);</span><br><span class="line">intList.add(2);</span><br><span class="line">intList.add(3);</span><br></pre></td></tr></table></figure><br><br>复制代码以下为Java的原始类型(基本数据类型)与其对应的包装类：<br><br><br><br>|原始类型|包装类|<br>| :——– | ——–: |<br>|byte |Byte|<br>|short|Short|<br>|int|Integer|<br>|long|Long|<br>|float|Float|<br>|double|Double|<br>|char|Character|<br>|boolean|Boolean|<br><br>##3. 集合的分类<br>在Java中，集合主要分为以下3种：<br></li><li> List集合</li><br><li>Set集合</li><br><li>Map集合</li>
-
-<p>它们之间的继承关系可以参考下图。</p>
-<p>从上图可以总结出如下几点：</p>
-<li>Java集合的根接口是Collection，它又继承了迭代接口Iterable</li><br><li>List接口和Set接口继承了Collection接口</li><br><li>Map接口是独立的接口，并没有继承Collection接口  （这里是重点，面试可能问的比较多）</li><br><li>List接口常用的实现类有：ArrayList、LinkedList、Vector</li><br><li>Set接口常用的实现类有：HashSet、LinkedHashSet、TreeSet</li><br><li>Map接口常用的实现类有：HashMap、HashTable、TreeMap</li>
-
-<p>##4. List集合<br>List集合包括List接口以及List接口的所有实现类。List集合具有以下特点：</p>
-<p><li>集合中的元素允许重复</li></p>
-<p><li>集合中的元素是有顺序的，各元素插入的顺序就是各元素的顺序</li></p>
-<p><li>集合中的元素可以通过索引来访问或者设置</li></p>
-<p><li>List接口常用的实现类有：ArrayList、LinkedList、Vector。</li></p>
-<p>我们先看下如下示例了解下List集合的用法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">package collection;</span><br><span class="line"></span><br><span class="line">import java.util.*;</span><br><span class="line"></span><br><span class="line">public class Muster &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        List&lt;String&gt; strList = new ArrayList&lt;&gt;();</span><br><span class="line">        strList.add(&quot;a&quot;);</span><br><span class="line">        strList.add(&quot;b&quot;);</span><br><span class="line">        strList.add(&quot;c&quot;);</span><br><span class="line"></span><br><span class="line">        int i = (int) (Math.random() * strList.size());</span><br><span class="line">        System.out.println(&quot;随机获取数组中的元素：&quot; + strList.get(i));</span><br><span class="line"></span><br><span class="line">        strList.remove(2);</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;将索引为2的元素从列表移除后，数组中的元素是:&quot;);</span><br><span class="line">        for (int j = 0; j &lt; strList.size(); j++) &#123;</span><br><span class="line">            System.out.println(strList.get(j));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>复制代码以上代码的输出结果为：</p>
-<p><pre><br>随机获取数组中的元素：a<br>将索引为2的元素从列表移除后，数组中的元素是:<br>a<br>b<br></pre><br><a href="##"><br>关于List集合的详细用法，ArrayList、LinkedList、Vector的区别（这里是重点，面试可能问的比较多），后续会单独写文总结，敬请期待。<br></a></p>
-<p>##5. Set集合<br>Set集合包括Set接口以及Set接口的所有实现类。Set集合具有以下特点：</p>
-<p><li>集合中不包含重复元素(你可以重复添加，但只会保留第1个)</li></p>
-<p><li>集合中的元素不一定保证有序</li></p>
-<p><li>Set接口常用的实现类有：HashSet、LinkedHashSet、TreeSet。</li></p>
-<p>我们先看下如下示例了解下Set集合的用法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">package collection;</span><br><span class="line"></span><br><span class="line">import java.util.*;</span><br><span class="line"></span><br><span class="line">public class Muster &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Set&lt;String&gt; platformList = new HashSet&lt;&gt;();</span><br><span class="line">        platformList.add(&quot;博客园&quot;);</span><br><span class="line">        platformList.add(&quot;掘金&quot;);</span><br><span class="line">        platformList.add(&quot;微信公众号&quot;);</span><br><span class="line">        platformList.add(&quot;个人博客&quot;);</span><br><span class="line"></span><br><span class="line">        // 尝试添加重复元素</span><br><span class="line">        platformList.add(&quot;博客园&quot;);</span><br><span class="line">        platformList.add(&quot;掘金&quot;);</span><br><span class="line"></span><br><span class="line">        for (String platform : platformList) &#123;</span><br><span class="line">            System.out.println(platform);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>复制代码以上代码的输出结果为：</p>
-<p><pre><br>博客园<br>个人博客<br>掘金<br>微信公众号<br></pre><br>可以看出，虽然我们尝试添加了重复元素，但并没有添加成功并且输出的元素没有顺序。<br>因此当你的集合中不允许有重复元素并且对排序也没有要求的话，可以使用Set集合。<br><a href="##">关于Set集合的详细用法，HashSet、LinkedHashSet、TreeSet的区别（这里是重点，面试可能问的比较多），后续会单独写文总结，敬请期待。</a></p>
-<p>##6. Map集合<br>Map集合包括Map接口以及Map接口的所有实现类。<br>Map集合具有以下特点：</p>
-<p><li>Map接口并没有继承Collection接口，提供的是key到value的映射</li></p>
-<p><li>Map中不能包含相同的key</li></p>
-<p><li>Map接口常用的实现类有：HashMap、HashTable、TreeMap。</li></p>
-<p>我们先看下如下示例了解下Map集合的用法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">package collection;</span><br><span class="line"></span><br><span class="line">import java.util.*;</span><br><span class="line"></span><br><span class="line">public class Muster &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Map&lt;Integer, String&gt; platformMap = new HashMap&lt;&gt;();</span><br><span class="line">        platformMap.put(1, &quot;博客园&quot;);</span><br><span class="line">        platformMap.put(2, &quot;掘金&quot;);</span><br><span class="line">        platformMap.put(3, &quot;微信公众号&quot;);</span><br><span class="line">        platformMap.put(4, &quot;个人博客&quot;);</span><br><span class="line"></span><br><span class="line">        // 尝试添加重复Map</span><br><span class="line">        platformMap.put(4, &quot;个人博客&quot;);</span><br><span class="line"></span><br><span class="line">        // 获取所有的key</span><br><span class="line">        Set&lt;Integer&gt; keys = platformMap.keySet();</span><br><span class="line">        for (Integer integer : keys) &#123;</span><br><span class="line">            System.out.println(&quot;Key:&quot; + integer + &quot;,Value:&quot; + platformMap.get(integer));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>复制代码以上代码的输出结果为：</p>
-<p><li>Key:1,Value:博客园</li></p>
-<p><li>Key:2,Value:掘金</li></p>
-<p><li>Key:3,Value:微信公众号</li></p>
-<p><li>Key:4,Value:个人博客</li></p>
-<p><li>从日志可以看出，当我们尝试重加重复Map时，并没有添加成功。</li></p>
-<p><li><a href="##">关于Map集合的详细用法，HashMap、HashTable、TreeMap的区别（这里是重点，面试可能问的比较多），后续会单独写文总结，敬请期待。</a></li></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2019/08/18/一次生产问题的排查解决/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1571,7 +1560,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="shengfq's blog">
+      <meta itemprop="name" content="程序员shengfq">
     </span>
 
     
@@ -1721,7 +1710,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2019/03/20/JUC-线程池原理/">
+    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2019/08/18/集合框架详解一/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="盛富强">
@@ -1730,7 +1719,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="shengfq's blog">
+      <meta itemprop="name" content="程序员shengfq">
     </span>
 
     
@@ -1740,7 +1729,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/03/20/JUC-线程池原理/" itemprop="url">JUC系列-线程池原理</a></h1>
+                <a class="post-title-link" href="/2019/08/18/集合框架详解一/" itemprop="url">集合框架总结一</a></h1>
         
 
         <div class="post-meta">
@@ -1752,8 +1741,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-03-20T00:00:00+08:00">
-                2019-03-20
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-08-18T00:00:00+08:00">
+                2019-08-18
               </time>
             
 
@@ -1792,38 +1781,44 @@
       
         
           
-            <p></p><h3>ThreadPoolExecutor使用介绍</h3><p></p>
-<pre><code>
-private static ExecutorService exec = new ThreadPoolExecutor(8, 8, 0L,
-TimeUnit.MILLISECONDS, new LinkedBlockingQueue<runnable>(100000),
-new ThreadPoolExecutor.CallerRunsPolicy());
-</runnable></code></pre>
+            <p>##1. 集合的定义<br>什么是集合呢？<br><br>定义：集合是一个存放对象的引用的容器。<br>在Java中，集合位于java.util包下。<br></p>
+<p>##2. 集合和数组的区别(面试常问)<br>提到容器，就会想起数组，那么集合和数组的区别是什么呢？（这里是重点，面试可能问的比较多）</p>
+<li>数组和集合都是Java中的容器<br><br></li><li>数组的长度是固定的，集合的长度是可变的<br><br></li><li>数组只能存储相同数据类型的数据，这里的数据类型可以是基本数据类型，也可以是引用类型<br><br></li><li>集合可以存储不同数据类型的对象的引用(但一般情况下，我们会使用泛型来约定只使用1种数据类型)，但不能存储基本数据类型<br><br><br>空口无凭，我们来点代码配合理解，首先，我们看下如下的数组代码：<br><br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">String[] platformArray = new String[3];</span><br><span class="line">platformArray[0] = &quot;博客园&quot;;</span><br><span class="line">platformArray[1] = &quot;掘金&quot;;</span><br><span class="line">platformArray[2] = &quot;微信公众号&quot;;</span><br><span class="line">platformArray[3] = &quot;个人博客&quot;;</span><br></pre></td></tr></table></figure><br><br>复制代码运行代码就会发现<br><br><pre>platformArray[3] = “个人博客”;</pre>会引发java.lang.ArrayIndexOutOfBoundsException异常。<br><br>而使用集合时就不存在这个问题，因为集合在声明时不需要指定长度并且长度会根据放入元素的多少而变化：<br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; platformList = new ArrayList&lt;&gt;();</span><br><span class="line">platformList.add(&quot;博客园&quot;);</span><br><span class="line">platformList.add(&quot;掘金&quot;);</span><br><span class="line">platformList.add(&quot;微信公众号&quot;);</span><br><span class="line">platformList.add(&quot;个人博客&quot;);</span><br><span class="line">复制代码观察上面声明数组的代码，我们可以推断出下面的代码肯定是编译不通过的：</span><br><span class="line">String[] platformArray = new String[3];</span><br><span class="line">platformArray[0] = &quot;博客园&quot;;</span><br><span class="line">platformArray[1] = &quot;掘金&quot;;</span><br><span class="line">platformArray[2] = 1;</span><br><span class="line">复制代码因为数组声明时用的是String类型，而platformArray[2] = 1;赋值时却使用了int类型。</span><br><span class="line">再来看下下面的集合代码：</span><br><span class="line">List&lt;int&gt; intList = new ArrayList&lt;int&gt;();</span><br><span class="line">intList.add(1);</span><br><span class="line">intList.add(2);</span><br><span class="line">intList.add(3);</span><br><span class="line">复制代码这段代码也是编译不通过的，在IDEA中，鼠标悬停时会提示如下的错误信息：</span><br><span class="line"></span><br><span class="line">意思是类型参数不能是原始类型(基本数据类型)，那怎么使用呢？总不能不让我使用int型的集合吧？</span><br><span class="line">当然不会，Java为每种基本数据类型都提供了对应的包装类，这里修改为int类型对应的包装类Integer即可：</span><br><span class="line">List&lt;Integer&gt; intList = new ArrayList&lt;Integer&gt;();</span><br><span class="line">intList.add(1);</span><br><span class="line">intList.add(2);</span><br><span class="line">intList.add(3);</span><br></pre></td></tr></table></figure><br><br>复制代码以下为Java的原始类型(基本数据类型)与其对应的包装类：<br><br><br><br>|原始类型|包装类|<br>| :——– | ——–: |<br>|byte |Byte|<br>|short|Short|<br>|int|Integer|<br>|long|Long|<br>|float|Float|<br>|double|Double|<br>|char|Character|<br>|boolean|Boolean|<br><br>##3. 集合的分类<br>在Java中，集合主要分为以下3种：<br></li><li> List集合</li><br><li>Set集合</li><br><li>Map集合</li>
 
-<h3>一、简介</h3><br><pre><code><br>线程池类为 java.util.concurrent.ThreadPoolExecutor，常用构造方法为：<br>ThreadPoolExecutor(int corePoolSize, int maximumPoolSize,<br>long keepAliveTime, TimeUnit unit,<br>BlockingQueue<runnable> workQueue,<br>RejectedExecutionHandler handler)<br><br>corePoolSize： 线程池维护线程的最少数量<br>maximumPoolSize：线程池维护线程的最大数量<br>keepAliveTime： 线程池维护线程所允许的空闲时间<br>unit： 线程池维护线程所允许的空闲时间的单位<br>workQueue： 线程池所使用的缓冲队列<br>handler： 线程池对拒绝任务的处理策略<br></runnable></code></pre><br><br><br>一个任务通过 execute(Runnable)方法被添加到线程池，任务就是一个 Runnable类型的对象，任务的执行方法就是Runnable类型对象的run()方法。<br><br><br><h3>二、原理</h3><br>当一个任务通过execute(Runnable)方法欲添加到线程池时:<br>1.  如果此时线程池中的数量小于corePoolSize，即使线程池中的线程都处于空闲状态，也要创建新的线程来处理被添加的任务。<br>2.  如果此时线程池中的数量等于 corePoolSize，但是缓冲队列 workQueue未满，那么任务被放入缓冲队列。<br>3.  如果此时线程池中的数量大于corePoolSize，缓冲队列workQueue满，并且线程池中的数量小于maximumPoolSize，建新的线程来处理被添加的任务。<br>4.  如果此时线程池中的数量大于corePoolSize，缓冲队列workQueue满，并且线程池中的数量等于maximumPoolSize，那么通过 handler所指定的策略来处理此任务。也就是：处理任务的优先级为：核心线程corePoolSize、任务队列workQueue、最大线程maximumPoolSize，如果三者都满了，使用handler处理被拒绝的任务。<br>5. 当线程池中的线程数量大于 corePoolSize时，如果某线程空闲时间超过keepAliveTime，线程将被终止。这样，线程池可以动态的调整池中的线程数。<br>6. unit可选的参数为java.util.concurrent.TimeUnit中的几个静态属性：<br>NANOSECONDS、<br>MICROSECONDS、<br>MILLISECONDS、<br>SECONDS。<br><br>7. workQueue常用的是：java.util.concurrent.ArrayBlockingQueue<br>8. handler有四个选择：<br><pre><code><br>  1. ThreadPoolExecutor.AbortPolicy()<br>抛出java.util.concurrent.RejectedExecutionException异常<br><br>  2. ThreadPoolExecutor.CallerRunsPolicy()<br>当抛出RejectedExecutionException异常时，会调用rejectedExecution方法<br>(如果主线程没有关闭，则主线程调用run方法,源码如下:<br>public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {<br>            if (!e.isShutdown()) {<br>                r.run();<br>            }<br>        }<br><br>)<br><br>  3. ThreadPoolExecutor.DiscardOldestPolicy()<br>抛弃旧的任务<br>  4. ThreadPoolExecutor.DiscardPolicy()<br>抛弃当前的任务<br></code></pre><br><br><h3>三、相关参考</h3><br>一个 ExecutorService，它使用可能的几个池线程之一执行每个提交的任务，通常使用 Executors 工厂方法配置。<br><br>线程池可以解决两个不同问题：由于减少了每个任务调用的开销，它们通常可以在执行大量异步任务时提供增强的性能，并且还可以提供绑定和管理资源（包括执行集合任务时使用的线程）的方法。每个ThreadPoolExecutor 还维护着一些基本的统计数据，如完成的任务数。<br><br>为了便于跨大量上下文使用，此类提供了很多可调整的参数和扩展挂钩。但是，强烈建议程序员使用较为方便的 Executors 工厂方法 Executors.newCachedThreadPool()（无界线程池，可以进行自动线程回收）、Executors.newFixedThreadPool(int)（固定大小线程池）和 Executors.newSingleThreadExecutor()（单个后台线程），它们均为大多数使用场景预定义了设置。否则，在手动配置和调整此类时，使用以下指导：<br><h4>核心和最大池大小</h4><br>ThreadPoolExecutor 将根据 corePoolSize（参见 getCorePoolSize()）和 maximumPoolSize（参见getMaximumPoolSize()）设置的边界自动调整池大小。<br>当新任务在方法 execute(java.lang.Runnable) 中提交时，如果运行的线程少于 corePoolSize，则创建新线程来处理请求，即使其他辅助线程是空闲的。<br><br>如果运行的线程多于corePoolSize 而少于 maximumPoolSize，则仅当队列满时才创建新线程。如果设置的 corePoolSize 和 maximumPoolSize相同，则创建了固定大小的线程池。<br>如果将 maximumPoolSize 设置为基本的无界值（如 Integer.MAX_VALUE），则允许池适应任意数量的并发任务。在大多数情况下，核心和最大池大小仅基于构造来设置，不过也可以使用setCorePoolSize(int) 和 setMaximumPoolSize(int) 进行动态更改。<br><br><br><br><h4>按需构造</h4><br>默认情况下，即使核心线程最初只是在新任务需要时才创建和启动的，也可以使用方法 prestartCoreThread()或 prestartAllCoreThreads() 对其进行动态重写。<br><br><h4>创建新线程</h4><br>使用 ThreadFactory 创建新线程。如果没有另外说明，则在同一个 ThreadGroup 中一律使用Executors.defaultThreadFactory() 创建线程，并且这些线程具有相同的 NORM_PRIORITY 优先级和非守护进程状态。通过提供不同的 ThreadFactory，可以改变线程的名称、线程组、优先级、守护进程状态，等等。如果从 newThread返回 null 时 ThreadFactory 未能创建线程，则执行程序将继续运行，但不能执行任何任务。<br><br><h4>保持活动时间</h4><br>如果池中当前有多于 corePoolSize 的线程，则这些多出的线程在空闲时间超过 keepAliveTime 时将会终止（参见getKeepAliveTime(java.util.concurrent.TimeUnit)）。这提供了当池处于非活动状态时减少资源消耗的方法。如果池后来变得更为活动，则可以创建新的线程。也可以使用方法 setKeepAliveTime(long, java.util.concurrent.TimeUnit) 动态地更改此参数。使用 Long.MAX_VALUE TimeUnit.NANOSECONDS 的值在关闭前有效地从以前的终止状态禁用空闲线程。<br><br><h4>排队</h4><br>所有 BlockingQueue 都可用于传输和保持提交的任务。可以使用此队列与池大小进行交互：<br>1. 如果运行的线程少于 corePoolSize，则 Executor 始终首选添加新的线程，而不进行排队。<br>2. 如果运行的线程等于或多于 corePoolSize，则 Executor 始终首选将请求加入队列，而不添加新的线程。<br>3.如果无法将请求加入队列，则创建新的线程，除非创建此线程超出 maximumPoolSize，在这种情况下，任务将被拒绝。<br><br><h4>排队有三种通用策略：</h4><br>1. 直接提交。工作队列的默认选项是 SynchronousQueue，它将任务直接提交给线程而不保持它们。在此，如果不存在可用于立即运行任务的线程，则试图把任务加入队列将失败，因此会构造一个新的线程。此策略可以避免在处理可能具有内部依赖性的请求集合时出现锁定。直接提交通常要求无界 maximumPoolSizes 以避免拒绝新提交的任务。当命令以超过队列所能处理的平均数连续到达时，此策略允许无界线程具有增长的可能性。<br><br>2. 无界队列。使用无界队列（例如，不具有预定义容量的 LinkedBlockingQueue）将导致在所有 corePoolSize 线程都忙的情况下将新任务加入队列。这样，创建的线程就不会超过 corePoolSize。（因此，maximumPoolSize 的值也就无效了。）当每个任务完全独立于其他任务，即任务执行互不影响时，适合于使用无界队列；例如，在 Web 页服务器中。这种排队可用于处理瞬态突发请求，当命令以超过队列所能处理的平均数连续到达时，此策略允许无界线程具有增长的可能性。<br><br>3. 有界队列。当使用有限的 maximumPoolSizes 时，有界队列（如 ArrayBlockingQueue）有助于防止资源耗尽，但是可能较难调整和控制。队列大小和最大池大小可能需要相互折衷：使用大型队列和小型池可以最大限度地降低CPU 使用率、操作系统资源和上下文切换开销，但是可能导致人工降低吞吐量。如果任务频繁阻塞（例如，如果它们是 I/O 边界），则系统可能为超过您许可的更多线程安排时间。使用小型队列通常要求较大的池大小，CPU 使用率较高，但是可能遇到不可接受的调度开销，这样也会降低吞吐量。<br><br><h4>被拒绝的任务</h4><br>当 Executor 已经关闭，并且 Executor 将有限边界用于最大线程和工作队列容量，且已经饱和时，在方法execute(java.lang.Runnable) 中提交的新任务将被拒绝。在以上两种情况下，execute 方法都将调用其RejectedExecutionHandler 的 RejectedExecutionHandler.rejectedExecution(java.lang.Runnable, java.util.concurrent.ThreadPoolExecutor) 方法。<br>下面提供了四种预定义的处理程序策略:<br>1.在默认的 ThreadPoolExecutor.AbortPolicy 中，处理程序遭到拒绝将抛出运行时 RejectedExecutionException。<br>2.在 ThreadPoolExecutor.CallerRunsPolicy 中，线程调用运行该任务的 execute 本身。此策略提供简单的反馈控制机制，能够减缓新任务的提交速度。<br>3.在 ThreadPoolExecutor.DiscardPolicy 中，不能执行的任务将被删除。<br>4.在 ThreadPoolExecutor.DiscardOldestPolicy 中，如果执行程序尚未关闭，则位于工作队列头部的任务将被删除，然后重试执行程序（如果再次失败，则重复此过程）。<br>5. 定义和使用其他种类的 RejectedExecutionHandler 类也是可能的，但这样做需要非常小心，尤其是当策略仅用于特定容量或排队策略时。<br><br><h4>挂钩方法</h4><br>此类提供 protected 可重写的 beforeExecute(java.lang.Thread, java.lang.Runnable) 和 afterExecute(java.lang.Runnable, java.lang.Throwable) 方法，这两种方法分别在执行每个任务之前和之后调用。它们可用于操纵执行环境；例如，重新初始化ThreadLocal、搜集统计信息或添加日志条目。此外，还可以重写方法 terminated() 来执行 Executor 完全终止后需要完成的所有特殊处理。<br><br><br>如果挂钩或回调方法抛出异常，则内部辅助线程将依次失败并突然终止。<br><br><br><h4>队列维护</h4><br><p>方法 getQueue() 允许出于监控和调试目的而访问工作队列。强烈反对出于其他任何目的而使用此方法。remove(java.lang.Runnable) 和 purge() 这两种方法可用于在取消大量已排队任务时帮助进行存储回收。<br></p><br>一、例子<br>创建 TestThreadPool 类<br><br><pre><br><code><br><br>import java.util.concurrent.ArrayBlockingQueue;<br>import java.util.concurrent.ThreadPoolExecutor;<br>import java.util.concurrent.TimeUnit;<br><br>public class TestThreadPool {<br><br>    private static int produceTaskSleepTime = 2;<br><br>    private static int produceTaskMaxNumber = 10;<br><br>    public static void main(String[] args) {<br><br>        // 构造一个线程池<br>        ThreadPoolExecutor threadPool = new ThreadPoolExecutor(2, 4, 3,<br>                TimeUnit.SECONDS, new ArrayBlockingQueue<runnable>(3),<br>                new ThreadPoolExecutor.DiscardOldestPolicy());<br><br>        for (int i = 1; i &lt;= produceTaskMaxNumber; i++) {<br>            try {<br>                String task = “task@ “ + i;<br>                System.out.println(“创建任务并提交到线程池中：” + task);<br>                threadPool.execute(new ThreadPoolTask(task));<br><br>                Thread.sleep(produceTaskSleepTime);<br>            } catch (Exception e) {<br>                e.printStackTrace();<br>            }<br>        }<br>    }<br>}<br><br>import java.io.Serializable;<br><br>public class ThreadPoolTask implements Runnable, Serializable {<br><br>    private Object attachData;<br><br>    ThreadPoolTask(Object tasks) {<br>        this.attachData = tasks;<br>    }<br><br>    public void run() {<br><br>        System.out.println(“开始执行任务：” + attachData);<br><br>        attachData = null;<br>    }<br><br>    public Object getTask() {<br>        return this.attachData;<br>    }<br>}<br><br><br><br>执行结果：<br><br>创建任务并提交到线程池中：task@ 1<br><br>开始执行任务：task@ 1<br><br>创建任务并提交到线程池中：task@ 2<br><br>开始执行任务：task@ 2<br><br>创建任务并提交到线程池中：task@ 3<br><br>创建任务并提交到线程池中：task@ 4<br><br>开始执行任务：task@ 3<br><br>创建任务并提交到线程池中：task@ 5<br><br>开始执行任务：task@ 4<br><br>创建任务并提交到线程池中：task@ 6<br><br>创建任务并提交到线程池中：task@ 7<br><br>创建任务并提交到线程池中：task@ 8<br><br>开始执行任务：task@ 5<br><br>开始执行任务：task@ 6<br><br>创建任务并提交到线程池中：task@ 9<br><br>开始执行任务：task@ 7<br><br>创建任务并提交到线程池中：task@ 10<br><br>开始执行任务：task@ 8<br><br>开始执行任务：task@ 9<br><br>开始执行任务：task@ 10<br></runnable></code><br></pre><br><br><br><h3>四.ThreadPoolExecutor配置</h3>
+<p>它们之间的继承关系可以参考下图。</p>
+<p>从上图可以总结出如下几点：</p>
+<li>Java集合的根接口是Collection，它又继承了迭代接口Iterable</li><br><li>List接口和Set接口继承了Collection接口</li><br><li>Map接口是独立的接口，并没有继承Collection接口  （这里是重点，面试可能问的比较多）</li><br><li>List接口常用的实现类有：ArrayList、LinkedList、Vector</li><br><li>Set接口常用的实现类有：HashSet、LinkedHashSet、TreeSet</li><br><li>Map接口常用的实现类有：HashMap、HashTable、TreeMap</li>
 
-<ol>
-<li><p>ThreadPoolExcutor为一些Executor提供了基本的实现，这些Executor是由Executors中的工厂 newCahceThreadPool、newFixedThreadPool和newScheduledThreadExecutor返回的。 ThreadPoolExecutor是一个灵活的健壮的池实现，允许各种各样的用户定制。</p>
-</li>
-<li><p>线程的创建与销毁</p>
-<ol>
-<li>核心池大小、最大池大小和存活时间共同管理着线程的创建与销毁。</li>
-<li>核心池的大小是目标的大小；线程池的实现试图维护池的大小；即使没有任务执行，池的大小也等于核心池的大小，并直到工作队列充满前，池都不会创建更多的线程。如果当前池的大小超过了核心池的大小，线程池就会终止它。</li>
-</ol>
-</li>
-<li><p>最大池的大小是可同时活动的线程数的上限。</p>
-</li>
-<li>如果一个线程已经闲置的时间超过了存活时间，它将成为一个被回收的候选者。</li>
-<li>newFixedThreadPool工厂为请求的池设置了核心池的大小和最大池的大小，而且池永远不会超时</li>
-<li>newCacheThreadPool工厂将最大池的大小设置为Integer.MAX_VALUE，核心池的大小设置为0，超时设置为一分钟。这样创建了无限扩大的线程池，会在需求量减少的情况下减少线程数量。</li>
-</ol>
-<h3> 五.管理</h3>
-
-<ol>
-<li>ThreadPoolExecutor允许你提供一个BlockingQueue来持有等待执行的任务。任务排队有3种基本方法：无限队列、有限队列和同步移交。</li>
-<li>newFixedThreadPool和newSingleThreadExectuor默认使用的是一个无限的 LinkedBlockingQueue。如果所有的工作者线程都处于忙碌状态，任务会在队列中等候。如果任务持续快速到达，超过了它们被执行的速度，队列也会无限制地增加。稳妥的策略是使用有限队列，比如ArrayBlockingQueue或有限的LinkedBlockingQueue以及 PriorityBlockingQueue。</li>
-<li>对于庞大或无限的池，可以使用SynchronousQueue，完全绕开队列，直接将任务由生产者交给工作者线程</li>
-<li>可以使用PriorityBlockingQueue通过优先级安排任务</li>
-</ol>
+<p>##4. List集合<br>List集合包括List接口以及List接口的所有实现类。List集合具有以下特点：</p>
+<p><li>集合中的元素允许重复</li></p>
+<p><li>集合中的元素是有顺序的，各元素插入的顺序就是各元素的顺序</li></p>
+<p><li>集合中的元素可以通过索引来访问或者设置</li></p>
+<p><li>List接口常用的实现类有：ArrayList、LinkedList、Vector。</li></p>
+<p>我们先看下如下示例了解下List集合的用法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">package collection;</span><br><span class="line"></span><br><span class="line">import java.util.*;</span><br><span class="line"></span><br><span class="line">public class Muster &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        List&lt;String&gt; strList = new ArrayList&lt;&gt;();</span><br><span class="line">        strList.add(&quot;a&quot;);</span><br><span class="line">        strList.add(&quot;b&quot;);</span><br><span class="line">        strList.add(&quot;c&quot;);</span><br><span class="line"></span><br><span class="line">        int i = (int) (Math.random() * strList.size());</span><br><span class="line">        System.out.println(&quot;随机获取数组中的元素：&quot; + strList.get(i));</span><br><span class="line"></span><br><span class="line">        strList.remove(2);</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;将索引为2的元素从列表移除后，数组中的元素是:&quot;);</span><br><span class="line">        for (int j = 0; j &lt; strList.size(); j++) &#123;</span><br><span class="line">            System.out.println(strList.get(j));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>复制代码以上代码的输出结果为：</p>
+<p><pre><br>随机获取数组中的元素：a<br>将索引为2的元素从列表移除后，数组中的元素是:<br>a<br>b<br></pre><br><a href="##"><br>关于List集合的详细用法，ArrayList、LinkedList、Vector的区别（这里是重点，面试可能问的比较多），后续会单独写文总结，敬请期待。<br></a></p>
+<p>##5. Set集合<br>Set集合包括Set接口以及Set接口的所有实现类。Set集合具有以下特点：</p>
+<p><li>集合中不包含重复元素(你可以重复添加，但只会保留第1个)</li></p>
+<p><li>集合中的元素不一定保证有序</li></p>
+<p><li>Set接口常用的实现类有：HashSet、LinkedHashSet、TreeSet。</li></p>
+<p>我们先看下如下示例了解下Set集合的用法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">package collection;</span><br><span class="line"></span><br><span class="line">import java.util.*;</span><br><span class="line"></span><br><span class="line">public class Muster &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Set&lt;String&gt; platformList = new HashSet&lt;&gt;();</span><br><span class="line">        platformList.add(&quot;博客园&quot;);</span><br><span class="line">        platformList.add(&quot;掘金&quot;);</span><br><span class="line">        platformList.add(&quot;微信公众号&quot;);</span><br><span class="line">        platformList.add(&quot;个人博客&quot;);</span><br><span class="line"></span><br><span class="line">        // 尝试添加重复元素</span><br><span class="line">        platformList.add(&quot;博客园&quot;);</span><br><span class="line">        platformList.add(&quot;掘金&quot;);</span><br><span class="line"></span><br><span class="line">        for (String platform : platformList) &#123;</span><br><span class="line">            System.out.println(platform);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>复制代码以上代码的输出结果为：</p>
+<p><pre><br>博客园<br>个人博客<br>掘金<br>微信公众号<br></pre><br>可以看出，虽然我们尝试添加了重复元素，但并没有添加成功并且输出的元素没有顺序。<br>因此当你的集合中不允许有重复元素并且对排序也没有要求的话，可以使用Set集合。<br><a href="##">关于Set集合的详细用法，HashSet、LinkedHashSet、TreeSet的区别（这里是重点，面试可能问的比较多），后续会单独写文总结，敬请期待。</a></p>
+<p>##6. Map集合<br>Map集合包括Map接口以及Map接口的所有实现类。<br>Map集合具有以下特点：</p>
+<p><li>Map接口并没有继承Collection接口，提供的是key到value的映射</li></p>
+<p><li>Map中不能包含相同的key</li></p>
+<p><li>Map接口常用的实现类有：HashMap、HashTable、TreeMap。</li></p>
+<p>我们先看下如下示例了解下Map集合的用法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">package collection;</span><br><span class="line"></span><br><span class="line">import java.util.*;</span><br><span class="line"></span><br><span class="line">public class Muster &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Map&lt;Integer, String&gt; platformMap = new HashMap&lt;&gt;();</span><br><span class="line">        platformMap.put(1, &quot;博客园&quot;);</span><br><span class="line">        platformMap.put(2, &quot;掘金&quot;);</span><br><span class="line">        platformMap.put(3, &quot;微信公众号&quot;);</span><br><span class="line">        platformMap.put(4, &quot;个人博客&quot;);</span><br><span class="line"></span><br><span class="line">        // 尝试添加重复Map</span><br><span class="line">        platformMap.put(4, &quot;个人博客&quot;);</span><br><span class="line"></span><br><span class="line">        // 获取所有的key</span><br><span class="line">        Set&lt;Integer&gt; keys = platformMap.keySet();</span><br><span class="line">        for (Integer integer : keys) &#123;</span><br><span class="line">            System.out.println(&quot;Key:&quot; + integer + &quot;,Value:&quot; + platformMap.get(integer));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>复制代码以上代码的输出结果为：</p>
+<p><li>Key:1,Value:博客园</li></p>
+<p><li>Key:2,Value:掘金</li></p>
+<p><li>Key:3,Value:微信公众号</li></p>
+<p><li>Key:4,Value:个人博客</li></p>
+<p><li>从日志可以看出，当我们尝试重加重复Map时，并没有添加成功。</li></p>
+<p><li><a href="##">关于Map集合的详细用法，HashMap、HashTable、TreeMap的区别（这里是重点，面试可能问的比较多），后续会单独写文总结，敬请期待。</a></li></p>
 
           
         
@@ -1909,7 +1904,7 @@ new ThreadPoolExecutor.CallerRunsPolicy());
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-count">22</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -1922,7 +1917,7 @@ new ThreadPoolExecutor.CallerRunsPolicy());
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
