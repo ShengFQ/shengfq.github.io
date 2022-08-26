@@ -1278,135 +1278,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2019/08/21/Netty应运而生/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="盛富强">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="程序员shengfq">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/08/21/Netty应运而生/" itemprop="url">Netty 应运而生</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-08-21T00:00:00+08:00">
-                2019-08-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><b>导读</b></p>
-<p></p><p><br>Netty 服务端创建需要的必备知识如下：</p>
-<ol>
-<li>熟悉 JDK NIO 主要类库的使用，例如 ByteBuffer、Selector</li>
-<li>ServerSocketChannel 等；</li>
-<li>熟悉 JDK 的多线程编程；</li>
-<li>了解 Reactor 模式。</li>
-</ol>
-<p><b>需求</b><br>如果需要构建基于NIO的高性能,异步,高可靠的底层通讯框架. 开发高质量的 NIO 程序并不是一件简单的事情，除去 NIO 类库的固有复杂性和 Bug，作为 NIO 服务端，需要能够处理网络的闪断、客户端的重连、安全认证和消息的编解码、半包处理等。如果没有足够的 NIO 编程经验积累，自研 NIO 框架往往需要半年甚至数年的时间才能最终稳定下来，这种成本即便对一个大公司而言也是个严重的挑战。</p>
-<p>&lt;img src=<a href="https://mmbiz.qpic.cn/mmbiz_png/FE4VibF0SjfMk7VlIOcRXdVsmAGiaQuf3zbINzsTAJuWAkQkQC6HQJCribfX4QQV7o3uwa23wlfibgkfPS97sKcDeA/640?wx_fmt=png&amp;tp=webp&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1" target="_blank" rel="noopener">https://mmbiz.qpic.cn/mmbiz_png/FE4VibF0SjfMk7VlIOcRXdVsmAGiaQuf3zbINzsTAJuWAkQkQC6HQJCribfX4QQV7o3uwa23wlfibgkfPS97sKcDeA/640?wx_fmt=png&amp;tp=webp&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1</a> /&gt;</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2019/08/21/(Reactor)异步非阻塞多路IO复用模型/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1503,6 +1374,135 @@
 <li>Reactor模式在IO读写数据时还是在同一个线程中实现的，即使使用多个Reactor机制的情况下，那些共享一个Reactor的Channel如果出现一个长时间的数据读写，会影响这个Reactor中其他Channel的相应时间，比如在大文件传输时，IO操作就会影响其他Client的相应时间，因而对这种操作，使用传统的Thread-Per-Connection或许是一个更好的选择，或则此时使用Proactor模式。</li>
 </ol>
 <p></p><h4>参考</h4><br>Reactor Pattern WikiPedia <br><br>Reactor An Object Behavioral Pattern for Demultiplexing and Dispatching Handles for Synchronous Events<br><br>Scalable IO In Java<br><br>C10K Problem WikiPedia<br></selectionkey></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2019/08/21/Netty应运而生/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="盛富强">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员shengfq">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/08/21/Netty应运而生/" itemprop="url">Netty 应运而生</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-08-21T00:00:00+08:00">
+                2019-08-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><b>导读</b></p>
+<p></p><p><br>Netty 服务端创建需要的必备知识如下：</p>
+<ol>
+<li>熟悉 JDK NIO 主要类库的使用，例如 ByteBuffer、Selector</li>
+<li>ServerSocketChannel 等；</li>
+<li>熟悉 JDK 的多线程编程；</li>
+<li>了解 Reactor 模式。</li>
+</ol>
+<p><b>需求</b><br>如果需要构建基于NIO的高性能,异步,高可靠的底层通讯框架. 开发高质量的 NIO 程序并不是一件简单的事情，除去 NIO 类库的固有复杂性和 Bug，作为 NIO 服务端，需要能够处理网络的闪断、客户端的重连、安全认证和消息的编解码、半包处理等。如果没有足够的 NIO 编程经验积累，自研 NIO 框架往往需要半年甚至数年的时间才能最终稳定下来，这种成本即便对一个大公司而言也是个严重的挑战。</p>
+<p>&lt;img src=<a href="https://mmbiz.qpic.cn/mmbiz_png/FE4VibF0SjfMk7VlIOcRXdVsmAGiaQuf3zbINzsTAJuWAkQkQC6HQJCribfX4QQV7o3uwa23wlfibgkfPS97sKcDeA/640?wx_fmt=png&amp;tp=webp&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1" target="_blank" rel="noopener">https://mmbiz.qpic.cn/mmbiz_png/FE4VibF0SjfMk7VlIOcRXdVsmAGiaQuf3zbINzsTAJuWAkQkQC6HQJCribfX4QQV7o3uwa23wlfibgkfPS97sKcDeA/640?wx_fmt=png&amp;tp=webp&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1</a> /&gt;</p>
 
           
         
