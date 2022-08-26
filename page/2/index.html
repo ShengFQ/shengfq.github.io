@@ -1197,7 +1197,7 @@ The searched-for class definition existed when the currently executing class was
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2018/05/14/Java Exception Handling/">
+    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2018/05/14/异常的层级/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="盛富强">
@@ -1216,7 +1216,7 @@ The searched-for class definition existed when the currently executing class was
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/05/14/Java Exception Handling/" itemprop="url">java 异常处理</a></h1>
+                <a class="post-title-link" href="/2018/05/14/异常的层级/" itemprop="url">Exception Hierarchies</a></h1>
         
 
         <div class="post-meta">
@@ -1268,13 +1268,10 @@ The searched-for class definition existed when the currently executing class was
       
         
           
-            <p>java 异常处理让你能轻松处理应用程序中的错误.异常处理在编写健壮的应用或组件的时候很容易被忽略的.当一个错误发生在一个Java程序通常会导致一个异常被抛出。你若能抛出,捕获,处理这些异常得当,将有很多方法来处理,但并不是所有的都有效并且安全失败(程序执行失败逻辑要安全处理).</p>
-<p>本次训练(文集)深度讲解java当中的异常处理.这次训练包含了各种应该的活不建议的异常处理,也包含了一些高效、不易出错的异常处理.希望你能从这些文字中受益.</p>
-<p>这个手册中使用的java版本是jdk6 或者jdk7.这些技术也能很好的适用于jdk5.jdk4.</p>
-<p>下面是一个快速介绍你能从异常处理中所见到的内容.<br>基本的java异常处理<br>头两篇文章包含基本的异常抛出和处理理论,异常层级:<br>基本的try..catch..finally<br>异常的结构层级</p>
-<p>检查异常和非检查异常的区别<br>java是一门支持检查\非检查异常的语言,在文章[检查或非检查异常]中我讨论了这两种方式的不同,最后我也推荐使用非检查异常少用检查异常.</p>
-<p>通用的异常处理建议<br>手册6片文章讲述 失败安全异常处理,异常日志写在哪里,建议在验证数据中抛出异常,在另一方面,建议如何设计你的应用程序抛出和处理异常.<br>高级异常处理建议<br>在下面2篇文章,异常处理的模板和异常丰富讨论更多高级异常处理的技术,让你的代码更简洁,异常模板把所有的try..catch代码重用到一个异常处理的模板方法里,帮助你避免很长的异常栈日志,应用程序获得真实的唯一异常代码.</p>
-<p>异常处理的策略<br>我写了很多建议如何把异常技术描述到这个手册进行浓缩了异常处理的策略,这通常很有效.</p>
+            <p>异常的层级</p>
+<h2 id="多catch块"><a href="#多catch块" class="headerlink" title="多catch块"></a>多catch块</h2><h2 id="抛出条款"><a href="#抛出条款" class="headerlink" title="抛出条款"></a>抛出条款</h2><h2 id="设计异常的层级"><a href="#设计异常的层级" class="headerlink" title="设计异常的层级"></a>设计异常的层级</h2><h2 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h2><p>在java和c#中异常能够通过层级关系分类.这种关系一般是一个或多个异常继承自其他异常.在java中FileNotFoundException 就是IOException异常的子类.下面就是一自定义异常:<br>public class MyException extends Exception{<br>    //constructors etc.<br>}</p>
+<p>如你所见并没有其他内容.更高级的异常层级是你决定catch一个具体的异常,你就能自动的捕获到该异常所有子类发生时触发时点.换句话说,你能catch所有具体的异常只要你声明一个父类异常.在案例中FileNotFoundException,如果你捕获了IOException,你就能捕获到FileNotFoundException.</p>
+<p>##多个catch块<br>你可能知道了已经有一种多catch块的声明异常的方式,这在</p>
 
           
         
