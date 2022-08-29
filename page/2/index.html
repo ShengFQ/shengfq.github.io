@@ -1197,129 +1197,6 @@ The searched-for class definition existed when the currently executing class was
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2018/05/14/异常的层级/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="盛富强">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="程序员shengfq">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/14/异常的层级/" itemprop="url">Exception Hierarchies</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-14T00:00:00+08:00">
-                2018-05-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>异常的层级</p>
-<h2 id="多catch块"><a href="#多catch块" class="headerlink" title="多catch块"></a>多catch块</h2><h2 id="抛出条款"><a href="#抛出条款" class="headerlink" title="抛出条款"></a>抛出条款</h2><h2 id="设计异常的层级"><a href="#设计异常的层级" class="headerlink" title="设计异常的层级"></a>设计异常的层级</h2><h2 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h2><p>在java和c#中异常能够通过层级关系分类.这种关系一般是一个或多个异常继承自其他异常.在java中FileNotFoundException 就是IOException异常的子类.下面就是一自定义异常:<br>public class MyException extends Exception{<br>    //constructors etc.<br>}</p>
-<p>如你所见并没有其他内容.更高级的异常层级是你决定catch一个具体的异常,你就能自动的捕获到该异常所有子类发生时触发时点.换句话说,你能catch所有具体的异常只要你声明一个父类异常.在案例中FileNotFoundException,如果你捕获了IOException,你就能捕获到FileNotFoundException.</p>
-<p>##多个catch块<br>你可能知道了已经有一种多catch块的声明异常的方式,这在</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2018/05/14/Catching Multiple Exceptions in Java 7/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1426,6 +1303,129 @@ The searched-for class definition existed when the currently executing class was
 <p>注意子类异常也不再声明了 也不捕获和包装了,因为他们的超类已经将异常传播给访问栈了.<br>我的意见跟异常包装一样:如果所有的方法都声明抛出基类异常,为什么不让基类成为unchecked异常 保存一些try-catch块,抛出一个基类.</p>
 <p>当一个方法不再声明非检查异常,但是他们可能抛出这种异常将会很难处理.不声明你就不知道什么异常会抛出.你也许不会知道如何处理,当然除了你已经通过代码处理他们那些可能抛出的异常.<br>争论1:<br>在大多数情况下你,对于异常的处理你除了显示打印错误信息给调用者,不能做其他,写一条日志,回滚事务.不管什么异常发生在很多情况下处理他们是用相同的方式.因为应用程序通常有一些中央和通用的异常处理代码.因此知道实际发生了什么可能抛出的异常就没那么重要了.</p>
 <p>总结<br>我通常赞成检查异常但是最近我凯撒改变我的主意.个人喜欢Rod johnson,anders hejlsberg,joshua bloch和其他人让我重新思考真实的益处来自检查异常.最近我们尝试使用unchecked异常在大项目上,他们工作很好.异常处理集中在一部分类.这里我们必须做本地异常处理代替传播异常到主异常处理代码.但是这不是非常多.我们的代码可读性更高,没有try-catch快.在另一方面,这里有更少的catch-rethrow try-catch块在代码里使用检查异常.我将提醒所有使用unchecked异常的人,至少使用try.我说明下原因:<br>1.非检查异常不需要杂乱的代码使用非必要的try-catch块.<br>2.非检查异常不需要杂乱的方法头声明去传播异常.<br>3.你很容易忘记处理非检查异常的论证是这不适合我的经验.<br>4.非检查异常避免了版本升级的问题.</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2018/05/14/异常的层级/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="盛富强">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员shengfq">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/14/异常的层级/" itemprop="url">Exception Hierarchies</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-14T00:00:00+08:00">
+                2018-05-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>异常的层级</p>
+<h2 id="多catch块"><a href="#多catch块" class="headerlink" title="多catch块"></a>多catch块</h2><h2 id="抛出条款"><a href="#抛出条款" class="headerlink" title="抛出条款"></a>抛出条款</h2><h2 id="设计异常的层级"><a href="#设计异常的层级" class="headerlink" title="设计异常的层级"></a>设计异常的层级</h2><h2 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h2><p>在java和c#中异常能够通过层级关系分类.这种关系一般是一个或多个异常继承自其他异常.在java中FileNotFoundException 就是IOException异常的子类.下面就是一自定义异常:<br>public class MyException extends Exception{<br>    //constructors etc.<br>}</p>
+<p>如你所见并没有其他内容.更高级的异常层级是你决定catch一个具体的异常,你就能自动的捕获到该异常所有子类发生时触发时点.换句话说,你能catch所有具体的异常只要你声明一个父类异常.在案例中FileNotFoundException,如果你捕获了IOException,你就能捕获到FileNotFoundException.</p>
+<p>##多个catch块<br>你可能知道了已经有一种多catch块的声明异常的方式,这在</p>
 
           
         
