@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zn-han">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="elastic search," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="如何自学一门中间件1.去官网找文档,guide/reference/api,文档通读一遍,搞清楚是什么? 2.不要去看源码,而是先demo一遍,知道流程和步骤,抽象模型,核心组件,运作原理.搞清楚为什么工具能达到目的? 3.场景是什么?结合场景和demo练习几次,想想是怎么回事?如何做到的? 4.越是低版本越是接近底层原理,越是接近底层就越能弄明白,其他API无非就是各语言的扩展.比如掌握了命令行">
+<meta name="keywords" content="elastic search">
+<meta property="og:type" content="article">
+<meta property="og:title" content="elastic search 全文检索知识学习">
+<meta property="og:url" content="https://www.shengfq.github.io/2022/08/29/elastic search 全文检索知识学习/index.html">
+<meta property="og:site_name" content="程序员shengfq">
+<meta property="og:description" content="如何自学一门中间件1.去官网找文档,guide/reference/api,文档通读一遍,搞清楚是什么? 2.不要去看源码,而是先demo一遍,知道流程和步骤,抽象模型,核心组件,运作原理.搞清楚为什么工具能达到目的? 3.场景是什么?结合场景和demo练习几次,想想是怎么回事?如何做到的? 4.越是低版本越是接近底层原理,越是接近底层就越能弄明白,其他API无非就是各语言的扩展.比如掌握了命令行">
+<meta property="og:locale" content="zn-han">
+<meta property="og:updated_time" content="2023-01-01T09:43:50.813Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="elastic search 全文检索知识学习">
+<meta name="twitter:description" content="如何自学一门中间件1.去官网找文档,guide/reference/api,文档通读一遍,搞清楚是什么? 2.不要去看源码,而是先demo一遍,知道流程和步骤,抽象模型,核心组件,运作原理.搞清楚为什么工具能达到目的? 3.场景是什么?结合场景和demo练习几次,想想是怎么回事?如何做到的? 4.越是低版本越是接近底层原理,越是接近底层就越能弄明白,其他API无非就是各语言的扩展.比如掌握了命令行">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.shengfq.github.io/2022/08/29/elastic search 全文检索知识学习/"/>
+
+
+
+
+
+  <title>elastic search 全文检索知识学习 | 程序员shengfq</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zn-han">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">程序员shengfq</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">技术博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2022/08/29/elastic search 全文检索知识学习/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="盛富强">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员shengfq">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">elastic search 全文检索知识学习</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2022-08-29T00:00:00+08:00">
+                2022-08-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="如何自学一门中间件"><a href="#如何自学一门中间件" class="headerlink" title="如何自学一门中间件"></a>如何自学一门中间件</h2><p>1.去官网找文档,guide/reference/api,文档通读一遍,搞清楚是什么?</p>
+<p>2.不要去看源码,而是先demo一遍,知道流程和步骤,抽象模型,核心组件,运作原理.搞清楚为什么工具能达到目的?</p>
+<p>3.场景是什么?结合场景和demo练习几次,想想是怎么回事?如何做到的?</p>
+<p>4.越是低版本越是接近底层原理,越是接近底层就越能弄明白,其他API无非就是各语言的扩展.比如掌握了命令行,其他语言API就不用记</p>
+<h2 id="class1-es安装-配置"><a href="#class1-es安装-配置" class="headerlink" title="class1 es安装,配置"></a>class1 es安装,配置</h2><p>1.图形化工具 elastic search head,kibana</p>
+<h2 id="class2-es的基本概念"><a href="#class2-es的基本概念" class="headerlink" title="class2 es的基本概念"></a>class2 es的基本概念</h2><p>集群,节点</p>
+<p>索引,类型,文档,分片,映射</p>
+<table>
+<thead>
+<tr>
+<th>关系型数据库(mysql)</th>
+<th>面向文档elasticsearch</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>database</td>
+<td>indices</td>
+</tr>
+<tr>
+<td>tables</td>
+<td>types</td>
+</tr>
+<tr>
+<td>rows</td>
+<td>documents</td>
+</tr>
+<tr>
+<td>dolumns</td>
+<td>fields</td>
+</tr>
+</tbody>
+</table>
+<p>逻辑设计:</p>
+<p>一个索引类型中,包含多个文档,当我们索引一篇文档时,可以通过这样的规则: 索引&gt;类型&gt;文档id,通过这个组合我们能索引到具体的文档.</p>
+<p>索引</p>
+<p>文档</p>
+<p>文档包含字段和值,可以层级包含字段和值,JSON格式.</p>
+<p>字段类型</p>
+<p>类型是包含文档的上级节点,类型中对字段的定义是映射</p>
+<p><strong>==倒排索引??==</strong></p>
+<h2 id="class3-ik分词器详解"><a href="#class3-ik分词器详解" class="headerlink" title="class3 ik分词器详解"></a>class3 ik分词器详解</h2><blockquote>
+<p>安装分词器插件 :</p>
+</blockquote>
+<p>ik_smart 最细粒度划分 / ik_max_word   穷尽词库可能</p>
+<p>elastic search analysis ik</p>
+<blockquote>
+<p>安装kibana</p>
+</blockquote>
+<blockquote>
+<p>查看分词器效果</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">kibana</span><br><span class="line"></span><br><span class="line">GET _analyze&#123;</span><br><span class="line"></span><br><span class="line">&quot;analyzer&quot;:&quot;ik_smart&quot;,</span><br><span class="line"></span><br><span class="line">&quot;text&quot;:&quot;中国共产党人&quot;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>自定义分词器插件</p>
+</blockquote>
+<p>自己加字典,如何自己加字典?</p>
+<p>添加字典:xxx.dic</p>
+<p>修改到: ${es_plugins}/ik/config/IkAnalyzer.cfg.xml</p>
+<h2 id="class4-rest-分格的API"><a href="#class4-rest-分格的API" class="headerlink" title="class4 rest 分格的API"></a>class4 rest 分格的API</h2><p>数据类型</p>
+<p>添加文档字段时,可以指定也可以不指定数据类型</p>
+<p>字符串类型</p>
+<p>text,keyword</p>
+<p>数值类型</p>
+<p>long,integer,short,byte,double,float,half_float</p>
+<p>日期类型</p>
+<p>date</p>
+<p>boolean类型</p>
+<p>boolean</p>
+<p>二进制类型</p>
+<p>binary </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">建立索引的数据结构存储规则</span><br><span class="line">put http://127.0.0.1:9200/&#123;index&#125;</span><br><span class="line">&#123;</span><br><span class="line">&quot;mappings&quot;:&#123;</span><br><span class="line">	&quot;properties&quot;:&#123;</span><br><span class="line">		&quot;name&quot;:&#123;</span><br><span class="line">			&quot;type&quot;:&quot;text&quot;</span><br><span class="line">		&#125;,</span><br><span class="line">		&quot;age&quot;:&#123;</span><br><span class="line">			&quot;type&quot;:&quot;long&quot;</span><br><span class="line">		&#125;,</span><br><span class="line">		&quot;birthday&quot;:&#123;</span><br><span class="line">			&quot;type&quot;:&quot;date&quot;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="索引的操作API"><a href="#索引的操作API" class="headerlink" title="索引的操作API"></a>索引的操作API</h3><table>
+<thead>
+<tr>
+<th>http method</th>
+<th style="text-align:left">name</th>
+<th>url</th>
+<th>param</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>put</td>
+<td style="text-align:left">创建一个索引,添加规则</td>
+<td><a href="http://127.0.0.1:9200/{index}" target="_blank" rel="noopener">http://127.0.0.1:9200/{index}</a></td>
+<td>json body</td>
+</tr>
+<tr>
+<td>get</td>
+<td style="text-align:left">查看所有索引</td>
+<td><a href="http://127.0.0.1:9200/_cat/indices?v" target="_blank" rel="noopener">http://127.0.0.1:9200/_cat/indices?v</a></td>
+<td></td>
+</tr>
+<tr>
+<td>get</td>
+<td style="text-align:left"></td>
+<td>_cat/xxx</td>
+<td></td>
+</tr>
+<tr>
+<td>get</td>
+<td style="text-align:left"></td>
+<td>-cluster/xxx</td>
+<td></td>
+</tr>
+<tr>
+<td>get</td>
+<td style="text-align:left">查看单个索引</td>
+<td><a href="http://127.0.0.1:9200/{index}" target="_blank" rel="noopener">http://127.0.0.1:9200/{index}</a></td>
+<td></td>
+</tr>
+<tr>
+<td>delete</td>
+<td style="text-align:left">删除一个索引</td>
+<td><a href="http://127.0.0.1:9200/{index}" target="_blank" rel="noopener">http://127.0.0.1:9200/{index}</a></td>
+<td></td>
+</tr>
+<tr>
+<td>post</td>
+<td style="text-align:left">创建一个默认文档</td>
+<td><a href="http://127.0.0.1:9200/{index}/_doc" target="_blank" rel="noopener">http://127.0.0.1:9200/{index}/_doc</a></td>
+<td></td>
+</tr>
+<tr>
+<td>get</td>
+<td style="text-align:left">查看默认文档</td>
+<td><a href="http://127.0.0.1:9200/{index}/_doc/{doc_id}" target="_blank" rel="noopener">http://127.0.0.1:9200/{index}/_doc/{doc_id}</a></td>
+<td></td>
+</tr>
+<tr>
+<td>put</td>
+<td style="text-align:left">修改默认文档[不建议] 覆盖式</td>
+<td><a href="http://127.0.0.1:9200/{index}/_doc/{doc_id}" target="_blank" rel="noopener">http://127.0.0.1:9200/{index}/_doc/{doc_id}</a></td>
+<td></td>
+</tr>
+<tr>
+<td>post</td>
+<td style="text-align:left">修改默认文档[单字段修改]</td>
+<td><a href="http://127.0.0.1:9200/{index}/_doc/{doc_id}/__update" target="_blank" rel="noopener">http://127.0.0.1:9200/{index}/_doc/{doc_id}/__update</a></td>
+<td></td>
+</tr>
+<tr>
+<td>delete</td>
+<td style="text-align:left">删除默认文档</td>
+<td><a href="http://127.0.0.1:9200/{index}/_doc/{doc_id}" target="_blank" rel="noopener">http://127.0.0.1:9200/{index}/_doc/{doc_id}</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="文档的操作API"><a href="#文档的操作API" class="headerlink" title="文档的操作API"></a>文档的操作API</h3><table>
+<thead>
+<tr>
+<th>http method</th>
+<th>name</th>
+<th>url</th>
+<th>param</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>put</td>
+<td>创建文档</td>
+<td><a href="http://127.0.0.1:9200/{index}/{type}/{document_id}" target="_blank" rel="noopener">http://127.0.0.1:9200/{index}/{type}/{document_id}</a></td>
+<td></td>
+</tr>
+<tr>
+<td>post</td>
+<td>创建随机id文档</td>
+<td><a href="http://127.0.0.1:9200/{index}/{type}" target="_blank" rel="noopener">http://127.0.0.1:9200/{index}/{type}</a></td>
+<td></td>
+</tr>
+<tr>
+<td>get</td>
+<td>获取文档</td>
+<td><a href="http://127.0.0.1:9200/{index}/{type}/{document_id}" target="_blank" rel="noopener">http://127.0.0.1:9200/{index}/{type}/{document_id}</a></td>
+<td></td>
+</tr>
+<tr>
+<td>post</td>
+<td>更新文档字段</td>
+<td><a href="http://127.0.0.1:9200/{index}/{type}/{doc_id}/__update" target="_blank" rel="noopener">http://127.0.0.1:9200/{index}/{type}/{doc_id}/__update</a></td>
+<td></td>
+</tr>
+<tr>
+<td>get</td>
+<td>简单匹配查询文档</td>
+<td><a href="http://127.0.0.1:9200/{index}/{type}/_search" target="_blank" rel="noopener">http://127.0.0.1:9200/{index}/{type}/_search</a></td>
+<td></td>
+</tr>
+<tr>
+<td>delete</td>
+<td>删除文档</td>
+<td><a href="http://127.0.0.1:9200/{index}/{type}/{document_id}" target="_blank" rel="noopener">http://127.0.0.1:9200/{index}/{type}/{document_id}</a></td>
+<td></td>
+</tr>
+<tr>
+<td>delete</td>
+<td>条件删除文档</td>
+<td><a href="http://127.0.0.1:9200/{index}/{type}/_delete_by_query" target="_blank" rel="noopener">http://127.0.0.1:9200/{index}/{type}/_delete_by_query</a></td>
+<td></td>
+</tr>
+<tr>
+<td>get</td>
+<td>查询所有文档</td>
+<td><a href="http://127.0.0.1:9200/{index}/{type}/_search" target="_blank" rel="noopener">http://127.0.0.1:9200/{index}/{type}/_search</a></td>
+<td>参数不同</td>
+</tr>
+<tr>
+<td>get</td>
+<td>字段匹配查询</td>
+<td><a href="http://127.0.0.1:9200/{index}/{type}/_search" target="_blank" rel="noopener">http://127.0.0.1:9200/{index}/{type}/_search</a></td>
+<td>参数不同</td>
+</tr>
+<tr>
+<td>get</td>
+<td>关键字精确查询</td>
+<td><a href="http://127.0.0.1:9200/{index}/{type}/_search" target="_blank" rel="noopener">http://127.0.0.1:9200/{index}/{type}/_search</a></td>
+<td>参数不同</td>
+</tr>
+<tr>
+<td>get</td>
+<td>多关键字精确查询</td>
+<td><a href="http://127.0.0.1:9200/{index}/{type}/_search" target="_blank" rel="noopener">http://127.0.0.1:9200/{index}/{type}/_search</a></td>
+<td>参数不同</td>
+</tr>
+<tr>
+<td>get</td>
+<td>指定查询字段</td>
+<td><a href="http://127.0.0.1:9200/{index}/{type}/_search" target="_blank" rel="noopener">http://127.0.0.1:9200/{index}/{type}/_search</a></td>
+<td></td>
+</tr>
+<tr>
+<td>get</td>
+<td>过滤字段</td>
+<td><a href="http://127.0.0.1:9200/{index}/{type}/_search" target="_blank" rel="noopener">http://127.0.0.1:9200/{index}/{type}/_search</a></td>
+<td></td>
+</tr>
+<tr>
+<td>get</td>
+<td>组合查询</td>
+<td><a href="http://127.0.0.1:9200/{index}/{type}/_search" target="_blank" rel="noopener">http://127.0.0.1:9200/{index}/{type}/_search</a></td>
+<td></td>
+</tr>
+<tr>
+<td>get</td>
+<td>范围查询</td>
+<td><a href="http://127.0.0.1:9200/{index}/{type}/_search" target="_blank" rel="noopener">http://127.0.0.1:9200/{index}/{type}/_search</a></td>
+<td></td>
+</tr>
+<tr>
+<td>get</td>
+<td>模糊查询</td>
+<td><a href="http://127.0.0.1:9200/{index}/{type}/_search" target="_blank" rel="noopener">http://127.0.0.1:9200/{index}/{type}/_search</a></td>
+<td></td>
+</tr>
+<tr>
+<td>get</td>
+<td>单字段排序</td>
+<td><a href="http://127.0.0.1:9200/{index}/{type}/_search" target="_blank" rel="noopener">http://127.0.0.1:9200/{index}/{type}/_search</a></td>
+<td></td>
+</tr>
+<tr>
+<td>get</td>
+<td>多字段排序</td>
+<td><a href="http://127.0.0.1:9200/{index}/{type}/_search" target="_blank" rel="noopener">http://127.0.0.1:9200/{index}/{type}/_search</a></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>高亮查询</td>
+<td><a href="http://127.0.0.1:9200/{index}/{type}/_search" target="_blank" rel="noopener">http://127.0.0.1:9200/{index}/{type}/_search</a></td>
+<td>highlight</td>
+</tr>
+<tr>
+<td></td>
+<td>分页查询</td>
+<td><a href="http://127.0.0.1:9200/{index}/{type}/_search" target="_blank" rel="noopener">http://127.0.0.1:9200/{index}/{type}/_search</a></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>聚合查询</td>
+<td><a href="http://127.0.0.1:9200/{index}/{type}/_search" target="_blank" rel="noopener">http://127.0.0.1:9200/{index}/{type}/_search</a></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>桶聚合查询</td>
+<td><a href="http://127.0.0.1:9200/{index}/{type}/_search" target="_blank" rel="noopener">http://127.0.0.1:9200/{index}/{type}/_search</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="映射操作API"><a href="#映射操作API" class="headerlink" title="映射操作API"></a>映射操作API</h3><table>
+<thead>
+<tr>
+<th>ttp method</th>
+<th>name</th>
+<th>url</th>
+<th>param</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>put</td>
+<td>添加映射</td>
+<td><a href="http://127.0.0.1:9200/{index}/_mapping" target="_blank" rel="noopener">http://127.0.0.1:9200/{index}/_mapping</a></td>
+<td></td>
+</tr>
+<tr>
+<td>get</td>
+<td>查看映射</td>
+<td><a href="http://127.0.0.1:9200/{index}/_mapping" target="_blank" rel="noopener">http://127.0.0.1:9200/{index}/_mapping</a></td>
+<td></td>
+</tr>
+<tr>
+<td>put</td>
+<td>索引映射关联</td>
+<td><a href="http://127.0.0.1:9200/{index}/{type}/{doc_id}/__update" target="_blank" rel="noopener">http://127.0.0.1:9200/{index}/{type}/{doc_id}/__update</a></td>
+</tr>
+</tbody>
+</table>
+<p>分词器类型</p>
+<h3 id="java-rest-client-API"><a href="#java-rest-client-API" class="headerlink" title="java rest client API"></a>java rest client API</h3><p>集成思路:</p>
+<p>一.java rest sdk就是运用java httpclient把原始的命令行工具封装到request/response/client框架内,每个命令一组request/response,这是一个典型的http restful请求java框架. jar名称:elasticsearch-rest-high-level-client.jar,核心操作对象:TransportClient.java/RestHighLevelClient.java</p>
+<p>二.要想跟spring集成,就是把对象实例托管到Context中,spring有spring-data.jar抽象,为elasticsearch提供具体的实现:spring-data-elasticsearch.jar, 核心操作对象:ElasticsearchRestTemplate.java</p>
+<p>三.为了能实现自动化配置,用户无需做对象实例化,跟springboot集成autoconfigure模块,springboot把elasticsearch集成到了autoconfigure中,jar名称:spring-boot-starter-data-elasticsearch.jar,核心操作对象没变,只需要在application.yml中配置es的连接信息,就能直接使用elasticsearchRestTemplate.java</p>
+<h2 id="class5-springboot集成es"><a href="#class5-springboot集成es" class="headerlink" title="class5 springboot集成es"></a>class5 springboot集成es</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">自动配置包:</span><br><span class="line">maven:</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-boot-starter-data-elasticsearch&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line"> </span><br><span class="line">spring-boot-autoconfigure.jar</span><br><span class="line"></span><br><span class="line">核心包</span><br><span class="line">springframework.boot.autoconfigure.data.elasticsearch</span><br><span class="line">核心类</span><br><span class="line">RestHightLevelClient.java</span><br><span class="line">RestLevelClientConfiguration.java</span><br></pre></td></tr></table></figure>
+<h2 id="class6-京东爬虫入库es-全文检索"><a href="#class6-京东爬虫入库es-全文检索" class="headerlink" title="class6 京东爬虫入库es,全文检索"></a>class6 京东爬虫入库es,全文检索</h2><h3 id="爬虫"><a href="#爬虫" class="headerlink" title="爬虫"></a>爬虫</h3><p>1.写爬虫,根据京东搜索关键字的url去加载查询结果,放到list中.</p>
+<p>2.将搜索到结果加入到es的文档库.输入关键字,返回添加是否成功.</p>
+<p>3.获取这些数据实现搜索功能,关键字,分页,返回列表.</p>
+<p>/条件搜索/ searchRequest  SearchSourceBuilder</p>
+<p>/分页 sourcebuilder.from(); size()</p>
+<p>/精准匹配 TermQueryBuilder  sourcebuilder.query(tempquerybuilder); sourcebuilder.timeout</p>
+<p>//高亮关键字</p>
+<p>/执行搜索 </p>
+<p>searchRequest.source(sourcebuilder);</p>
+<p>client.search(request,requestOptions.default); //SearchResponse</p>
+<p>//解析结果</p>
+<p>SearchResponse.getHits().getHits().getSourceAsMap();//Map&lt;String,Object&gt;</p>
+<h3 id="搜索高亮"><a href="#搜索高亮" class="headerlink" title="搜索高亮"></a>搜索高亮</h3><p>​    高亮关键字/执行搜索/解析结果 //将原来字段替换为高亮的字段</p>
+<p>举一反三</p>
+<p>要做搜索,只需要把MySQL的数据加入到es,实现搜索全文高亮就行.</p>
+<h4 id="FAQ"><a href="#FAQ" class="headerlink" title="FAQ"></a>FAQ</h4><p>1.服务启动后es连接失败</p>
+<p>java.net.ConnectException: Connection refused</p>
+<p>原因:client的jar包版本与server的版本不匹配导致连接失败.client是7.x 而我的服务是6.x</p>
+<p>2.批量添加报错:</p>
+<p>nested exception is org.elasticsearch.action.ActionRequestValidationException: Validation Failed: 1: type is missing;2: type is missing;3: type is missing;4: type is missing;5: type is missing;6: type is missing;7: type is missing</p>
+<p>原因:6.x版本的es,插入索引需要 指定type,7.x之后就不需要了,这是版本差异.</p>
+<p>index/type/doc_id</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>1.es的发展历史</p>
+<p>2.es的文件结构</p>
+<p>3.安装es</p>
+<p>4.生态圈,logstash,kibana</p>
+<p>5.分词器ik,自定义分词器</p>
+<p>6.restful API操作</p>
+<p>7.javaAPI操作</p>
+<p>8.springboot集成elasticsearch</p>
+<p>9.爬虫爬取jd的关键字搜索</p>
+<p>10.模拟全文检索</p>
+<p>爬虫-&gt;加入es库-&gt;搜索es库返回list-&gt;高亮显示返回关键字</p>
+<p>参考资料</p>
+<p><a href="https://szh-forever-young.blog.csdn.net/article/details/119930308?spm=a2c6h.12873639.article-detail.16.1c905a31NBbdOi#t9" target="_blank" rel="noopener">使用Java API实现ES中的索引、映射、文档操作</a></p>
+<p><a href="https://www.elastic.co/guide/cn/elasticsearch/guide/current/_how_to_read_this_book.html" target="_blank" rel="noopener">低版本的elasticsearch中文 guide</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/elastic-search/" rel="tag"># elastic search</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/08/26/如何解决毫无头绪的线上问题/" rel="next" title="">
+                <i class="fa fa-chevron-left"></i> 
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/08/29/我的技术总结-编程思想-解耦实践/" rel="prev" title="">
+                 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">盛富强</p>
+              <p class="site-description motion-element" itemprop="description">blogs and research</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.github.com/shengfq" target="_blank" title="github">
+                      
+                        <i class="fa fa-fw fa-globe"></i>github</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#如何自学一门中间件"><span class="nav-number">1.</span> <span class="nav-text">如何自学一门中间件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#class1-es安装-配置"><span class="nav-number">2.</span> <span class="nav-text">class1 es安装,配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#class2-es的基本概念"><span class="nav-number">3.</span> <span class="nav-text">class2 es的基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#class3-ik分词器详解"><span class="nav-number">4.</span> <span class="nav-text">class3 ik分词器详解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#class4-rest-分格的API"><span class="nav-number">5.</span> <span class="nav-text">class4 rest 分格的API</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#索引的操作API"><span class="nav-number">5.1.</span> <span class="nav-text">索引的操作API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文档的操作API"><span class="nav-number">5.2.</span> <span class="nav-text">文档的操作API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#映射操作API"><span class="nav-number">5.3.</span> <span class="nav-text">映射操作API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#java-rest-client-API"><span class="nav-number">5.4.</span> <span class="nav-text">java rest client API</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#class5-springboot集成es"><span class="nav-number">6.</span> <span class="nav-text">class5 springboot集成es</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#class6-京东爬虫入库es-全文检索"><span class="nav-number">7.</span> <span class="nav-text">class6 京东爬虫入库es,全文检索</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#爬虫"><span class="nav-number">7.1.</span> <span class="nav-text">爬虫</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#搜索高亮"><span class="nav-number">7.2.</span> <span class="nav-text">搜索高亮</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#FAQ"><span class="nav-number">7.2.1.</span> <span class="nav-text">FAQ</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">8.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">盛富强</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

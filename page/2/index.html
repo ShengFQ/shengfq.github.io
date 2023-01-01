@@ -233,6 +233,851 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2020/03/14/Fastjson详解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="盛富强">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员shengfq">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/03/14/Fastjson详解/" itemprop="url">阿里巴巴Fastjson详解</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-03-14T00:00:00+08:00">
+                2020-03-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>###什么是 Fastjson?<br>阿里官方给的定义是， fastjson 是阿里巴巴的开源JSON解析库，它可以解析 JSON 格式的字符串，支持将 Java Bean 序列化为 JSON 字符串，也可以从 JSON 字符串反序列化到 JavaBean。</p>
+<p>###Fastjson 的优点</p>
+<p>####速度快<br>fastjson相对其他JSON库的特点是快，从2011年fastjson发布1.1.x版本之后，其性能从未被其他Java实现的JSON库超越。</p>
+<p>####使用广泛<br>fastjson在阿里巴巴大规模使用，在数万台服务器上部署，fastjson在业界被广泛接受。在2012年被开源中国评选为最受欢迎的国产开源软件之一。</p>
+<p>####测试完备<br>fastjson有非常多的testcase，在1.2.11版本中，testcase超过3321个。每次发布都会进行回归测试，保证质量稳定。</p>
+<p>####使用简单<br>fastjson的 API 十分简洁。</p>
+<p>####功能完备<br>支持泛型，支持流处理超大文本，支持枚举，支持序列化和反序列化扩展。</p>
+<p>###怎么获得 Fastjson<br>你可以通过如下地方下载fastjson:</p>
+<ol>
+<li>maven中央仓库:[地址] (<a href="http://central.maven.org/maven2/com/alibaba/fastjson/" target="_blank" rel="noopener">http://central.maven.org/maven2/com/alibaba/fastjson/</a>)</li>
+<li>在maven项目的pom文件中直接配置fastjson依赖<br>fastjson最新版本都会发布到maven中央仓库，你可以直接依赖。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">     &lt;groupId&gt;com.alibaba&lt;/groupId&gt;</span><br><span class="line">     &lt;artifactId&gt;fastjson&lt;/artifactId&gt;</span><br><span class="line">     &lt;version&gt;x.x.x&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+<p>其中x.x.x是版本号，根据需要使用特定版本，建议使用最新版本。</p>
+<h3 id="Fastjson-主要的API"><a href="#Fastjson-主要的API" class="headerlink" title="Fastjson 主要的API"></a>Fastjson 主要的API</h3><p>Fastjson入口类是 com.alibaba.fastjson.JSON，主要的 API 是 JSON.toJSONString 和 parseObject。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">package com.alibaba.fastjson;</span><br><span class="line">public abstract class JSON &#123;</span><br><span class="line">      // Java对象转换为JSON字符串</span><br><span class="line">      public static final String toJSONString(Object object);</span><br><span class="line">      //JSON字符串转换为Java对象</span><br><span class="line">      public static final &lt;T&gt; T parseObject(String text, Class&lt;T&gt; clazz, Feature... features);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>序列化：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String jsonString = JSON.toJSONString(obj);</span><br></pre></td></tr></table></figure></p>
+<p>反序列化：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">VO vo = JSON.parseObject(&quot;...&quot;, VO.class);</span><br></pre></td></tr></table></figure></p>
+<p>泛型反序列化：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import com.alibaba.fastjson.TypeReference;</span><br><span class="line"></span><br><span class="line">List&lt;VO&gt; list = JSON.parseObject(&quot;...&quot;, new TypeReference&lt;List&lt;VO&gt;&gt;() &#123;&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>###Fastjson 的性能<br>fastjson是目前java语言中最快的json库，比自称最快的jackson速度还要快，第三方独立测试结果看这里：<a href="https://github.com/eishay/jvm-serializers/wiki" target="_blank" rel="noopener">这里</a></p>
+<p>自行做性能测试时，需关闭循环引用检测的功能。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">JSON.toJSONString(obj, SerializerFeature.DisableCircularReferenceDetect)</span><br><span class="line">VO vo = JSON.parseObject(&quot;...&quot;, VO.class, Feature.DisableCircularReferenceDetect)</span><br></pre></td></tr></table></figure></p>
+<p>另外，Fastjson 比 Gson 快大约6倍，测试结果可以看这里：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">Checking correctness…</span><br><span class="line">[done]</span><br><span class="line">Pre-warmup… java-built-in hessian kryo protostuff-runtime avro-generic msgpack json/jackson/databind json/jackson/databind-strings json/jackson/db-afterburner json/google-gson/databind json/svenson-databind json/flexjson/databind json/fastjson/databind smile/jackson/databind smile/jackson/db-afterburner smile/protostuff-runtime bson/jackson/databind xml/xstream+c xml/jackson/databind-aalto</span><br><span class="line">[done]</span><br><span class="line">pre. create ser deser shal +deep total size +dfl</span><br><span class="line">java-built-in 63 5523 27765 28084 28162 33686 889 514</span><br><span class="line">hessian 64 3776 6459 6505 6690 10466 501 313</span><br><span class="line">kryo 63 809 962 937 1001 1810 214 133</span><br><span class="line">protostuff-runtime 62 671 903 920 957 1627 241 151</span><br><span class="line">avro-generic 436 1234 1122 1416 1760 2994 221 133</span><br><span class="line">msgpack 61 789 1369 1385 1449 2238 233 146</span><br><span class="line">json/jackson/databind 60 1772 3089 3113 3246 5018 485 261</span><br><span class="line">json/jackson/databind-strings 64 2346 3739 3791 3921 6267 485 261</span><br><span class="line">json/jackson/db-afterburner 64 1482 2220 2233 2323 3805 485 261</span><br><span class="line">json/google-gson/databind 64 7076 4894 4962 5000 12076 486 259</span><br><span class="line">json/svenson-databind 64 5422 12387 12569 12468 17890 495 266</span><br><span class="line">json/flexjson/databind 62 20923 26853 26873 27272 48195 503 273</span><br><span class="line">json/fastjson/databind 63 1250 1208 1206 1247 2497 486 262</span><br><span class="line">smile/jackson/databind 60 1697 2117 2290 2298 3996 338 241</span><br><span class="line">smile/jackson/db-afterburner 60 1300 1614 1648 1703 3003 352 252</span><br><span class="line">smile/protostuff-runtime 61 1275 1612 1638 1685 2961 335 235</span><br><span class="line">bson/jackson/databind 63 5151 6729 6977 6918 12069 506 286</span><br><span class="line">xml/xstreamc 62 6358 13208 13319 13516 19874 487 244</span><br><span class="line">xml/jackson/databind-aalto 62 2955 5332 5465 5584 8539 683 286</span><br></pre></td></tr></table></figure></p>
+<p>###Fastjson 使用示例<br>我们创建一个班级的对象，和一个学生对象如下：</p>
+<p>班级对象<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public class Grade &#123;</span><br><span class="line"></span><br><span class="line">    private Long id;</span><br><span class="line">    private String name;</span><br><span class="line">    private List&lt;Student&gt; users = new ArrayList&lt;Student&gt;();</span><br><span class="line"></span><br><span class="line">    // 省略 setter、getter</span><br><span class="line">    </span><br><span class="line">    public void addStudent(Student student) &#123;</span><br><span class="line">        users.add(student);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        return &quot;Grade&#123;&quot; +</span><br><span class="line">                &quot;id=&quot; + id +</span><br><span class="line">                &quot;, name=&apos;&quot; + name + &apos;\&apos;&apos; +</span><br><span class="line">                &quot;, users=&quot; + users +</span><br><span class="line">                &apos;&#125;&apos;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>学生对象<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public class Student &#123;</span><br><span class="line"></span><br><span class="line">    private Long   id;</span><br><span class="line">    private String name;</span><br><span class="line"></span><br><span class="line">    // 省略 setter、getter</span><br><span class="line">    </span><br><span class="line">    @Override</span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        return &quot;Student&#123;&quot; +</span><br><span class="line">                &quot;id=&quot; + id +</span><br><span class="line">                &quot;, name=&apos;&quot; + name + &apos;\&apos;&apos; +</span><br><span class="line">                &apos;&#125;&apos;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>运行的 Main 函数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">public class MainTest &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Grade group = new Grade();</span><br><span class="line">        group.setId(0L);</span><br><span class="line">        group.setName(&quot;admin&quot;);</span><br><span class="line"></span><br><span class="line">        Student student = new Student();</span><br><span class="line">        student.setId(2L);</span><br><span class="line">        student.setName(&quot;guest&quot;);</span><br><span class="line"></span><br><span class="line">        Student rootUser = new Student();</span><br><span class="line">        rootUser.setId(3L);</span><br><span class="line">        rootUser.setName(&quot;root&quot;);</span><br><span class="line"></span><br><span class="line">        group.addStudent(student);</span><br><span class="line">        group.addStudent(rootUser);</span><br><span class="line"></span><br><span class="line">        // 转换为 JSON</span><br><span class="line">        String jsonString = JSON.toJSONString(group);</span><br><span class="line">        System.out.println(&quot;JSON字符串：&quot; + jsonString);</span><br><span class="line"></span><br><span class="line">        // 转换为 对象BEAN</span><br><span class="line">        Grade grade = JSON.parseObject(jsonString, Grade.class);</span><br><span class="line">        System.out.println(&quot;JavaBean对象：&quot; + grade);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>最后的运行结果如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">JSON字符串：</span><br><span class="line">&#123;&quot;id&quot;:0,&quot;name&quot;:&quot;admin&quot;,&quot;users&quot;:[&#123;&quot;id&quot;:2,&quot;name&quot;:&quot;guest&quot;&#125;,&#123;&quot;id&quot;:3,&quot;name&quot;:&quot;root&quot;&#125;]&#125;</span><br><span class="line"></span><br><span class="line">JavaBean对象：</span><br><span class="line">Grade&#123;id=0, name=&apos;admin&apos;, users=[Student&#123;id=2, name=&apos;guest&apos;&#125;, Student&#123;id=3, name=&apos;root&apos;&#125;]&#125;</span><br></pre></td></tr></table></figure></p>
+<p>###将对象中的空值输出<br>在fastjson中，缺省是不输出空值的。无论Map中的null和对象属性中的null，序列化的时候都会被忽略不输出，这样会减少产生文本的大小。但如果需要输出空值怎么做呢？</p>
+<p>如果你需要输出空值，需要使用<br><strong>SerializerFeature.WriteMapNullValue </strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Model obj = ...;</span><br><span class="line">JSON.toJSONString(obj, SerializerFeature.WriteMapNullValue);</span><br></pre></td></tr></table></figure>
+<p>几种空值特别处理方式：</p>
+<p>|SerializerFeature    |描述|<br>|WriteNullListAsEmpty |:    将Collection类型字段的字段空值输出为[]:|<br>|WriteNullStringAsEmpty    |将字符串类型字段的空值输出为空字符串 “”<br>|WriteNullNumberAsZero    |将数值类型字段的空值输出为0|<br>|WriteNullBooleanAsFalse|    将Boolean类型字段的空值输出为false|</p>
+<p>具体的示例参考如下，可以同时选择多个：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">class Model &#123;</span><br><span class="line">      public List&lt;Objec&gt; items;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Model obj = ....;</span><br><span class="line"></span><br><span class="line">String text = JSON.toJSONString(obj, SerializerFeature.WriteMapNullValue, SerializerFeature.WriteNullListAsEmpty);</span><br></pre></td></tr></table></figure>
+<p>###Fastjson 处理日期<br>Fastjson 处理日期的API很简单，例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">JSON.toJSONStringWithDateFormat(date, &quot;yyyy-MM-dd HH:mm:ss.SSS&quot;)</span><br></pre></td></tr></table></figure>
+<p>使用ISO-8601日期格式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">JSON.toJSONString(obj, SerializerFeature.UseISO8601DateFormat);</span><br></pre></td></tr></table></figure>
+<p>全局修改日期格式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">JSON.DEFFAULT_DATE_FORMAT = &quot;yyyy-MM-dd&quot;;</span><br><span class="line">JSON.toJSONString(obj, SerializerFeature.WriteDateUseDateFormat);</span><br></pre></td></tr></table></figure>
+<p>反序列化能够自动识别如下日期格式：</p>
+<ul>
+<li>ISO-8601日期格式</li>
+<li>yyyy-MM-dd</li>
+<li>yyyy-MM-dd HH:mm:ss</li>
+<li>yyyy-MM-dd HH:mm:ss.SSS</li>
+<li>毫秒数字</li>
+<li>毫秒数字字符串</li>
+<li>.NET JSON日期格式</li>
+<li>new Date(198293238)<br>虽然上面处理了单个的日期类型和全局的日期类型格式的配置，但是有时候我们需要的是对象中个别的日期类型差异化，并不一定是同一种格式的。那如何处理呢？接下来介绍 Fastjson 的定制序列化。</li>
+</ul>
+<p>###Fastjson 定制序列化</p>
+<p>####简介<br>fastjson支持多种方式定制序列化。</p>
+<ul>
+<li>通过@JSONField定制序列化</li>
+<li>通过@JSONType定制序列化</li>
+<li>通过SerializeFilter定制序列化</li>
+<li>通过ParseProcess定制反序列化<br>####使用@JSONField配置<br>####1.JSONField 注解介绍</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">package com.alibaba.fastjson.annotation;</span><br><span class="line"></span><br><span class="line">public @interface JSONField &#123;</span><br><span class="line">    // 配置序列化和反序列化的顺序，1.1.42版本之后才支持</span><br><span class="line">    int ordinal() default 0;</span><br><span class="line"></span><br><span class="line">     // 指定字段的名称</span><br><span class="line">    String name() default &quot;&quot;;</span><br><span class="line"></span><br><span class="line">    // 指定字段的格式，对日期格式有用</span><br><span class="line">    String format() default &quot;&quot;;</span><br><span class="line"></span><br><span class="line">    // 是否序列化</span><br><span class="line">    boolean serialize() default true;</span><br><span class="line"></span><br><span class="line">    // 是否反序列化</span><br><span class="line">    boolean deserialize() default true;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>####2.JSONField配置方式<br>可以把@JSONField配置在字段或者getter/setter方法上，例如：</p>
+<p>配置在字段上</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public class VO &#123;</span><br><span class="line">     @JSONField(name=&quot;ID&quot;)</span><br><span class="line">     private int id;</span><br><span class="line"></span><br><span class="line">     @JSONField(name=&quot;birthday&quot;,format=&quot;yyyy-MM-dd&quot;)</span><br><span class="line">     public Date date;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>配置在 Getter/Setter 上</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public class VO &#123;</span><br><span class="line">    private int id;</span><br><span class="line"></span><br><span class="line">    @JSONField(name=&quot;ID&quot;)</span><br><span class="line">    public int getId() &#123; return id;&#125;</span><br><span class="line"></span><br><span class="line">    @JSONField(name=&quot;ID&quot;)</span><br><span class="line">    public void setId(int id) &#123;this.id = id;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意：若属性是私有的，必须有set*方法。否则无法反序列化。</p>
+<p>3、使用format配置日期格式化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">可以定制化配置各个日期字段的格式化</span><br><span class="line"> public class A &#123;</span><br><span class="line">      // 配置date序列化和反序列使用yyyyMMdd日期格式</span><br><span class="line">      @JSONField(format=&quot;yyyyMMdd&quot;)</span><br><span class="line">      public Date date;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>4、使用serialize/deserialize指定字段不序列化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public class A &#123;</span><br><span class="line">      @JSONField(serialize=false)</span><br><span class="line">      public Date date;</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> public class A &#123;</span><br><span class="line">      @JSONField(deserialize=false)</span><br><span class="line">      public Date date;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>5、使用ordinal指定字段的顺序<br>缺省Fastjson序列化一个java bean，是根据fieldName的字母序进行序列化的，你可以通过ordinal指定字段的顺序。这个特性需要1.1.42以上版本。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public static class VO &#123;</span><br><span class="line">    @JSONField(ordinal = 3)</span><br><span class="line">    private int f0;</span><br><span class="line"></span><br><span class="line">    @JSONField(ordinal = 2)</span><br><span class="line">    private int f1;</span><br><span class="line"></span><br><span class="line">    @JSONField(ordinal = 1)</span><br><span class="line">    private int f2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>6、使用serializeUsing制定属性的序列化类<br>在fastjson 1.2.16版本之后，JSONField支持新的定制化配置serializeUsing，可以单独对某一个类的某个属性定制序列化，比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public static class Model &#123;</span><br><span class="line">    @JSONField(serializeUsing = ModelValueSerializer.class)</span><br><span class="line">    public int value;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public static class ModelValueSerializer implements ObjectSerializer &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void write(JSONSerializer serializer, Object object, Object fieldName, Type fieldType,</span><br><span class="line">                      int features) throws IOException &#123;</span><br><span class="line">        Integer value = (Integer) object;</span><br><span class="line">        String text = value + &quot;元&quot;;</span><br><span class="line">        serializer.write(text);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>测试代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Model model = new Model();</span><br><span class="line">model.value = 100;</span><br><span class="line">String json = JSON.toJSONString(model);</span><br><span class="line">Assert.assertEquals(&quot;&#123;\&quot;value\&quot;:\&quot;100元\&quot;&#125;&quot;, json);</span><br></pre></td></tr></table></figure>
+<p>####|3使用@JSONType配置<br>和JSONField类似，但JSONType配置在类上，而不是field或者getter/setter方法上。</p>
+<p>####|4通过SerializeFilter定制序列化<br>1、简介</p>
+<ul>
+<li>SerializeFilter是通过编程扩展的方式定制序列化。fastjson支持6种SerializeFilter，用于不同场景的定制序列化</li>
+<li>PropertyPreFilter 根据PropertyName判断是否序列化</li>
+<li>PropertyFilter 根据PropertyName和PropertyValue来判断是否序列化</li>
+<li>NameFilter 修改Key，如果需要修改Key,process返回值则可</li>
+<li>ValueFilter 修改Value</li>
+<li>BeforeFilter 序列化时在最前添加内容</li>
+<li>AfterFilter 序列化时在最后添加内容<br>2、PropertyFilter 根据PropertyName和PropertyValue来判断是否序列化<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public interface PropertyFilter extends SerializeFilter &#123;</span><br><span class="line">   boolean apply(Object object, String propertyName, Object propertyValue);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>可以通过扩展实现根据object或者属性名称或者属性值进行判断是否需要序列化。例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">PropertyFilter filter = new PropertyFilter() &#123;</span><br><span class="line"></span><br><span class="line">    public boolean apply(Object source, String name, Object value) &#123;</span><br><span class="line">        if (&quot;id&quot;.equals(name)) &#123;</span><br><span class="line">            int id = ((Integer) value).intValue();</span><br><span class="line">            return id &gt;= 100;</span><br><span class="line">        &#125;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">JSON.toJSONString(obj, filter); // 序列化的时候传入filter</span><br></pre></td></tr></table></figure>
+<p>3、PropertyPreFilter 根据PropertyName判断是否序列化</p>
+<p>和PropertyFilter不同只根据object和name进行判断，在调用getter之前，这样避免了getter调用可能存在的异常。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public interface PropertyPreFilter extends SerializeFilter &#123;</span><br><span class="line">     boolean apply(JSONSerializer serializer, Object object, String name);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>4、NameFilter 序列化时修改Key</p>
+<p>如果需要修改Key,process返回值则可</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public interface NameFilter extends SerializeFilter &#123;</span><br><span class="line">    String process(Object object, String propertyName, Object propertyValue);</span><br><span class="line">&#125;</span><br><span class="line">fastjson内置一个PascalNameFilter，用于输出将首字符大写的Pascal风格。 例如：</span><br><span class="line"></span><br><span class="line">import com.alibaba.fastjson.serializer.PascalNameFilter;</span><br><span class="line"></span><br><span class="line">Object obj = ...;</span><br><span class="line">String jsonStr = JSON.toJSONString(obj, new PascalNameFilter());</span><br></pre></td></tr></table></figure>
+<p>5、ValueFilter 序列化时修改Value</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public interface ValueFilter extends SerializeFilter &#123;</span><br><span class="line">  Object process(Object object, String propertyName, Object propertyValue);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>6、BeforeFilter 序列化时在最前添加内容<br>在序列化对象的所有属性之前执行某些操作,例如调用 writeKeyValue 添加内容<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public abstract class BeforeFilter implements SerializeFilter &#123;</span><br><span class="line">   protected final void writeKeyValue(String key, Object value) &#123; ... &#125;</span><br><span class="line">    // 需要实现的抽象方法，在实现中调用writeKeyValue添加内容</span><br><span class="line">    public abstract void writeBefore(Object object);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>7、AfterFilter 序列化时在最后添加内容<br>在序列化对象的所有属性之后执行某些操作,例如调用 writeKeyValue 添加内容</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> public abstract class AfterFilter implements SerializeFilter &#123;</span><br><span class="line">  protected final void writeKeyValue(String key, Object value) &#123; ... &#125;</span><br><span class="line">    // 需要实现的抽象方法，在实现中调用writeKeyValue添加内容</span><br><span class="line">    public abstract void writeAfter(Object object);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>####通过ParseProcess定制反序列化<br>1、简介</p>
+<ul>
+<li>ParseProcess是编程扩展定制反序列化的接口。fastjson支持如下ParseProcess：</li>
+<li>ExtraProcessor 用于处理多余的字段</li>
+<li>ExtraTypeProvider 用于处理多余字段时提供类型信息</li>
+</ul>
+<p>2、使用ExtraProcessor 处理多余字段</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">public static class VO &#123;</span><br><span class="line">    private int id;</span><br><span class="line">    private Map&lt;String, Object&gt; attributes = new HashMap&lt;String, Object&gt;();</span><br><span class="line">    public int getId() &#123; return id; &#125;</span><br><span class="line">    public void setId(int id) &#123; this.id = id;&#125;</span><br><span class="line">    public Map&lt;String, Object&gt; getAttributes() &#123; return attributes;&#125;</span><br><span class="line">&#125;</span><br><span class="line">    </span><br><span class="line">ExtraProcessor processor = new ExtraProcessor() &#123;</span><br><span class="line">    public void processExtra(Object object, String key, Object value) &#123;</span><br><span class="line">        VO vo = (VO) object;</span><br><span class="line">        vo.getAttributes().put(key, value);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">    </span><br><span class="line">VO vo = JSON.parseObject(&quot;&#123;\&quot;id\&quot;:123,\&quot;name\&quot;:\&quot;abc\&quot;&#125;&quot;, VO.class, processor);</span><br><span class="line">Assert.assertEquals(123, vo.getId());</span><br><span class="line">Assert.assertEquals(&quot;abc&quot;, vo.getAttributes().get(&quot;name&quot;));</span><br></pre></td></tr></table></figure>
+<p>3、使用ExtraTypeProvider 为多余的字段提供类型</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">public static class VO &#123;</span><br><span class="line">    private int id;</span><br><span class="line">    private Map&lt;String, Object&gt; attributes = new HashMap&lt;String, Object&gt;();</span><br><span class="line">    public int getId() &#123; return id; &#125;</span><br><span class="line">    public void setId(int id) &#123; this.id = id;&#125;</span><br><span class="line">    public Map&lt;String, Object&gt; getAttributes() &#123; return attributes;&#125;</span><br><span class="line">&#125;</span><br><span class="line">    </span><br><span class="line">class MyExtraProcessor implements ExtraProcessor, ExtraTypeProvider &#123;</span><br><span class="line">    public void processExtra(Object object, String key, Object value) &#123;</span><br><span class="line">        VO vo = (VO) object;</span><br><span class="line">        vo.getAttributes().put(key, value);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public Type getExtraType(Object object, String key) &#123;</span><br><span class="line">        if (&quot;value&quot;.equals(key)) &#123;</span><br><span class="line">            return int.class;</span><br><span class="line">        &#125;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">ExtraProcessor processor = new MyExtraProcessor();</span><br><span class="line">    </span><br><span class="line">VO vo = JSON.parseObject(&quot;&#123;\&quot;id\&quot;:123,\&quot;value\&quot;:\&quot;123456\&quot;&#125;&quot;, VO.class, processor);</span><br><span class="line">Assert.assertEquals(123, vo.getId());</span><br><span class="line">Assert.assertEquals(123456, vo.getAttributes().get(&quot;value&quot;)); // value本应该是字符串类型的，通过getExtraType的处理变成Integer类型了。</span><br></pre></td></tr></table></figure>
+<p>####在 Spring MVC 中集成 Fastjson</p>
+<p>如果你使用 Spring MVC 来构建 Web 应用并对性能有较高的要求的话，可以使用 Fastjson 提供的FastJsonHttpMessageConverter 来替换 Spring MVC 默认的 HttpMessageConverter 以提高 @RestController @ResponseBody @RequestBody 注解的 JSON序列化速度。下面是配置方式，非常简单。</p>
+<p>XML式<br>如果是使用 XML 的方式配置 Spring MVC 的话，只需在 Spring MVC 的 XML 配置文件中加入下面配置即可</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;mvc:annotation-driven&gt;</span><br><span class="line">    &lt;mvc:message-converters&gt;</span><br><span class="line">        &lt;bean class=&quot;com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter&quot;/&gt;      </span><br><span class="line">    &lt;/mvc:message-converters&gt;</span><br><span class="line">&lt;/mvc:annotation-driven&gt;</span><br></pre></td></tr></table></figure>
+<p>通常默认配置已经可以满足大部分使用场景，如果你想对它进行自定义配置的话，你可以添加 FastJsonConfig Bean。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;mvc:annotation-driven&gt;</span><br><span class="line">    &lt;mvc:message-converters&gt;</span><br><span class="line">        &lt;bean class=&quot;com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter&quot;&gt;</span><br><span class="line">            &lt;property name=&quot;fastJsonConfig&quot; ref=&quot;fastJsonConfig&quot;/&gt;</span><br><span class="line">        &lt;/bean&gt;</span><br><span class="line">    &lt;/mvc:message-converters&gt;</span><br><span class="line">&lt;/mvc:annotation-driven&gt;</span><br><span class="line"></span><br><span class="line">&lt;bean id=&quot;fastJsonConfig&quot; class=&quot;com.alibaba.fastjson.support.config.FastJsonConfig&quot;&gt;</span><br><span class="line">    &lt;!--   自定义配置...   --&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+<p>编程式</p>
+<p>如果是使用编程的方式（通常是基于 Spring Boot 项目）配置 Spring MVC 的话只需继承 WebMvcConfigurerAdapter覆写configureMessageConverters方法即可，就像下面这样。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@Configuration</span><br><span class="line">public class WebMvcConfigurer extends WebMvcConfigurerAdapter &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void configureMessageConverters(List&lt;HttpMessageConverter&lt;?&gt;&gt; converters) &#123;</span><br><span class="line">        FastJsonHttpMessageConverter converter = new FastJsonHttpMessageConverter();</span><br><span class="line">        //自定义配置...</span><br><span class="line">        //FastJsonConfig config = new FastJsonConfig();</span><br><span class="line">        //config.set ...</span><br><span class="line">        //converter.setFastJsonConfig(config);</span><br><span class="line">        converters.add(0, converter);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注意：</p>
+<ol>
+<li><p>如果你使用的 Fastjson 版本小于1.2.36的话(强烈建议使用最新版本)，在与Spring MVC 4.X 版本集成时需使用 FastJsonHttpMessageConverter4。</p>
+</li>
+<li><p>SpringBoot 2.0.1版本中加载WebMvcConfigurer的顺序发生了变动，故需使用converters.add(0, converter);指定FastJsonHttpMessageConverter在converters内的顺序，否则在SpringBoot 2.0.1及之后的版本中将优先使用Jackson处理。</p>
+</li>
+</ol>
+<p>####在 Spring Data Redis 中集成 Fastjson</p>
+<p>通常我们在 Spring 中使用 Redis 是通过 Spring Data Redis 提供的 RedisTemplate 来进行的，如果你准备使用 JSON 作为对象序列/反序列化的方式并对序列化速度有较高的要求的话，建议使用 Fastjson 提供的 GenericFastJsonRedisSerializer 或 FastJsonRedisSerializer 作为 RedisTemplate 的 RedisSerializer。下面是配置方式，非常简单。</p>
+<p>XML式<br>如果是使用 XML 的方式配置 Spring Data Redis 的话，只需将 RedisTemplate 中的 Serializer 替换为 GenericFastJsonRedisSerializer 即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;redisTemplate&quot; class=&quot;org.springframework.data.redis.core.RedisTemplate&quot;&gt;</span><br><span class="line">    &lt;property name=&quot;connectionFactory&quot; ref=&quot;jedisConnectionFactory&quot;/&gt;</span><br><span class="line">    &lt;property name=&quot;defaultSerializer&quot;&gt;</span><br><span class="line">        &lt;bean class=&quot;com.alibaba.fastjson.support.spring.GenericFastJsonRedisSerializer&quot;/&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+<p>下面是完整的 Spring 集成 Redis 配置供参考。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- Redis 连接池配置(可选) --&gt;</span><br><span class="line">&lt;bean id=&quot;jedisPoolConfig&quot; class=&quot;redis.clients.jedis.JedisPoolConfig&quot;&gt;</span><br><span class="line">    &lt;property name=&quot;maxTotal&quot; value=&quot;$&#123;redis.pool.maxActive&#125;&quot;/&gt;</span><br><span class="line">    &lt;property name=&quot;maxIdle&quot; value=&quot;$&#123;redis.pool.maxIdle&#125;&quot;/&gt;</span><br><span class="line">    &lt;property name=&quot;maxWaitMillis&quot; value=&quot;$&#123;redis.pool.maxWait&#125;&quot;/&gt;</span><br><span class="line">    &lt;property name=&quot;testOnBorrow&quot; value=&quot;$&#123;redis.pool.testOnBorrow&#125;&quot;/&gt;</span><br><span class="line">     &lt;!-- 更多连接池配置...--&gt;</span><br><span class="line">&lt;/bean&gt;</span><br><span class="line">&lt;!-- Redis 连接工厂配置 --&gt;</span><br><span class="line">&lt;bean id=&quot;jedisConnectionFactory&quot; class=&quot;org.springframework.data.redis.connection.jedis.JedisConnectionFactory&quot;&gt;</span><br><span class="line">    &lt;!--设置连接池配置，不设置的话会使用默认的连接池配置，若想禁用连接池可设置 usePool = false --&gt;   </span><br><span class="line">    &lt;property name=&quot;poolConfig&quot; ref=&quot;jedisPoolConfig&quot; /&gt;  </span><br><span class="line">    &lt;property name=&quot;hostName&quot; value=&quot;$&#123;host&#125;&quot;/&gt;</span><br><span class="line">    &lt;property name=&quot;port&quot; value=&quot;$&#123;port&#125;&quot;/&gt;</span><br><span class="line">    &lt;property name=&quot;password&quot; value=&quot;$&#123;password&#125;&quot;/&gt;</span><br><span class="line">    &lt;property name=&quot;database&quot; value=&quot;$&#123;database&#125;&quot;/&gt;</span><br><span class="line">    &lt;!-- 更多连接工厂配置...--&gt;</span><br><span class="line">&lt;/bean&gt;</span><br><span class="line">&lt;!-- RedisTemplate 配置 --&gt;</span><br><span class="line">&lt;bean id=&quot;redisTemplate&quot; class=&quot;org.springframework.data.redis.core.RedisTemplate&quot;&gt;</span><br><span class="line">    &lt;!-- 设置 Redis 连接工厂--&gt;</span><br><span class="line">    &lt;property name=&quot;connectionFactory&quot; ref=&quot;jedisConnectionFactory&quot;/&gt;</span><br><span class="line">    &lt;!-- 设置默认 Serializer ，包含 keySerializer &amp; valueSerializer --&gt;</span><br><span class="line">    &lt;property name=&quot;defaultSerializer&quot;&gt;</span><br><span class="line">        &lt;bean class=&quot;com.alibaba.fastjson.support.spring.GenericFastJsonRedisSerializer&quot;/&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;!-- 单独设置 keySerializer --&gt;</span><br><span class="line">    &lt;property name=&quot;keySerializer&quot;&gt;</span><br><span class="line">        &lt;bean class=&quot;com.alibaba.fastjson.support.spring.GenericFastJsonRedisSerializer&quot;/&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;!-- 单独设置 valueSerializer --&gt;</span><br><span class="line">    &lt;property name=&quot;valueSerializer&quot;&gt;</span><br><span class="line">        &lt;bean class=&quot;com.alibaba.fastjson.support.spring.GenericFastJsonRedisSerializer&quot;/&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+<p>编程式</p>
+<p>如果是使用编程的方式（通常是基于 Spring Boot 项目）配置 RedisTemplate 的话只需在你的配置类(被@Configuration注解修饰的类)中显式创建 RedisTemplate Bean，设置 Serializer 即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@Bean</span><br><span class="line">public RedisTemplate redisTemplate(RedisConnectionFactory redisConnectionFactory) &#123;</span><br><span class="line">    RedisTemplate redisTemplate = new RedisTemplate();</span><br><span class="line">    redisTemplate.setConnectionFactory(redisConnectionFactory);</span><br><span class="line"></span><br><span class="line">    GenericFastJsonRedisSerializer fastJsonRedisSerializer = new GenericFastJsonRedisSerializer();</span><br><span class="line">    redisTemplate.setDefaultSerializer(fastJsonRedisSerializer);//设置默认的Serialize，包含 keySerializer &amp; valueSerializer</span><br><span class="line"></span><br><span class="line">    //redisTemplate.setKeySerializer(fastJsonRedisSerializer);//单独设置keySerializer</span><br><span class="line">    //redisTemplate.setValueSerializer(fastJsonRedisSerializer);//单独设置valueSerializer</span><br><span class="line">    return redisTemplate;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通常使用 GenericFastJsonRedisSerializer 即可满足大部分场景，如果你想定义特定类型专用的 RedisTemplate 可以使用 FastJsonRedisSerializer来代替 GenericFastJsonRedisSerializer，配置是类似的。</p>
+<p>参考：<a href="https://github.com/alibaba/fastjson/wiki" target="_blank" rel="noopener">https://github.com/alibaba/fastjson/wiki</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2019/08/21/(Reactor)异步非阻塞多路IO复用模型/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="盛富强">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员shengfq">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/08/21/(Reactor)异步非阻塞多路IO复用模型/" itemprop="url">(Reactor)异步非阻塞多路IO复用模型</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-08-21T00:00:00+08:00">
+                2019-08-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>异步非阻塞多路I/O复用机制<br>这个名词可以理解为NIO,是比同步阻塞模型响应更加快速的线程模型,为什么要理解他?<br>因为Redis,Nginx,Netty的线程模型都是在此基础上构建的.</p>
+<p>需要基础:Linux,JAVA IO,JAVA NIO,JAVA SOCKET,JAVA.UTIL.CONCURRENT.*;</p>
+<p>文章原文链接:&lt;a href=<a href="http://www.blogjava.net/DLevin/archive/2015/09/02/427045.html&gt;点我访问" target="_blank" rel="noopener">http://www.blogjava.net/DLevin/archive/2015/09/02/427045.html&gt;点我访问</a> </p>
+<p><br><br>1. Reactor模式详解<br>前记<br>第一次听到Reactor模式是三年前的某个晚上，一个室友突然跑过来问我什么是Reactor模式？我上网查了一下，很多人都是给出NIO中的 Selector的例子，而且就是NIO里Selector多路复用模型，只是给它起了一个比较fancy的名字而已，虽然它引入了EventLoop概 念，这对我来说是新的概念，但是代码实现却是一样的，因而我并没有很在意这个模式。然而最近开始读Netty源码，而Reactor模式是很多介绍Netty的文章中被大肆宣传的模式，因而我再次问自己，什么是Reactor模式？本文就是对这个问题关于我的一些理解和尝试着来解答。<br><br>2. 什么是Reactor模式<br>要回答这个问题，首先当然是求助Google或Wikipedia，其中Wikipedia上说：“The reactor design pattern is an event handling pattern for handling service requests delivered concurrently by one or more inputs. The service handler then demultiplexes the incoming requests and dispatches them synchronously to associated request handlers.”。从这个描述中，我们知道Reactor模式首先是事件驱动的，有一个或多个并发输入源，有一个Service Handler，有多个Request Handlers；这个Service Handler会同步的将输入的请求（Event）多路复用的分发给相应的Request Handler。如果用图来表达：<br><br>从结构上，这有点类似生产者消费者模式，即有一个或多个生产者将事件放入一个Queue中，而一个或多个消费者主动的从这个Queue中Poll事件来处理；而Reactor模式则并没有Queue来做缓冲，每当一个Event输入到Service Handler之后，该Service Handler会主动的根据不同的Event类型将其分发给对应的Request Handler来处理。<br><br>更学术的，这篇文章&lt;a href=<a href="http://www.dre.vanderbilt.edu/~schmidt/PDF/reactor-siemens.pdf&gt;（Reactor" target="_blank" rel="noopener">http://www.dre.vanderbilt.edu/~schmidt/PDF/reactor-siemens.pdf&gt;（Reactor</a> An Object Behavioral Pattern for Demultiplexing and Dispatching Handles for Synchronous Events）上说：<br><br>“The Reactor design pattern handles service requests that are delivered concurrently to an application by one or more clients. Each service in an application may consistent of several methods and is represented by a separate event handler that is responsible for dispatching service-specific requests. Dispatching of event handlers is performed by an initiation dispatcher, which manages the registered event handlers. Demultiplexing of service requests is performed by a synchronous event demultiplexer. Also known as Dispatcher, Notifier”。<br></p><p><br>这段描述和Wikipedia上的描述类似，有多个输入源，有多个不同的EventHandler（RequestHandler）来处理不同的请求，Initiation Dispatcher用于管理EventHander，EventHandler首先要注册到Initiation Dispatcher中，然后Initiation Dispatcher根据输入的Event分发给注册的EventHandler；然而Initiation Dispatcher并不监听Event的到来，这个工作交给Synchronous Event Demultiplexer来处理。<br>Reactor模式结构<br>在解决了什么是Reactor模式后，我们来看看Reactor模式是由什么模块构成。图是一种比较简洁形象的表现方式，因而先上一张图来表达各个模块的名称和他们之间的关系：<br>&lt;img src=<a href="http://www.blogjava.net/images/blogjava_net/dlevin/Reactor_Structures.png" target="_blank" rel="noopener">http://www.blogjava.net/images/blogjava_net/dlevin/Reactor_Structures.png</a> /&gt;<br></p><p><br><b>Handle</b>：即操作系统中的句柄，是对资源在操作系统层面上的一种抽象，它可以是打开的文件、一个连接(Socket)、Timer等。由于Reactor模式一般使用在网络编程中，因而这里一般指Socket Handle，即一个网络连接（Connection，在Java NIO中的Channel）。这个Channel注册到Synchronous Event Demultiplexer中，以监听Handle中发生的事件，对ServerSocketChannnel可以是CONNECT事件，对SocketChannel可以是READ、WRITE、CLOSE事件等。<br><br><b>Synchronous Event Demultiplexer</b>：阻塞等待一系列的Handle中的事件到来，如果阻塞等待返回，即表示在返回的Handle中可以不阻塞的执行返回的事件类型。这个模块一般使用操作系统的select来实现。在Java NIO中用Selector来封装，当Selector.select()返回时，可以调用Selector的selectedKeys()方法获取Set<selectionkey>，一个SelectionKey表达一个有事件发生的Channel以及该Channel上的事件类型。上图的“Synchronous Event Demultiplexer —notifies–&gt; Handle”的流程如果是对的，那内部实现应该是select()方法在事件到来后会先设置Handle的状态，然后返回。不了解内部实现机制，因而保留原图。<br><br><b>Initiation Dispatcher</b>：用于管理Event Handler，即EventHandler的容器，用以注册、移除EventHandler等；另外，它还作为Reactor模式的入口调用Synchronous Event Demultiplexer的select方法以阻塞等待事件返回，当阻塞等待返回时，根据事件发生的Handle将其分发给对应的Event Handler处理，即回调EventHandler中的handle_event()方法。<br><br><b>Event Handler</b>：定义事件处理方法：handle_event()，以供InitiationDispatcher回调使用。<br><br><b>Concrete Event Handler</b>：事件EventHandler接口，实现特定事件处理逻辑。<br><br><br><b>Reactor模式模块之间的交互</b><br>简单描述一下Reactor各个模块之间的交互流程，先从序列图开始：<br>&lt;img src=<a href="http://www.blogjava.net/images/blogjava_net/dlevin/Reactor_Sequence.png" target="_blank" rel="noopener">http://www.blogjava.net/images/blogjava_net/dlevin/Reactor_Sequence.png</a> /&gt;<br><br>1. 初始化InitiationDispatcher，并初始化一个Handle到EventHandler的Map。<br>2. 注册EventHandler到InitiationDispatcher中，每个EventHandler包含对相应Handle的引用，从而建立Handle到EventHandler的映射（Map）。<br>3. 调用InitiationDispatcher的handle_events()方法以启动Event Loop。在Event Loop中，调用select()方法（Synchronous Event Demultiplexer）阻塞等待Event发生。<br>4. 当某个或某些Handle的Event发生后，select()方法返回，InitiationDispatcher根据返回的Handle找到注册的EventHandler，并回调该EventHandler的handle_events()方法。<br>5. 在EventHandler的handle_events()方法中还可以向InitiationDispatcher中注册新的Eventhandler，比如对AcceptorEventHandler来，当有新的client连接时，它会产生新的EventHandler以处理新的连接，并注册到InitiationDispatcher中。<br><br><b>Reactor模式实现</b><br>在Reactor An Object Behavioral Pattern for Demultiplexing and Dispatching Handles for Synchronous Events中，一直以Logging Server来分析Reactor模式，这个Logging Server的实现完全遵循这里对Reactor描述，因而放在这里以做参考。Logging Server中的Reactor模式实现分两个部分：Client连接到Logging Server和Client向Logging Server写Log。因而对它的描述分成这两个步骤。<br><br><br><b>Client连接到Logging Server</b><br>&lt;img src=<a href="http://www.blogjava.net/images/blogjava_net/dlevin/Reactor_LoggingServer_connect.png" target="_blank" rel="noopener">http://www.blogjava.net/images/blogjava_net/dlevin/Reactor_LoggingServer_connect.png</a> /&gt;<br><br>1. Logging Server注册LoggingAcceptor到InitiationDispatcher。<br>2. Logging Server调用InitiationDispatcher的handle_events()方法启动。<br>3. InitiationDispatcher内部调用select()方法（Synchronous Event Demultiplexer），阻塞等待Client连接。<br>4. Client连接到Logging Server。<br>5. InitiationDisptcher中的select()方法返回，并通知LoggingAcceptor有新的连接到来。<br>6. LoggingAcceptor调用accept方法accept这个新连接。<br>7. LoggingAcceptor创建新的LoggingHandler。<br>8. 新的LoggingHandler注册到InitiationDispatcher中(同时也注册到Synchonous Event Demultiplexer中)，等待Client发起写log请求。<br><br><b>Client向Logging Server写Log</b><br>&lt;img src=<a href="http://www.blogjava.net/images/blogjava_net/dlevin/Reactor_LoggingServer_log.png" target="_blank" rel="noopener">http://www.blogjava.net/images/blogjava_net/dlevin/Reactor_LoggingServer_log.png</a> /&gt;<br><br>1. Client发送log到Logging server。<br>2. InitiationDispatcher监测到相应的Handle中有事件发生，返回阻塞等待，根据返回的Handle找到LoggingHandler，并回调LoggingHandler中的handle_event()方法。<br>3. LoggingHandler中的handle_event()方法中读取Handle中的log信息。<br>4. 将接收到的log写入到日志文件、数据库等设备中。<br>3.4步骤循环直到当前日志处理完成。<br>5. 返回到InitiationDispatcher等待下一次日志写请求。<br><br>在Reactor An Object Behavioral Pattern for Demultiplexing and Dispatching Handles for Synchronous Events有对Reactor模式的C++的实现版本，多年不用C++，因而略过。 <br><br><br><b>Java NIO对Reactor的实现</b><br><br>在Java的NIO中，对Reactor模式有无缝的支持，即使用Selector类封装了操作系统提供的Synchronous Event Demultiplexer功能。这个Doug Lea已经在Scalable IO In Java中有非常深入的解释了，因而不再赘述，另外&lt;a href=<a href="http://www.cnblogs.com/luxiaoxun/archive/2015/03/11/4331110.html&gt;这篇文章" target="_blank" rel="noopener">http://www.cnblogs.com/luxiaoxun/archive/2015/03/11/4331110.html&gt;这篇文章</a>对Doug Lea的Scalable IO In Java有一些简单解释，至少它的代码格式比Doug Lea的PPT要整洁一些。<br><p><br>需要指出的是，不同这里使用InitiationDispatcher来管理EventHandler，在Doug Lea的版本中使用SelectionKey中的Attachment来存储对应的EventHandler，因而不需要注册EventHandler这个步骤，或者设置Attachment就是这里的注册。而且在这篇文章中，Doug Lea从单线程的Reactor、Acceptor、Handler实现这个模式出发；演化为将Handler中的处理逻辑多线程化，实现类似Proactor模式，此时所有的IO操作还是单线程的，因而再演化出一个Main Reactor来处理CONNECT事件(Acceptor)，而多个Sub Reactor来处理READ、WRITE等事件(Handler)，这些Sub Reactor可以分别再自己的线程中执行，从而IO操作也多线程化。这个最后一个模型正是Netty中使用的模型。并且在Reactor An Object Behavioral Pattern for Demultiplexing and Dispatching Handles for Synchronous Events的9.5 Determine the Number of Initiation Dispatchers in an Application中也有相应的描述。<br></p>
+
+<p><b>EventHandler接口定义</b></p>
+<p>对EventHandler的定义有两种设计思路：single-method设计和multi-method设计：<br><br>A single-method interface：它将Event封装成一个Event Object，EventHandler只定义一个handle_event(Event event)方法。这种设计的好处是有利于扩展，可以后来方便的添加新的Event类型，然而在子类的实现中，需要判断不同的Event类型而再次扩展成 不同的处理方法，从这个角度上来说，它又不利于扩展。另外在Netty3的使用过程中，由于它不停的创建ChannelEvent类，因而会引起GC的不稳定。<br><br>A multi-method interface：这种设计是将不同的Event类型在 EventHandler中定义相应的方法。这种设计就是Netty4中使用的策略，其中一个目的是避免ChannelEvent创建引起的GC不稳定， 另外一个好处是它可以避免在EventHandler实现时判断不同的Event类型而有不同的实现，然而这种设计会给扩展新的Event类型时带来非常 大的麻烦，因为它需要该接口。<br></p>
+<p><b>关于Netty4对Netty3的改进可以参考这里</b>：</p>
+<p>ChannelHandler with no event object<br>In 3.x, every I/O operation created a ChannelEvent object. For each read / write, it additionally created a new ChannelBuffer. It simplified the internals of Netty quite a lot because it delegates resource management and buffer pooling to the JVM. However, it often was the root cause of GC pressure and uncertainty which are sometimes observed in a Netty-based application under high load.<br>4.0 removes event object creation almost completely by replacing the event objects with strongly typed method invocations. 3.x had catch-all event handler methods such as handleUpstream() and handleDownstream(), but this is not the case anymore. Every event type has its own handler method now:</p>
+<p><b>为什么使用Reactor模式</b></p>
+<p>归功与Netty和Java NIO对Reactor的宣传，本文慕名而学习的Reactor模式，因而已经默认Reactor具有非常优秀的性能，然而慕名归慕名，到这里，我还是要不得不问自己Reactor模式的好处在哪里？即为什么要使用这个Reactor模式？<br></p>
+<p>在Reactor An Object Behavioral Pattern for Demultiplexing and Dispatching Handles for Synchronous Events中是这么说的：<br>Reactor Pattern优点<br>Separation of concerns: The Reactor pattern decouples application-independent demultiplexing and dispatching mechanisms from application-specific hook method functionality. The application-independent mechanisms become reusable components that know how to demultiplex events and dispatch the appropriate hook methods defined by Event Handlers. In contrast, the application-specific functionality in a hook method knows how to perform a particular type of service.</p>
+<p>Improve modularity, reusability, and configurability of event-driven applications: The pattern decouples application functionality into separate classes. For instance, there are two separate classes in the logging server: one for establishing connections and another for receiving and processing logging records. This decoupling enables the reuse of the connection establishment class for different types of connection-oriented services (such as file transfer, remote login, and video-on-demand). Therefore, modifying or extending the functionality of the logging server only affects the implementation of the logging handler class.</p>
+<p>Improves application portability: The Initiation Dispatcher’s interface can be reused independently of the OS system calls that perform event demultiplexing. These system calls detect and report the occurrence of one or more events that may occur simultaneously on multiple sources of events. Common sources of events may in- clude I/O handles, timers, and synchronization objects. On UNIX platforms, the event demultiplexing system calls are called select and poll [1]. In the Win32 API [16], the WaitForMultipleObjects system call performs event demultiplexing.</p>
+<p>Provides coarse-grained concurrency control: The Reactor pattern serializes the invocation of event handlers at the level of event demultiplexing and dispatching within a process or thread. Serialization at the Initiation Dispatcher level often eliminates the need for more complicated synchronization or locking within an application process.</p>
+<p><b>这些貌似是很多模式的共性：解耦、提升复用性、模块化、可移植性、事件驱动、细力度的并发控制等，因而并不能很好的说明什么，特别是它鼓吹的对性能的提升，这里并没有体现出来。</b><br><br>当然在这篇文章的开头有描述过另一种直观的实现：Thread-Per-Connection，即传统的实现，提到了这个传统实现的以下问题：</p>
+<font color="red">Thread Per Connection缺点</font><br><br>Efficiency: Threading may lead to poor performance due to context switching, synchronization, and data movement [2];<br><br>Programming simplicity: Threading may require complex concurrency control schemes;<br><br>Portability: Threading is not available on all OS platforms.<br>对于性能，它其实就是第一点关于Efficiency的描述，即线程的切换、同步、数据的移动会引起性能问题。也就是说从性能的角度上，它最大的提升就是减少了性能的使用，即不需要每个Client对应一个线程。我的理解，其他业务逻辑处理很多时候也会用到相同的线程，IO读写操作相对CPU的操作还是要慢很多，即使Reactor机制中每次读写已经能保证非阻塞读写，这里可以减少一些线程的使用，但是这减少的线程使用对性能有那么大的影响吗？答案貌似是肯定的，这篇论文(SEDA: Staged Event-Driven Architecture - An Architecture for Well-Conditioned, Scalable Internet Service)对随着线程的增长带来性能降低做了一个统计：<br><br>在这个统计中，每个线程从磁盘中读8KB数据，每个线程读同一个文件，因而数据本身是缓存在操作系统内部的，即减少IO的影响；所有线程是事先分配的，不会有线程启动的影响；所有任务在测试内部产生，因而不会有网络的影响。该统计数据运行环境：Linux 2.2.14，2GB内存，4-way 500MHz Pentium III。从图中可以看出，随着线程的增长，吞吐量在线程数为8个左右的时候开始线性下降，并且到64个以后而迅速下降，其相应事件也在线程达到256个后指数上升。即1+1&lt;2，因为线程切换、同步、数据移动会有性能损失，线程数增加到一定数量时，这种性能影响效果会更加明显。<br><br>对于这点，还可以参考C10K Problem，用以描述同时有10K个Client发起连接的问题，到2010年的时候已经出现10M Problem了。<br><br>当然也有人说：Threads are expensive are no longer valid.在不久的将来可能又会发生不同的变化，或者这个变化正在、已经发生着？没有做过比较仔细的测试，因而不敢随便断言什么，然而本人观点，即使线程变的影响并没有以前那么大，使用Reactor模式，甚至时SEDA模式来减少线程的使用，再加上其他解耦、模块化、提升复用性等优点，还是值得使用的。<br><br><br><font color="red">Reactor模式的缺点</font>
+
+<p>Reactor模式的缺点貌似也是显而易见的：</p>
+<ol>
+<li>相比传统的简单模型，Reactor增加了一定的复杂性，因而有一定的门槛，并且不易于调试。</li>
+<li>Reactor模式需要底层的Synchronous Event Demultiplexer支持，比如Java中的Selector支持，操作系统的select系统调用支持，如果要自己实现Synchronous Event Demultiplexer可能不会有那么高效。</li>
+<li>Reactor模式在IO读写数据时还是在同一个线程中实现的，即使使用多个Reactor机制的情况下，那些共享一个Reactor的Channel如果出现一个长时间的数据读写，会影响这个Reactor中其他Channel的相应时间，比如在大文件传输时，IO操作就会影响其他Client的相应时间，因而对这种操作，使用传统的Thread-Per-Connection或许是一个更好的选择，或则此时使用Proactor模式。</li>
+</ol>
+<p></p><h4>参考</h4><br>Reactor Pattern WikiPedia <br><br>Reactor An Object Behavioral Pattern for Demultiplexing and Dispatching Handles for Synchronous Events<br><br>Scalable IO In Java<br><br>C10K Problem WikiPedia<br></selectionkey></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2019/08/21/Netty应运而生/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="盛富强">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员shengfq">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/08/21/Netty应运而生/" itemprop="url">Netty 应运而生</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-08-21T00:00:00+08:00">
+                2019-08-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><b>导读</b></p>
+<p></p><p><br>Netty 服务端创建需要的必备知识如下：</p>
+<ol>
+<li>熟悉 JDK NIO 主要类库的使用，例如 ByteBuffer、Selector</li>
+<li>ServerSocketChannel 等；</li>
+<li>熟悉 JDK 的多线程编程；</li>
+<li>了解 Reactor 模式。</li>
+</ol>
+<p><b>需求</b><br>如果需要构建基于NIO的高性能,异步,高可靠的底层通讯框架. 开发高质量的 NIO 程序并不是一件简单的事情，除去 NIO 类库的固有复杂性和 Bug，作为 NIO 服务端，需要能够处理网络的闪断、客户端的重连、安全认证和消息的编解码、半包处理等。如果没有足够的 NIO 编程经验积累，自研 NIO 框架往往需要半年甚至数年的时间才能最终稳定下来，这种成本即便对一个大公司而言也是个严重的挑战。</p>
+<p>&lt;img src=<a href="https://mmbiz.qpic.cn/mmbiz_png/FE4VibF0SjfMk7VlIOcRXdVsmAGiaQuf3zbINzsTAJuWAkQkQC6HQJCribfX4QQV7o3uwa23wlfibgkfPS97sKcDeA/640?wx_fmt=png&amp;tp=webp&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1" target="_blank" rel="noopener">https://mmbiz.qpic.cn/mmbiz_png/FE4VibF0SjfMk7VlIOcRXdVsmAGiaQuf3zbINzsTAJuWAkQkQC6HQJCribfX4QQV7o3uwa23wlfibgkfPS97sKcDeA/640?wx_fmt=png&amp;tp=webp&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1</a> /&gt;</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2019/08/18/集合框架详解一/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="盛富强">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员shengfq">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/08/18/集合框架详解一/" itemprop="url">集合框架总结一</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-08-18T00:00:00+08:00">
+                2019-08-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>##1. 集合的定义<br>什么是集合呢？<br><br>定义：集合是一个存放对象的引用的容器。<br>在Java中，集合位于java.util包下。<br></p>
+<p>##2. 集合和数组的区别(面试常问)<br>提到容器，就会想起数组，那么集合和数组的区别是什么呢？（这里是重点，面试可能问的比较多）</p>
+<li>数组和集合都是Java中的容器<br><br></li><li>数组的长度是固定的，集合的长度是可变的<br><br></li><li>数组只能存储相同数据类型的数据，这里的数据类型可以是基本数据类型，也可以是引用类型<br><br></li><li>集合可以存储不同数据类型的对象的引用(但一般情况下，我们会使用泛型来约定只使用1种数据类型)，但不能存储基本数据类型<br><br><br>空口无凭，我们来点代码配合理解，首先，我们看下如下的数组代码：<br><br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">String[] platformArray = new String[3];</span><br><span class="line">platformArray[0] = &quot;博客园&quot;;</span><br><span class="line">platformArray[1] = &quot;掘金&quot;;</span><br><span class="line">platformArray[2] = &quot;微信公众号&quot;;</span><br><span class="line">platformArray[3] = &quot;个人博客&quot;;</span><br></pre></td></tr></table></figure><br><br>复制代码运行代码就会发现<br><br><pre>platformArray[3] = “个人博客”;</pre>会引发java.lang.ArrayIndexOutOfBoundsException异常。<br><br>而使用集合时就不存在这个问题，因为集合在声明时不需要指定长度并且长度会根据放入元素的多少而变化：<br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; platformList = new ArrayList&lt;&gt;();</span><br><span class="line">platformList.add(&quot;博客园&quot;);</span><br><span class="line">platformList.add(&quot;掘金&quot;);</span><br><span class="line">platformList.add(&quot;微信公众号&quot;);</span><br><span class="line">platformList.add(&quot;个人博客&quot;);</span><br><span class="line">复制代码观察上面声明数组的代码，我们可以推断出下面的代码肯定是编译不通过的：</span><br><span class="line">String[] platformArray = new String[3];</span><br><span class="line">platformArray[0] = &quot;博客园&quot;;</span><br><span class="line">platformArray[1] = &quot;掘金&quot;;</span><br><span class="line">platformArray[2] = 1;</span><br><span class="line">复制代码因为数组声明时用的是String类型，而platformArray[2] = 1;赋值时却使用了int类型。</span><br><span class="line">再来看下下面的集合代码：</span><br><span class="line">List&lt;int&gt; intList = new ArrayList&lt;int&gt;();</span><br><span class="line">intList.add(1);</span><br><span class="line">intList.add(2);</span><br><span class="line">intList.add(3);</span><br><span class="line">复制代码这段代码也是编译不通过的，在IDEA中，鼠标悬停时会提示如下的错误信息：</span><br><span class="line"></span><br><span class="line">意思是类型参数不能是原始类型(基本数据类型)，那怎么使用呢？总不能不让我使用int型的集合吧？</span><br><span class="line">当然不会，Java为每种基本数据类型都提供了对应的包装类，这里修改为int类型对应的包装类Integer即可：</span><br><span class="line">List&lt;Integer&gt; intList = new ArrayList&lt;Integer&gt;();</span><br><span class="line">intList.add(1);</span><br><span class="line">intList.add(2);</span><br><span class="line">intList.add(3);</span><br></pre></td></tr></table></figure><br><br>复制代码以下为Java的原始类型(基本数据类型)与其对应的包装类：<br><br><br><br>|原始类型|包装类|<br>| :——– | ——–: |<br>|byte |Byte|<br>|short|Short|<br>|int|Integer|<br>|long|Long|<br>|float|Float|<br>|double|Double|<br>|char|Character|<br>|boolean|Boolean|<br><br>##3. 集合的分类<br>在Java中，集合主要分为以下3种：<br></li><li> List集合</li><br><li>Set集合</li><br><li>Map集合</li>
+
+<p>它们之间的继承关系可以参考下图。</p>
+<p>从上图可以总结出如下几点：</p>
+<li>Java集合的根接口是Collection，它又继承了迭代接口Iterable</li><br><li>List接口和Set接口继承了Collection接口</li><br><li>Map接口是独立的接口，并没有继承Collection接口  （这里是重点，面试可能问的比较多）</li><br><li>List接口常用的实现类有：ArrayList、LinkedList、Vector</li><br><li>Set接口常用的实现类有：HashSet、LinkedHashSet、TreeSet</li><br><li>Map接口常用的实现类有：HashMap、HashTable、TreeMap</li>
+
+<p>##4. List集合<br>List集合包括List接口以及List接口的所有实现类。List集合具有以下特点：</p>
+<p><li>集合中的元素允许重复</li></p>
+<p><li>集合中的元素是有顺序的，各元素插入的顺序就是各元素的顺序</li></p>
+<p><li>集合中的元素可以通过索引来访问或者设置</li></p>
+<p><li>List接口常用的实现类有：ArrayList、LinkedList、Vector。</li></p>
+<p>我们先看下如下示例了解下List集合的用法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">package collection;</span><br><span class="line"></span><br><span class="line">import java.util.*;</span><br><span class="line"></span><br><span class="line">public class Muster &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        List&lt;String&gt; strList = new ArrayList&lt;&gt;();</span><br><span class="line">        strList.add(&quot;a&quot;);</span><br><span class="line">        strList.add(&quot;b&quot;);</span><br><span class="line">        strList.add(&quot;c&quot;);</span><br><span class="line"></span><br><span class="line">        int i = (int) (Math.random() * strList.size());</span><br><span class="line">        System.out.println(&quot;随机获取数组中的元素：&quot; + strList.get(i));</span><br><span class="line"></span><br><span class="line">        strList.remove(2);</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;将索引为2的元素从列表移除后，数组中的元素是:&quot;);</span><br><span class="line">        for (int j = 0; j &lt; strList.size(); j++) &#123;</span><br><span class="line">            System.out.println(strList.get(j));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>复制代码以上代码的输出结果为：</p>
+<p><pre><br>随机获取数组中的元素：a<br>将索引为2的元素从列表移除后，数组中的元素是:<br>a<br>b<br></pre><br><a href="##"><br>关于List集合的详细用法，ArrayList、LinkedList、Vector的区别（这里是重点，面试可能问的比较多），后续会单独写文总结，敬请期待。<br></a></p>
+<p>##5. Set集合<br>Set集合包括Set接口以及Set接口的所有实现类。Set集合具有以下特点：</p>
+<p><li>集合中不包含重复元素(你可以重复添加，但只会保留第1个)</li></p>
+<p><li>集合中的元素不一定保证有序</li></p>
+<p><li>Set接口常用的实现类有：HashSet、LinkedHashSet、TreeSet。</li></p>
+<p>我们先看下如下示例了解下Set集合的用法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">package collection;</span><br><span class="line"></span><br><span class="line">import java.util.*;</span><br><span class="line"></span><br><span class="line">public class Muster &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Set&lt;String&gt; platformList = new HashSet&lt;&gt;();</span><br><span class="line">        platformList.add(&quot;博客园&quot;);</span><br><span class="line">        platformList.add(&quot;掘金&quot;);</span><br><span class="line">        platformList.add(&quot;微信公众号&quot;);</span><br><span class="line">        platformList.add(&quot;个人博客&quot;);</span><br><span class="line"></span><br><span class="line">        // 尝试添加重复元素</span><br><span class="line">        platformList.add(&quot;博客园&quot;);</span><br><span class="line">        platformList.add(&quot;掘金&quot;);</span><br><span class="line"></span><br><span class="line">        for (String platform : platformList) &#123;</span><br><span class="line">            System.out.println(platform);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>复制代码以上代码的输出结果为：</p>
+<p><pre><br>博客园<br>个人博客<br>掘金<br>微信公众号<br></pre><br>可以看出，虽然我们尝试添加了重复元素，但并没有添加成功并且输出的元素没有顺序。<br>因此当你的集合中不允许有重复元素并且对排序也没有要求的话，可以使用Set集合。<br><a href="##">关于Set集合的详细用法，HashSet、LinkedHashSet、TreeSet的区别（这里是重点，面试可能问的比较多），后续会单独写文总结，敬请期待。</a></p>
+<p>##6. Map集合<br>Map集合包括Map接口以及Map接口的所有实现类。<br>Map集合具有以下特点：</p>
+<p><li>Map接口并没有继承Collection接口，提供的是key到value的映射</li></p>
+<p><li>Map中不能包含相同的key</li></p>
+<p><li>Map接口常用的实现类有：HashMap、HashTable、TreeMap。</li></p>
+<p>我们先看下如下示例了解下Map集合的用法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">package collection;</span><br><span class="line"></span><br><span class="line">import java.util.*;</span><br><span class="line"></span><br><span class="line">public class Muster &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Map&lt;Integer, String&gt; platformMap = new HashMap&lt;&gt;();</span><br><span class="line">        platformMap.put(1, &quot;博客园&quot;);</span><br><span class="line">        platformMap.put(2, &quot;掘金&quot;);</span><br><span class="line">        platformMap.put(3, &quot;微信公众号&quot;);</span><br><span class="line">        platformMap.put(4, &quot;个人博客&quot;);</span><br><span class="line"></span><br><span class="line">        // 尝试添加重复Map</span><br><span class="line">        platformMap.put(4, &quot;个人博客&quot;);</span><br><span class="line"></span><br><span class="line">        // 获取所有的key</span><br><span class="line">        Set&lt;Integer&gt; keys = platformMap.keySet();</span><br><span class="line">        for (Integer integer : keys) &#123;</span><br><span class="line">            System.out.println(&quot;Key:&quot; + integer + &quot;,Value:&quot; + platformMap.get(integer));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>复制代码以上代码的输出结果为：</p>
+<p><li>Key:1,Value:博客园</li></p>
+<p><li>Key:2,Value:掘金</li></p>
+<p><li>Key:3,Value:微信公众号</li></p>
+<p><li>Key:4,Value:个人博客</li></p>
+<p><li>从日志可以看出，当我们尝试重加重复Map时，并没有添加成功。</li></p>
+<p><li><a href="##">关于Map集合的详细用法，HashMap、HashTable、TreeMap的区别（这里是重点，面试可能问的比较多），后续会单独写文总结，敬请期待。</a></li></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2019/08/18/一次生产问题的排查解决/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="盛富强">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员shengfq">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/08/18/一次生产问题的排查解决/" itemprop="url">JAVA线上问题的解决思路</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-08-18T00:00:00+08:00">
+                2019-08-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><b>导读</b><br>java线上问题一直是个老大难的问题,紧急,信息量少,故障种类多,不易排查.那么在第一次遇到线上问题的时候我们可能会没有办法,但是随着解决问题的次数增多,对于很多线上问题,就会有了现象-分析-判定-解决这样的思路.开发人员在面对这样的问题时,一则是要见得多,从别人的博客中去分析提炼为什么会出现这样的,而不仅仅只满足答案. 二则是要能举一反三,<br>理解了病症,病灶,病因,才能药到病除.</p>
+<hr>
+<ul><br><li>病症</li><br><li>病灶</li><br><li>诊断</li><br><li>分析</li><br><li>对症下药</li><br></ul>
+
+<hr>
+<p></p><p>病症</p><br>典型的性能问题如页面响应慢、接口超时，服务器负载高、并发数低，数据库频繁死锁等。<p></p>
+<p></p><p>病灶</p><br>Java 应用性能的瓶颈点非常多，比如磁盘、内存、网络 I/O 等系统因素，Java 应用代码，JVM GC，数据库，缓存等。<br>Java 性能优化分为 4 个层级：应用层、数据库层、框架层、JVM 层<p></p>
+<p></p><p>诊断</p><br><b>OS层面的诊断</b><p></p><br>OS 的诊断主要关注的是 CPU、Memory、I/O 三个方面。<br><br>对于 CPU 主要关注平均负载（Load Average），CPU 使用率，上下文切换次数（Context Switch）。<br><br>通过 top 命令可以查看系统平均负载和 CPU 使用率<br><br>通过 vmstat 命令可以查看 CPU 的上下文切换次数<br><p></p>
+<p>Memory<br><br>从操作系统角度，内存关注应用进程是否足够，可以使用 free –m 命令查看内存的使用情况<br></p>
+<p>IO<br><br>通过 iostat 可以查看磁盘的读写情况，通过 CPU 的 I/O wait 可以看出磁盘 I/O 是否正常。<br></p>
+<p><b>JVM层面的诊断</b><br><br>jstack,JProfiler, jstat, jmap,MAT,</p>
+<p></p><p>对症下药</p><br>GC 调优目标基本有三个思路：降低 GC 频率，可以通过增大堆空间，减少不必要对象生成；降低 GC 暂停时间，可以通过减少堆空间，使用 CMS GC 算法实现；避免 Full GC，调整 CMS 触发比例，避免 Promotion Failure 和 Concurrent mode failure（老年代分配更多空间，增加 GC 线程数加快回收速度），减少大对象生成等。<p></p>
+<p><b>业务逻辑层面的诊断</b></p>
+<p>并发业务,不要使用静态共享全局集合来操作Hashmap是线程不安全的,多线程put操作会导致存储的链表出现死循环</p>
+<p></p><h5>1、业务日志相关 </h5><br>如果系统出现异常或者业务有异常，首先想到的都是查看业务日志<p></p>
+<p></p><h4>查看日志工具：<p></p>
+<p></p><h6>less 或者more<p></p>
+<p></p><h6>grep<p></p>
+<p></p><h6>tail -f filename 查看实时的最新内容<p></p>
+<p></p><h6>ps:切忌vim直接打开大日志文件，因为会直接加载到内存的<p></p>
+<p></p><h5>2、数据库相关</h5><br>java应用很多瓶颈在数据库，一条sql没写好导致慢查询，可能就会带来应用带来致命危害。<br>如果出现Could not get JDBC Connection 、接口响应慢、线程打满等，<br>需要登录线上库，查看数据库连接情况：show processh6st，<br>查看当前数据库的连接情况，确实由于慢查询造成，需要手动kill<p></p>
+<p></p><h5>3、JVM相关</h5><br>java虚拟机相关的问题一般多是以下几种问题：gc时间过长、OOM、死锁、线程block、线程数暴涨等问题。一般通过以下几个工具都能定位出问题。<p></p>
+<p></p><h6>jps命令 </h6><br>作用<br>是显示当前用户,当前系统的java进程情况，及其id号<br>常用命令<br>-m/-l/-v 查看运行参数<p></p>
+<p></p><h6>jstat命令 </h6><br>显示进程中的类装载、内存、垃圾收集、JIT编译等运行数据。<br>常用指令<br>jstat -gc 3331 250 20 ：查询进程2764的垃圾收集情况，每250毫秒查询一次，一共查询20次。<br>jstat -gccause：额外输出上次GC原因<br>jstat -calss：件事类装载、类卸载、总空间以及所消耗的时间<p></p>
+<p></p><h6>jstack命令</h6><br>功能<br>生成当前时刻的线程快照。<br>常用指令<br>jstack 3331：查看线程情况<br>jstack -F 3331：正常输出不被响应时，使用该指令<br>jstack -l 3331：除堆栈外，显示关于锁的附件信息<p></p>
+<p></p><h6>jmap命令</h6><br>功能<br>生成堆转储快照（heapdump）<br>常用指令<br>jmap -heap 3331：查看java 堆（heap）使用情况<br>jmap -histo 3331：查看堆内存(histogram)中的对象数量及大小<br>jmap -histo:h6ve 3331：JVM会先触发gc，然后再统计信息<br>jmap -dump:format=b,file=heapDump 3331：将内存使用的详细情况输出到文件，之后一般使用其他工具进行分析。<p></p>
+<p></p><h6>jhat命令 略</h6><p></p>
+<p></p><h6>3.1 OOM问题或者频繁GC问题</h6><br>发生OOM问题一般服务都会crash，业务日志会有OutOfMemoryError。OOM一般都是出现了内存泄露，需要查看OOM时候的jvm堆的快照，如果配置了-XX:+HeapDumpOnOutOfMemoryError, 在发生OOM的时候会在-XX:HeapDumpPath生成堆的dump文件，结合MAT，可以对dump文件进行分析，查找出发生OOM的原因. 关于MAT使用不详述了，google上一堆（<a href="http://inter12.iteye.com/blog/1407492）。" target="_blank" rel="noopener">http://inter12.iteye.com/blog/1407492）。</a><br>ps.<br>1、服务器的内存一般较大，所以要保证服务器的磁盘空间大于内存大小<br>2、另外手动dump堆快照，可以使用命令jmap -dump:format=b,file=file_name pid<p></p>
+<p></p><h6>3.2 死锁</h6><br>死锁原因是两个或者多个线程相互等待资源，现象一般是出现线程hung住，更严重会出现线程数暴涨，系统出现api ah6ve报警等。<br>查看死锁最好的方法就是分析当时的线程栈。<br>具体case 可以参考jstack命令里面的例子<br>用到的命令：<br>jps -v<br>jstack -l pid<p></p>
+<p></p><h6>3.3 线程block、线程数暴涨 </h6><br>jstack -l pid |wc -l<br>jstack -l pid |grep “BLOCKED”|wc -l<br>jstack -l pid |grep “Waiting on condition”|wc -l<p></p>
+<p>线程block问题一般是等待io、等待网络、等待监视器锁等造成，可能会导致请求超时、造成造成线程数暴涨导致系统502等。<br><br>如果出现这种问题，主要是关注jstack 出来的BLOCKED、Waiting on condition、Waiting on monitor entry等状态信息。<br><br>如果大量线程在“waiting for monitor entry”：<br>可能是一个全局锁阻塞住了大量线程。<br><br>如果短时间内打印的 thread dump 文件反映，随着时间流逝，waiting for monitor entry 的线程越来越多，没有减少的趋势，可能意味着某些线程在临界区里呆的时间太长了，以至于越来越多新线程迟迟无法进入临界区。<br><br>如果大量线程在“waiting on condition”：<br>可能是它们又跑去获取第三方资源，迟迟获取不到Response，导致大量线程进入等待状态。<br>所以如果你发现有大量的线程都处在 Wait on condition，从线程堆栈看，正等待网络读写，这可能是一个网络瓶颈的征兆，因为网络阻塞导致线程无法执行。</p>
+<p></p><h6>3.4 gc时间过长</h6><br>先贴一个文章占坑：&lt;a href= <a href="http://www.oracle.com/technetwork/cn/articles/java/g1gc-1984535-zhs.html&gt;传送门" target="_blank" rel="noopener">http://www.oracle.com/technetwork/cn/articles/java/g1gc-1984535-zhs.html&gt;传送门</a><p></p>
+<p><b>4、服务器问题</b></p>
+<p></p><h6>4.1 CPU</h6><br>top命令(参考<a href="https://h6nux.cn/article-2352-1.html" target="_blank" rel="noopener">https://h6nux.cn/article-2352-1.html</a>)<br>主要关注cpu的load，以及比较耗cpu的进程<br>由于现在服务器都是虚拟机，还要关注st（st 的全称是 Steal Time ，是分配给运行在其它虚拟机上的任务的实际 CPU 时间）<br>常用交互命令：<br>h 帮助，十分有用<br>R: 反向排序<br>x：将排序字段高亮显示（纵列）<br>y 将运行进程高亮显示（横行）<br>shift+&gt; 或shift+&lt;:切换排序字段<br>d或s: 设置显示的刷新间隔<br>f: 字段管理 设置显示的字段<br>k:kill进程<p></p>
+<p></p><h6>4.2 内存</h6><br>free命令：<br>free -m -c10 -s1<br>-m：以MB为单位显示，其他的有-k -g -b<br>-s: 间隔多少秒持续观察内存使用状况<br>-c:观察多少次<br>vmstat命令：(<a href="http://man.h6nuxde.net/vmstat" target="_blank" rel="noopener">http://man.h6nuxde.net/vmstat</a>)<br>vmstat 1 10<br>1表示每隔1s输出一次,10 表示输出10次<br>两个参数需要关注<br>r: 运行队列中进程数量，这个值也可以判断是否需要增加CPU。（长期大于1）<br>b: 等待IO的进程数量。<p></p>
+<p></p><h6>4.3 IO</h6><br>iostat 命令（<a href="http://www.orczhou.com/index.php/2010/03/iostat-detail/）" target="_blank" rel="noopener">http://www.orczhou.com/index.php/2010/03/iostat-detail/）</a><br>iostat -m 1 10<br>-m：某些使用block为单位的列强制使用MB为单位<br>1 10：数据显示每隔1秒刷新一次，共显示10次<p></p>
+<p></p><h6>4.4 网络</h6><br>netstat 命令（<a href="http://www.cnblogs.com/ggjucheng/archive/2012/01/08/2316661.html）" target="_blank" rel="noopener">http://www.cnblogs.com/ggjucheng/archive/2012/01/08/2316661.html）</a><br>netstat -antp <p></p>
+<p>-a (all)显示所有选项，默认不显示h6STEN相关<br>-t (tcp)仅显示tcp相关选项<br>-u (udp)仅显示udp相关选项<br>-n 拒绝显示别名，能显示数字的全部转化成数字。<br>-l 仅列出有在 h6sten (监听) 的服服务状态<br>-p 显示建立相关链接的程序名</p>
+<p>显示tcp各个状态数量：<br> netstat -ant |awk ‘{print $6}’|sort|uniq -c</p>
+<p>查看连接某服务端口最多的的IP地址<br>netstat -nat | grep “10.32.45.35:8924” |awk ‘{print $5}’|awk -F: ‘{print $4}’|sort|uniq -c|sort -nr|head -10</p>
+</h6></h6></h6></h6></h4>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2019/03/20/JUC-线程池原理/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -929,664 +1774,6 @@ The searched-for class definition existed when the currently executing class was
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2018/05/24/aboutme/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="盛富强">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="程序员shengfq">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/24/aboutme/" itemprop="url">aboutme</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-24T19:29:54+08:00">
-                2018-05-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><li>盛富强</li></p>
-<p><li>java开发工程师</li></p>
-<p><li>联系电话:+86 166-2512-0553</li></p>
-<p><li>电子邮箱:<a href="mailto:shengfu.qiang@163.com" target="_blank" rel="noopener">shengfu.qiang@163.com</a></li></p>
-<p><li>个人博客:<a href="https://shengfq.github.io/" target="_blank" rel="noopener">https://shengfq.github.io/</a></li></p>
-<p><li>github:<a href="https://github.com/shengfq" target="_blank" rel="noopener">https://github.com/shengfq</a></li></p>
-<p></p><h4>自我描述</h4><p></p>
-<h5>我是一名热爱分享,爱开源,爱交流的JAVA开发者.</h5>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2018/05/24/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="盛富强">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="程序员shengfq">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/24/hello-world/" itemprop="url">Hello World</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-24T18:25:38+08:00">
-                2018-05-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2018/05/14/Catching Multiple Exceptions in Java 7/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="盛富强">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="程序员shengfq">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/14/Catching Multiple Exceptions in Java 7/" itemprop="url">Catching Multiple Exceptions in Java 7</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-14T00:00:00+08:00">
-                2018-05-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>在java7中,在同一个catch块中是可以捕获到多个不同的异常的.这被称之为多次捕获.<br>在java7之前你可能这样写<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">try &#123;</span><br><span class="line"></span><br><span class="line">    // execute code that may throw 1 of the 3 exceptions below.</span><br><span class="line"></span><br><span class="line">&#125; catch(SQLException e) &#123;</span><br><span class="line">    logger.log(e);</span><br><span class="line"></span><br><span class="line">&#125; catch(IOException e) &#123;</span><br><span class="line">    logger.log(e);</span><br><span class="line"></span><br><span class="line">&#125; catch(Exception e) &#123;</span><br><span class="line">    logger.severe(e);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>你可以看到, SQLEXCEPTION AND IOEXCEPTIOn的处理方式相同,但是你需要些两个不同的catch块来处理,在java7中你可以使用这样的语法:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">try &#123;</span><br><span class="line"></span><br><span class="line">    // execute code that may throw 1 of the 3 exceptions below.</span><br><span class="line"></span><br><span class="line">&#125; catch(SQLException | IOException e) &#123;</span><br><span class="line">    logger.log(e);</span><br><span class="line"></span><br><span class="line">&#125; catch(Exception e) &#123;</span><br><span class="line">    logger.severe(e);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>注意:两个异常使用|分割开,声明的多个异常处理会通过同一个catch接收.</p>
-<p>###Exception Hierarchies 异常的继承结构<br>在java或c#中,异常被分类到继承结构体系,异常继承结构的有点是你可以使用一个特定的异常,你能自动捕获该异常下所有的子类异常.换个说法,你能捕获一个特定异常也能捕获该异常下面所有的子类异常.例如FileNotFoundException ,你能捕获IOException捕获,也能使用FileNotFoundException.</p>
-<p>多catch块<br>你可能已经知道使用多catch块.这是在try…块发生多种异常情况下的处理.但是,多个捕获块,也可用于try块内的所有抛出的异常情况是相同的类型或类型的子类.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">try&#123;</span><br><span class="line">    //call some methods that throw IOException&apos;s</span><br><span class="line">&#125; catch (FileNotFoundException e)&#123;</span><br><span class="line">&#125; catch (IOException e)&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>按照异常的继承结构,上述代码是FileNotFoundException先被捕获,如果是IOException则被第二个捕获.</p>
-<p>throws 语法<br>如果一个方法能抛出一具体的异常A,或者该异常的子类,可以使用方法声明 抛出A或者A的子类<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public void doSomething() throws IOException&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public void doSomething() throws IOException, FileNotFoundException&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>设计异常的继承结构<br>当设计一个API或者app时,为之设计一个异常体系结构是一个好主意.例如,Mr Persister(注:作者项目), 我们的持久层/ORM API的基础异常是 PersistenceException.这个基础异常能捕获和处理<br>Mr.Persister抛出的所有异常.</p>
-<p>如果你需要更多粒度的异常抛出,例如你可能以为异常很难处理,需要增加一个子类异常到应用的基础异常库.可以选择的方法是要么捕获一个确切的异常要么捕获基础异常.在MrPersister项目中,我们增加了 ConnectionOpenException, QueryException, UpdateException, CommitException和ConnectionCloseException作为PersistenceException异常的子类.如果Mr Persister的用户想要处理ConnectionOpenException与QueryException区分开,他们可以捕获这些具体的异常使用具体的操作.如果不是,用户可以捕获PersistenceException处理所有异常.</p>
-<p>你能通过更多等级的异常体系结构来区分所有的异常类型,例如,你可以区分一个异常是因为url错误,还是由于数据库没有运行.这个案例中,你能创建两个异常DatabaseURLException和DatabaseNotRespondingException,他们都扩展自ConnectionOpenException.用户可以捕获这两种不同的异常.</p>
-<p>总结<br>这章节我们了解了异常的体系结构通过创建子类.区分子类用来捕获和处理这些细分的异常,你也能创建细分的异常. </p>
-<p>###Checked or Unchecked Exceptions?<br>在java中有两种基础异常类型:Checked异常和unchecked异常(译者:可以类比为JVM需要强制执行异常处理/不需要强制执行).c#只有unchecked异常.他们的区别在于:<br>1.checked 异常必须显式的捕获或传播通过 try-catch-finally异常处理.unchecked异常不必须.他们不需要显式的捕获.<br>2.checked异常继承自java.lang.exception. unchecked exceptions 继承自 java.lang.RuntimeException.</p>
-<p>关于checked和unchecked有许多的争论,是否应该使用checked异常,我将通过许多争论提纲来说明,在我做之前,让我们先明确下:<br>checked和unchecked异常都是功能等效的.如果无法的unchecked异常的情形那么对于checked异常同样也无能为力.</p>
-<p>不论你选择的是checked或unchecked,这都是一个个人或组织的习惯,跟功能好坏无关.</p>
-<p>一个简单案例<br>在讨论这两种的优点和缺点时,我将先告诉你他们的不同用法,下面是抛出一个checked异常<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">public void storeDataFromUrl(String url)&#123;</span><br><span class="line">    try &#123;</span><br><span class="line">        String data = readDataFromUrl(url);</span><br><span class="line">    &#125; catch (BadUrlException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public String readDataFromUrl(String url)</span><br><span class="line">throws BadUrlException&#123;</span><br><span class="line">    if(isUrlBad(url))&#123;</span><br><span class="line">        throw new BadUrlException(&quot;Bad URL: &quot; + url);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    String data = null;</span><br><span class="line">    //read lots of data over HTTP and return</span><br><span class="line">    //it as a String instance.</span><br><span class="line"></span><br><span class="line">    return data;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">   public class BadUrlException extends Exception &#123;</span><br><span class="line">    public BadUrlException(String s) &#123;</span><br><span class="line">        super(s);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>storeDataFromUrl()方法有两种选择,要么捕获要么传播给访问栈<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//传播给访问栈</span><br><span class="line">   public void storeDataFromUrl(String url)</span><br><span class="line">    throws BadUrlException&#123;</span><br><span class="line">        String data = readDataFromUrl(url);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
-<p>现在,让我们看一下unchecked 异常的处理,首先让异常类继承 java.lang.RuntimeException<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public class BadUrlException extends RuntimeException &#123;</span><br><span class="line">        public BadUrlException(String s) &#123;</span><br><span class="line">            super(s);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public void storeDataFromUrl(String url)&#123;</span><br><span class="line">        String data = readDataFromUrl(url);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String readDataFromUrl(String url) &#123;</span><br><span class="line">        if(isUrlBad(url))&#123;</span><br><span class="line">            throw new BadUrlException(&quot;Bad URL: &quot; + url);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        String data = null;</span><br><span class="line">        //read lots of data over HTTP and</span><br><span class="line">        //return it as a String instance.</span><br><span class="line"></span><br><span class="line">        return data;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
-<p>storeDataFromUrl()方法可以选择捕获异常,但不是必须的了,也不是必须要传播.</p>
-<h4 id="什么时候checked什么时候unchecked"><a href="#什么时候checked什么时候unchecked" class="headerlink" title="什么时候checked什么时候unchecked?"></a>什么时候checked什么时候unchecked?</h4><p>我们看到了两种处理方式,让我们好好讨论下.<br>许多java书籍建议你使用checked异常为所有 可恢复应用程序,使用unchecked异常处理应用程序不可恢复的场景.实际上大部分的应用都需要恢复包括空指针异常,无效参数异常或者其他unchecked异常. 行动/交易失败将中止,但应用程序必须活下去,准备下一步行动/事务服务。这通常是合法的关闭应用程序.例如,如果配置文件丢失了,应用程序不能做任何事情,这将导致程序关闭.</p>
-<p>我的建议是你要么使用checked异常要么使用unchecked异常.混合异常类型常常导致迷惑和不一致的使用.当然你应该务实一点,在具体情况具体分析.</p>
-<p>下面的列表是最常见的争论关于checked和unchecked异常.最常见的区别是pro-checked=con-unchecked,pro-unchecked=con-checked.因此<br>1.高级的检查异常<br>编译器强制捕获或传播检查异常是为了不让开发者忘记处理异常.<br>2.非检查异常是编译器不强制开发者捕获和传播异常.<br>3.高级非检查异常<br>检查异常被传播到访问栈顶层方法,因为这些方法需要强制声明抛出他们声明的异常.<br>4.当一个方法没有声明非检查异常,他们一旦出现异常将很难处理.<br>5.检查异常的声明成为方法声明的一部分,增加一个或删除一个异常声明在需要变更方法声明时会很困难.</p>
-<p>争论一</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">try&#123;</span><br><span class="line">   callMethodThatThrowsException();</span><br><span class="line">catch(Exception e)&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面这种情况,强制捕获或传播异常让开发者粗心的处理风险,只会让开发者忽略错误.</p>
-<p>争论二<br>非检查异常很容易让开发者忘记异常处理,因为编译器不强制开发者处理.<br>没有比粗心的异常处理更糟糕的,当强制进行异常处理的时候.<br>在一个最近的大项目里,我们决定使用非检查异常.我个人的经验是,当使用非检查异常的方法趋向于抛出异常.我常常合理的有意识的考虑异常.不仅仅是检查下异常.我都会考虑一个方法的异常处理.</p>
-<p>许多标准java API方法没有声明任何可检查异常仍然可能抛出非检查异常例如空指针和无效参数.你的应用程序需要处理这些非检查异常.你可以考虑这些检查异常很容易忘记处理非检查异常的情况,因为他们不需要声明.</p>
-<p>argument3<br>传播到访问栈顶层方法的可检查异常,因为方法需要声明抛出异常,所以在顶层的方法要声明的异常是一种底层异常,例如.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">public long readNumberFromUrl(String url)</span><br><span class="line">   throws BadUrlExceptions, BadNumberException&#123;</span><br><span class="line">       String data = readDataFromUrl(url);</span><br><span class="line">       long number = convertData(data);</span><br><span class="line">       return number;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   private String readDataFromUrl(String url)</span><br><span class="line">   throws BadUrlException &#123;</span><br><span class="line">      //throw BadUrlException if url is bad.</span><br><span class="line">      //read data and return it.</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   private long convertData(String data)</span><br><span class="line">   throws BadNumberException&#123;</span><br><span class="line">       //convert data to long.</span><br><span class="line">       //throw BadNumberException if number isn&apos;t within valid range.</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
-<p>你能看到readNumberFromUrl()方法需要声明BadUrlException和BadNumberException,因为他的访问栈方法抛出了异常.想想,如果成千上万的类里面的顶级方法需要声明多少种异常.</p>
-<p>争论1:<br>异常声明聚合通常发生在实际的应用程序中.通常开发者使用异常包装器代替,例如:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public void readNumberFromUrl(String url)</span><br><span class="line">  throws ApplicationException&#123;</span><br><span class="line">      try&#123;</span><br><span class="line">          String data = readDataFromUrl(url);</span><br><span class="line">          long number = convertData(data);</span><br><span class="line">      &#125; catch (BadUrlException e)&#123;</span><br><span class="line">          throw new ApplicationException(e);</span><br><span class="line">      &#125; catch (BadNumberException e)&#123;</span><br><span class="line">          throw new ApplicationException(e);</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
-<p>你能看到readNumberFromUrl()方法声明了ApplicationException.而异常BadUrlException和BadNumberException被捕获并包装到一个通用的ApplicationException.这就是异常包装避免异常声明聚合.我个人的意见是,如果你所做的是包装一个异常,而不是提供附加的信息,你为什么要包装他?try-catch块附加一个代码而不做其他.使得这些异常成为unchecked 异常更容易,下面是以unchecked版本:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public void readNumberFromUrl(String url)&#123;</span><br><span class="line">       String data = readDataFromUrl(url);</span><br><span class="line">       long number = convertData(data);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
-<p>包装一个unchecked异常如果你想.下面是一个包装版本,注意,方法签名并不声明抛出的异常类型:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public void readNumberFromUrl(String url)</span><br><span class="line">       try&#123;</span><br><span class="line">           String data = readDataFromUrl(url);</span><br><span class="line">           long number = convertData(data);</span><br><span class="line">       &#125; catch (BadUrlException e)&#123;</span><br><span class="line">           throw new ApplicationException(</span><br><span class="line">               &quot;Error reading number from URL&quot;, e);</span><br><span class="line">       &#125; catch (BadNumberException e)&#123;</span><br><span class="line">           throw new ApplicationException(</span><br><span class="line">               &quot;Error reading number from URL&quot;, e);</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure></p>
-<p>另外一个常用技术是避免异常声明传播到访问栈而创建的一个基础异常声明类.所有的异常捕获都是该基础异常的子类.所有的方法抛出异常仅需要声明throw一个基础异常, 一个方法抛出基类的子类:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">public long readNumberFromUrl(String url)</span><br><span class="line">   throws ApplicationException &#123;</span><br><span class="line">       String data = readDataFromUrl(url);</span><br><span class="line">       long number = convertData(data);</span><br><span class="line">       return number;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   private String readDataFromUrl(String url)</span><br><span class="line">   throws BadUrlException &#123;</span><br><span class="line">      //throw BadUrlException if url is bad.</span><br><span class="line">      //read data and return it.</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   private long convertData(String data)</span><br><span class="line">   throws BadNumberException&#123;</span><br><span class="line">       //convert data to long.</span><br><span class="line">       //throw BadNumberException if number isn&apos;t within valid range.</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">   public class ApplicationException extends Exception&#123; &#125;</span><br><span class="line">   public class BadNumberException   extends ApplicationException&#123;&#125;</span><br><span class="line">   public class BadUrlException      extends ApplicationException&#123;&#125;</span><br></pre></td></tr></table></figure></p>
-<p>注意子类异常也不再声明了 也不捕获和包装了,因为他们的超类已经将异常传播给访问栈了.<br>我的意见跟异常包装一样:如果所有的方法都声明抛出基类异常,为什么不让基类成为unchecked异常 保存一些try-catch块,抛出一个基类.</p>
-<p>当一个方法不再声明非检查异常,但是他们可能抛出这种异常将会很难处理.不声明你就不知道什么异常会抛出.你也许不会知道如何处理,当然除了你已经通过代码处理他们那些可能抛出的异常.<br>争论1:<br>在大多数情况下你,对于异常的处理你除了显示打印错误信息给调用者,不能做其他,写一条日志,回滚事务.不管什么异常发生在很多情况下处理他们是用相同的方式.因为应用程序通常有一些中央和通用的异常处理代码.因此知道实际发生了什么可能抛出的异常就没那么重要了.</p>
-<p>总结<br>我通常赞成检查异常但是最近我凯撒改变我的主意.个人喜欢Rod johnson,anders hejlsberg,joshua bloch和其他人让我重新思考真实的益处来自检查异常.最近我们尝试使用unchecked异常在大项目上,他们工作很好.异常处理集中在一部分类.这里我们必须做本地异常处理代替传播异常到主异常处理代码.但是这不是非常多.我们的代码可读性更高,没有try-catch快.在另一方面,这里有更少的catch-rethrow try-catch块在代码里使用检查异常.我将提醒所有使用unchecked异常的人,至少使用try.我说明下原因:<br>1.非检查异常不需要杂乱的代码使用非必要的try-catch块.<br>2.非检查异常不需要杂乱的方法头声明去传播异常.<br>3.你很容易忘记处理非检查异常的论证是这不适合我的经验.<br>4.非检查异常避免了版本升级的问题.</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2018/05/14/异常的层级/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="盛富强">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="程序员shengfq">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/14/异常的层级/" itemprop="url">Exception Hierarchies</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-14T00:00:00+08:00">
-                2018-05-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>异常的层级</p>
-<h2 id="多catch块"><a href="#多catch块" class="headerlink" title="多catch块"></a>多catch块</h2><h2 id="抛出条款"><a href="#抛出条款" class="headerlink" title="抛出条款"></a>抛出条款</h2><h2 id="设计异常的层级"><a href="#设计异常的层级" class="headerlink" title="设计异常的层级"></a>设计异常的层级</h2><h2 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h2><p>在java和c#中异常能够通过层级关系分类.这种关系一般是一个或多个异常继承自其他异常.在java中FileNotFoundException 就是IOException异常的子类.下面就是一自定义异常:<br>public class MyException extends Exception{<br>    //constructors etc.<br>}</p>
-<p>如你所见并没有其他内容.更高级的异常层级是你决定catch一个具体的异常,你就能自动的捕获到该异常所有子类发生时触发时点.换句话说,你能catch所有具体的异常只要你声明一个父类异常.在案例中FileNotFoundException,如果你捕获了IOException,你就能捕获到FileNotFoundException.</p>
-<p>##多个catch块<br>你可能知道了已经有一种多catch块的声明异常的方式,这在</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2018/05/14/Java Exception Handling/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="盛富强">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="程序员shengfq">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/14/Java Exception Handling/" itemprop="url">java 异常处理</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-14T00:00:00+08:00">
-                2018-05-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>java 异常处理让你能轻松处理应用程序中的错误.异常处理在编写健壮的应用或组件的时候很容易被忽略的.当一个错误发生在一个Java程序通常会导致一个异常被抛出。你若能抛出,捕获,处理这些异常得当,将有很多方法来处理,但并不是所有的都有效并且安全失败(程序执行失败逻辑要安全处理).</p>
-<p>本次训练(文集)深度讲解java当中的异常处理.这次训练包含了各种应该的活不建议的异常处理,也包含了一些高效、不易出错的异常处理.希望你能从这些文字中受益.</p>
-<p>这个手册中使用的java版本是jdk6 或者jdk7.这些技术也能很好的适用于jdk5.jdk4.</p>
-<p>下面是一个快速介绍你能从异常处理中所见到的内容.<br>基本的java异常处理<br>头两篇文章包含基本的异常抛出和处理理论,异常层级:<br>基本的try..catch..finally<br>异常的结构层级</p>
-<p>检查异常和非检查异常的区别<br>java是一门支持检查\非检查异常的语言,在文章[检查或非检查异常]中我讨论了这两种方式的不同,最后我也推荐使用非检查异常少用检查异常.</p>
-<p>通用的异常处理建议<br>手册6片文章讲述 失败安全异常处理,异常日志写在哪里,建议在验证数据中抛出异常,在另一方面,建议如何设计你的应用程序抛出和处理异常.<br>高级异常处理建议<br>在下面2篇文章,异常处理的模板和异常丰富讨论更多高级异常处理的技术,让你的代码更简洁,异常模板把所有的try..catch代码重用到一个异常处理的模板方法里,帮助你避免很长的异常栈日志,应用程序获得真实的唯一异常代码.</p>
-<p>异常处理的策略<br>我写了很多建议如何把异常技术描述到这个手册进行浓缩了异常处理的策略,这通常很有效.</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1637,7 +1824,7 @@ The searched-for class definition existed when the currently executing class was
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -1650,7 +1837,7 @@ The searched-for class definition existed when the currently executing class was
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-count">13</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>
@@ -1697,7 +1884,7 @@ The searched-for class definition existed when the currently executing class was
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
