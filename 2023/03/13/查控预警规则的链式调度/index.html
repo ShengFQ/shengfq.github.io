@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zn-han">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="责任链模式,excel规则处理," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="今日心得: 做别人不能做的事情,不敢做的事情,有难度的事情,本身就是一种自信,不管结果怎么样,不要怕,也不要觉得别人不会的我也不会,就是因为别人不会,我才有机会挑战不可能,才能体现我的价值. 需求场景 资金查控是一个应用工具软件,实现从执法办调取案件数据和卡号信息,在本系统内发起申请单,向公安部API发起查控申请,通过异步异地文件交互的方式获取结果.系统是给基层民警办案提供的协查工具,经过上级单位">
+<meta name="keywords" content="责任链模式,excel规则处理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="查控预警规则的链式调度">
+<meta property="og:url" content="https://www.shengfq.github.io/2023/03/13/查控预警规则的链式调度/index.html">
+<meta property="og:site_name" content="程序员shengfq">
+<meta property="og:description" content="今日心得: 做别人不能做的事情,不敢做的事情,有难度的事情,本身就是一种自信,不管结果怎么样,不要怕,也不要觉得别人不会的我也不会,就是因为别人不会,我才有机会挑战不可能,才能体现我的价值. 需求场景 资金查控是一个应用工具软件,实现从执法办调取案件数据和卡号信息,在本系统内发起申请单,向公安部API发起查控申请,通过异步异地文件交互的方式获取结果.系统是给基层民警办案提供的协查工具,经过上级单位">
+<meta property="og:locale" content="zn-han">
+<meta property="og:updated_time" content="2023-03-13T15:54:00.812Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="查控预警规则的链式调度">
+<meta name="twitter:description" content="今日心得: 做别人不能做的事情,不敢做的事情,有难度的事情,本身就是一种自信,不管结果怎么样,不要怕,也不要觉得别人不会的我也不会,就是因为别人不会,我才有机会挑战不可能,才能体现我的价值. 需求场景 资金查控是一个应用工具软件,实现从执法办调取案件数据和卡号信息,在本系统内发起申请单,向公安部API发起查控申请,通过异步异地文件交互的方式获取结果.系统是给基层民警办案提供的协查工具,经过上级单位">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.shengfq.github.io/2023/03/13/查控预警规则的链式调度/"/>
+
+
+
+
+
+  <title>查控预警规则的链式调度 | 程序员shengfq</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zn-han">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">程序员shengfq</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">技术博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2023/03/13/查控预警规则的链式调度/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="盛富强">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员shengfq">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">查控预警规则的链式调度</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2023-03-13T00:00:00+08:00">
+                2023-03-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>今日心得:</p>
+<p>做别人不能做的事情,不敢做的事情,有难度的事情,本身就是一种自信,不管结果怎么样,不要怕,也不要觉得别人不会的我也不会,就是因为别人不会,我才有机会挑战不可能,才能体现我的价值.</p>
+<p>需求场景</p>
+<p>资金查控是一个应用工具软件,实现从执法办调取案件数据和卡号信息,在本系统内发起申请单,向公安部API发起查控申请,通过异步异地文件交互的方式获取结果.系统是给基层民警办案提供的协查工具,经过上级单位审批提交给公安部统一协调,由银行执行查控结果返回.</p>
+<p>执法监督-查控预警模块设计,是民警基于线上系统长时间运行后,对业务运维上提出的新思考,在业务进行时,存在一些不合法的使用场景,于是民警提出了一个excel表格来记录业务违反规则的场景,希望我们系统能提供自动判断违规使用的查控申请,并将案件和账号及违规内容记录到预警内容,提供给省厅民警进行核查.这个规则列表是根据业务进行后会补充的,也会有调整的.甚至会启停.</p>
+<table>
+<thead>
+<tr>
+<th>问题清单</th>
+<th style="text-align:left">是否可通过现有资金查控平台监督</th>
+<th>现有资金查控平台工作要求或无法通过平台监督原因</th>
+<th>资金查控平台执法监督功能改造措施</th>
+<th>执法监督设计逻辑 （粗体要求系统开发）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td style="text-align:left">规则1</td>
+<td>xxx</td>
+<td>xxxxx</td>
+<td>ccccc</td>
+</tr>
+</tbody>
+</table>
+<p>思考</p>
+<p>当时第一次接到这个需求的时候,我没有多想,就是在业务代码中增加拦截规则匹配,基本实现思路就是流水式代码.当我实现了其中几个规则之后,我发现代码越来越难维护,因为每个规则流程都要经历查询待办的案件数据,对案件中的几个关键指标根据规则的业务逻辑进行匹配,如果匹配上就增加案件的预警记录,然后标记该案件在在该规则上的执行任务状态,我要记录很多个执行状态,代码越来越难维护.</p>
+<p>经过反复的思考业务场景的特点,  数据源是案件编号—&gt;获取案件编号—&gt;调用规则匹配—-&gt;标记规则完成.其他的规则控制逻辑相同,规则逻辑不同.而且这些规则都需要匹配完成, 这就是一个典型的责任链模式, 责任处理器就是规则处理,这个处理器抽象有两个方法,一个是处理匹配规则,一个是设置下一个处理器.然后我从定时调度任务开启一个任务线程获取待处理的案件列表,经过规则处理器之后,将结果写入到案件列表状态.</p>
+<p>设计代码如下:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">IHandler.java <span class="comment">//链式规则处理接口</span></span><br><span class="line">RequestHandler.java<span class="comment">//链式规则处理抽象类</span></span><br><span class="line">ChainFactoryBuilder.java<span class="comment">//组链,初始化链路bean,执行链式调用	</span></span><br><span class="line">FlwsValidateHandler.java<span class="comment">//业务规则实例</span></span><br><span class="line">Request.java <span class="comment">//请求对象 包含案件对象</span></span><br><span class="line">RequestType.java <span class="comment">//规则枚举</span></span><br><span class="line">IScheduleExecutor.java	<span class="comment">//任务接口 获取数据/执行任务/结束任务	</span></span><br><span class="line">ScheduleExecutorTask.java <span class="comment">//任务接口实现</span></span><br></pre></td></tr></table></figure>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br><span class="line">364</span><br><span class="line">365</span><br><span class="line">366</span><br><span class="line">367</span><br><span class="line">368</span><br><span class="line">369</span><br><span class="line">370</span><br><span class="line">371</span><br><span class="line">372</span><br><span class="line">373</span><br><span class="line">374</span><br><span class="line">375</span><br><span class="line">376</span><br><span class="line">377</span><br><span class="line">378</span><br><span class="line">379</span><br><span class="line">380</span><br><span class="line">381</span><br><span class="line">382</span><br><span class="line">383</span><br><span class="line">384</span><br><span class="line">385</span><br><span class="line">386</span><br><span class="line">387</span><br><span class="line">388</span><br><span class="line">389</span><br><span class="line">390</span><br><span class="line">391</span><br><span class="line">392</span><br><span class="line">393</span><br><span class="line">394</span><br><span class="line">395</span><br><span class="line">396</span><br><span class="line">397</span><br><span class="line">398</span><br><span class="line">399</span><br><span class="line">400</span><br><span class="line">401</span><br><span class="line">402</span><br><span class="line">403</span><br><span class="line">404</span><br><span class="line">405</span><br><span class="line">406</span><br><span class="line">407</span><br><span class="line">408</span><br><span class="line">409</span><br><span class="line">410</span><br><span class="line">411</span><br><span class="line">412</span><br><span class="line">413</span><br><span class="line">414</span><br><span class="line">415</span><br><span class="line">416</span><br><span class="line">417</span><br><span class="line">418</span><br><span class="line">419</span><br><span class="line">420</span><br><span class="line">421</span><br><span class="line">422</span><br><span class="line">423</span><br><span class="line">424</span><br><span class="line">425</span><br><span class="line">426</span><br><span class="line">427</span><br><span class="line">428</span><br><span class="line">429</span><br><span class="line">430</span><br><span class="line">431</span><br><span class="line">432</span><br><span class="line">433</span><br><span class="line">434</span><br><span class="line">435</span><br><span class="line">436</span><br><span class="line">437</span><br><span class="line">438</span><br><span class="line">439</span><br><span class="line">440</span><br><span class="line">441</span><br><span class="line">442</span><br><span class="line">443</span><br><span class="line">444</span><br><span class="line">445</span><br><span class="line">446</span><br><span class="line">447</span><br><span class="line">448</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> \* ClassName: ChainFactoryBuilder</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> \* Description:组链,初始化链路bean,执行链式调用</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> \* <span class="doctag">@author</span> shengfq</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> \* <span class="doctag">@date</span>: 2023/3/11 11:08 上午</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ChainFactoryBuilder</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> IHandler chain;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Autowired</span></span><br><span class="line"></span><br><span class="line">  FlwsValidateHandler flwsValidateHandler;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Autowired</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">ChainFactoryBuilder</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">​    buildChain();</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">   \* TODO 构建责任链处理器链路</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">   \* 如果有新的规则添加,则设置</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">   \* handler.setNext(next);</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">   \* 目前只有FlwsValidateHandler</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">   \* */</span></span><br><span class="line"></span><br><span class="line">  <span class="meta">@PostConstruct</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">buildChain</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">​    IHandler head=flwsValidateHandler;</span><br><span class="line"></span><br><span class="line">​    <span class="comment">//TODO 构建责任链处理器链路,新增的责任处理器要在此处上链</span></span><br><span class="line"></span><br><span class="line">​    <span class="comment">//  head.setNext(iHandler);</span></span><br><span class="line"></span><br><span class="line">​    chain=head;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">   \* 压栈处理</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">   \* */</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">makeRequest</span><span class="params">(List&lt;Request&gt; requests)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">if</span>(CollectionUtil.isNotEmpty(requests))&#123;</span><br><span class="line"></span><br><span class="line">​      requests.stream().forEach(item-&gt;&#123;</span><br><span class="line"></span><br><span class="line">​        chain.handleRequest(item);</span><br><span class="line"></span><br><span class="line">​      &#125;);</span><br><span class="line"></span><br><span class="line">​    &#125;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IHandler</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">   \* 处理请求</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">   \* */</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">handleRequest</span><span class="params">(Request req)</span></span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">   \* 设置下一个处理器</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">   \* */</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">void</span>  <span class="title">setNext</span><span class="params">(IHandler next)</span></span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> \* 责任链处理器抽象类</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> \* 定义公共执行方法的实现</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> \* <span class="doctag">@author</span> sheng</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> \* <span class="doctag">@date</span> 2023-03-11</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> \* */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">RequestHandler</span> <span class="keyword">implements</span> <span class="title">IHandler</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger LOGGER = LoggerFactory.getLogger(RequestHandler.class);</span><br><span class="line"> <span class="keyword">private</span> IHandler next;</span><br><span class="line"> <span class="meta">@Override</span></span><br><span class="line"></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span>  <span class="title">setNext</span><span class="params">(IHandler next)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">this</span>.next = next;</span><br><span class="line"></span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> <span class="comment">/**</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">  \* Request handler</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line"></span><br><span class="line"> <span class="meta">@Override</span></span><br><span class="line"></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleRequest</span><span class="params">(Request req)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (next != <span class="keyword">null</span> &amp;&amp; !req.isHandled()) &#123;</span><br><span class="line"></span><br><span class="line">   next.handleRequest(req);</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"> <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">printHandling</span><span class="params">(Request req)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  LOGGER.info(<span class="string">"&#123;&#125; 处理规则 \"&#123;&#125;\""</span>, <span class="keyword">this</span>, req);</span><br><span class="line"></span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> <span class="meta">@Override</span></span><br><span class="line"></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> String <span class="title">toString</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">*请求对象 包含案件对象</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Request</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"> <span class="keyword">private</span> <span class="keyword">final</span> RequestType requestType;</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"> <span class="keyword">private</span> <span class="keyword">final</span> YjAjxxtjInfo yjAjxxtjInfo;</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"> <span class="keyword">private</span> <span class="keyword">boolean</span> handled;</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="title">Request</span><span class="params">(<span class="keyword">final</span> RequestType requestType, <span class="keyword">final</span> YjAjxxtjInfo yjAjxxtjInfo)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">this</span>.requestType = Objects.requireNonNull(requestType);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">this</span>.yjAjxxtjInfo = Objects.requireNonNull(yjAjxxtjInfo);</span><br><span class="line"></span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"> <span class="function"><span class="keyword">public</span> RequestType <span class="title">getRequestType</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> requestType;</span><br><span class="line"></span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">markHandled</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">this</span>.handled = <span class="keyword">true</span>;</span><br><span class="line"></span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isHandled</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">this</span>.handled;</span><br><span class="line"></span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"> <span class="meta">@Override</span></span><br><span class="line"></span><br><span class="line"> <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> requestType.getDesc();</span><br><span class="line"></span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> *枚举规则匹配</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> \* <span class="doctag">@author</span> shengfq</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> \* <span class="doctag">@date</span> 2023-03-09</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@Getter</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> RequestType &#123;</span><br><span class="line"></span><br><span class="line"> WLADJZH,</span><br><span class="line"></span><br><span class="line"> WCXYEDJZH,</span><br><span class="line"></span><br><span class="line"> DJFFZSAZH,</span><br><span class="line"></span><br><span class="line"> DJJECGSAJE,</span><br><span class="line"></span><br><span class="line"> CFDJZH,</span><br><span class="line"></span><br><span class="line"> CADJ,</span><br><span class="line"></span><br><span class="line"> WABFSSXZ,</span><br><span class="line"></span><br><span class="line"> WYFJSJDZH,</span><br><span class="line"></span><br><span class="line"> CXWGZH,</span><br><span class="line"></span><br><span class="line"> FLWSNRQS;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> \* 定时任务执行器接口</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> \* */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IScheduleExecutor</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">   \* 获取待查的案件信息</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">   \* */</span></span><br><span class="line"></span><br><span class="line">  <span class="function">List&lt;Request&gt; <span class="title">begin</span><span class="params">(YjAjxxtjInfo ajxxtjInfo)</span></span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">   \* 责任链处理规则</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">   \* */</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">handler</span><span class="params">(List&lt;Request&gt; requests)</span></span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">   \* 将结果更新到统计记录表</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">   \* yj_ajxxtj_info</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">   \* */</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">int</span> <span class="title">end</span><span class="params">(YjAjxxtjInfo request)</span></span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> \* 定时任务类</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> \* */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ScheduleExecutorTask</span> <span class="keyword">implements</span> <span class="title">IScheduleExecutor</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Autowired</span></span><br><span class="line"></span><br><span class="line">  YjAjxxtjInfoService yjAjxxtjInfoService;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Autowired</span></span><br><span class="line"></span><br><span class="line">  ChainFactoryBuilder chainFactoryBuilder;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">   *TODO 给目标案件添加预警规则匹配</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line"></span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> List&lt;Request&gt; <span class="title">begin</span><span class="params">(YjAjxxtjInfo ajxxtjInfo)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">​    log.info(<span class="string">"获取待处理的案件信息 ajxxtjInfo&#123;&#125; "</span>,ajxxtjInfo);</span><br><span class="line"></span><br><span class="line">​    List&lt;Request&gt; requests=<span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">​    <span class="comment">//法律文书校验规则处理</span></span><br><span class="line"></span><br><span class="line">​    Request request=<span class="keyword">new</span> Request(RequestType.FLWSNRQS,ajxxtjInfo);</span><br><span class="line"></span><br><span class="line">​    <span class="comment">//TODO 有后续规则通过 新增 Request对象规则加入规则队列</span></span><br><span class="line"></span><br><span class="line">​    requests.add(request);</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">return</span> requests;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">   \* 责任链处理规则</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">   \* */</span></span><br><span class="line"></span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handler</span><span class="params">(List&lt;Request&gt; requests)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">​    log.info(<span class="string">"开始执行规则匹配"</span>);</span><br><span class="line"></span><br><span class="line">​    chainFactoryBuilder.makeRequest(requests);</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">   \* 将结果更新到统计记录表</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">   \* yj_ajxxtj_info</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line"></span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">end</span><span class="params">(YjAjxxtjInfo ajxxtjInfo)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">​    log.info(<span class="string">"完成预警规则匹配"</span>);</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">int</span> result=<span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">if</span>(ajxxtjInfo!=<span class="keyword">null</span>)&#123;</span><br><span class="line"></span><br><span class="line">​      YjAjxxtjInfo update=<span class="keyword">new</span> YjAjxxtjInfo();</span><br><span class="line"></span><br><span class="line">​      update.setAjbh(ajxxtjInfo.getAjbh());</span><br><span class="line"></span><br><span class="line">​      update.setSfyj(QueryParamEnum.SFYJ_YES);</span><br><span class="line"></span><br><span class="line">​      result=yjAjxxtjInfoService.updateByAjbh(update);</span><br><span class="line"></span><br><span class="line">​    &#125;</span><br><span class="line"></span><br><span class="line">​    <span class="keyword">return</span> result;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> \* FlwsValidateHandler</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> *法律文书内容校验处理器</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FlwsValidateHandler</span> <span class="keyword">extends</span> <span class="title">RequestHandler</span></span>&#123;</span><br><span class="line"></span><br><span class="line"> <span class="meta">@Autowired</span></span><br><span class="line"></span><br><span class="line"> ZjckFlwsService zjckFlwsService;</span><br><span class="line"></span><br><span class="line"> <span class="meta">@Override</span></span><br><span class="line"></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleRequest</span><span class="params">(Request req)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span>(req.getRequestType()==RequestType.FLWSNRQS &amp;&amp; !req.isHandled())&#123;</span><br><span class="line"></span><br><span class="line">   <span class="comment">//规则匹配后的处理</span></span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">super</span>.handleRequest(req);</span><br><span class="line"></span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>实现心得</p>
+<p>代码实现相对简单,但是将业务逻辑规则和控制任务代码进行了抽象隔离,符合OOP中的单一职责和开闭原则.控制线程还能很方便的放入到线程池中进行并发执行,提高了系统运行效率.也是将业务逻辑和控制逻辑解耦思想的体现.</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/责任链模式-excel规则处理/" rel="tag"># 责任链模式,excel规则处理</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2023/02/05/restful API 的设计之道/" rel="next" title="RESTFUL API 设计实践总结">
+                <i class="fa fa-chevron-left"></i> RESTFUL API 设计实践总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">盛富强</p>
+              <p class="site-description motion-element" itemprop="description">blogs and research</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.github.com/shengfq" target="_blank" title="github">
+                      
+                        <i class="fa fa-fw fa-globe"></i>github</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">盛富强</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
