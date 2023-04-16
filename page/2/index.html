@@ -233,128 +233,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2021/03/18/程序员-如何提升实力/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="盛富强">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="程序员shengfq">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/03/18/程序员-如何提升实力/" itemprop="url">Untitled</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2021-03-18T22:32:02+08:00">
-                2021-03-18
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <hr>
-<p>title: 程序员-如何提升实力<br>date: 2021-03-19<br>tags: mind</p>
-<p>作者：kimmking<br>链接：<a href="https://www.zhihu.com/question/315201616/answer/1756148937" target="_blank" rel="noopener">https://www.zhihu.com/question/315201616/answer/1756148937</a><br>来源：知乎<br>以下几个任何一个都可以超过90%程序员：<br>1.把事情想明白，说清楚，跟别人商量好<br>2.写代码，注意边界条件和编码规范，写单测，基本做到无bug提测<br>3.工作中做好计划和进度跟踪，沟通和汇报，不把问题遗留到变成事故<br>4.思考和分析，如何优化目前的工作流程，引入工具和方法，提升生产效率<br>5.把自己工作中用到的技术用熟，搞清楚原理，优点短处，适用场景<br>6.不断接触新技术思想和工具，完善自身知识体系结构<br>7.深入学习至少一个常用开源项目，源码层面系统掌握这项技术<br>8.持续坚持学习和技术内容输出，每个星期产出2篇原创技术文章</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2020/06/07/Java8-Lambda表达式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -761,6 +639,146 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2019/08/24/为什么要用消息中间件/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="盛富强">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员shengfq">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/08/24/为什么要用消息中间件/" itemprop="url">消息中间件的选型</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-08-24T19:29:54+08:00">
+                2019-08-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h3><p>1.我们的业务实际情况面临的问题<br>2.我们面临选择有几个要素需要考虑<br>3.备选产品Kafka、ActiveMQ、RabbitMQ、RocketMQ 有什么优缺点<br>4.备选的产品的优缺点</p>
+<h3 id="1-我们的业务实际情况面临的问题"><a href="#1-我们的业务实际情况面临的问题" class="headerlink" title="1.我们的业务实际情况面临的问题"></a>1.我们的业务实际情况面临的问题</h3><h4 id="1-1-我们是一家在线教育公司-核心业务有课程-网校-题库-客服-CRM"><a href="#1-1-我们是一家在线教育公司-核心业务有课程-网校-题库-客服-CRM" class="headerlink" title="1.1.我们是一家在线教育公司,核心业务有课程,网校,题库,客服,CRM."></a>1.1.我们是一家在线教育公司,核心业务有课程,网校,题库,客服,CRM.</h4><p>在618等促销节日也有高并发大流量场景.做微服务改造过程中涉及到多个异构系统需要通信,需要服务间各种调用,通知,异步解耦,也有促销高并发秒杀.为了实现这些业务场景中能保障业务稳定和系统可靠性,我们考虑使用消息中间件来解决一些业务场景中需要系统间解耦,异步集群消费,从而提高系统的QPS和RT.</p>
+<p>耦合带来的缺点:调用方要关注被调方是否正常,如果是事务性的,根据容错策略还得考虑各个方法的返回值,增大了业务方法开发难度和不确定性.而解耦的话,如果业务有变更(新增/删除),都可以对mq消息进行修改订阅.业务场景:发送APP推送通知,之前是通过同步调用.net的http接口,改造后通过发送mq通知就行.</p>
+<p>同步带来的缺点:API响应的时间是累加的,因为是单线程操作.我们团队对用户端API操作响应要控制在毫秒级内.如果通过mq,发送多条消息后立即返回,响应速度就更快.</p>
+<p>流量高峰期该怎么处理:通过生产者将消息堆积到mq队列,消费者按限流策略均衡平稳消费.(流量高峰期)<br>每天 0:00 到 12:00，A 系统风平浪静，每秒并发请求数量就 50 个。结果每次一到8:00 ~ 1000 ，每秒并发请求数量突然会暴增到 5k+ 条。但是系统是直接基于 MySQL 的，大量的请求涌入 MySQL，每秒钟对 MySQL 执行约 5k 条 SQL。<br>如果使用 MQ，每秒 5k 个请求写入 MQ，A 系统每秒钟最多处理 2k 个请求，因为 MySQL 每秒钟最多处理 2k 个。A 系统从 MQ 中慢慢拉取请求，每秒钟就拉取 2k 个请求，不要超过自己每秒能处理的最大请求数量就 ok，这样下来，哪怕是高峰期的时候，A 系统也绝对不会挂掉。而 MQ 每秒钟 5k 个请求进来，就 2k 个请求出去，结果就导致在中午高峰期（1 个小时），可能有几十万甚至几百万的请求积压在 MQ 中。</p>
+<h4 id="1-2-我们面临选择有几个要素需要考虑"><a href="#1-2-我们面临选择有几个要素需要考虑" class="headerlink" title="1.2.我们面临选择有几个要素需要考虑"></a>1.2.我们面临选择有几个要素需要考虑</h4><pre><code>1.市面上稳定可靠,延迟低,消息可靠性高不丢,具备分布式架构,避免单点故障.
+2.社区活跃度高,出现了问题能快速的解决.
+3.运维管理难度不高,学习成本低,全组内都要掌握,程序员就能管理.
+</code></pre><h4 id="1-3-消息队列的缺点"><a href="#1-3-消息队列的缺点" class="headerlink" title="1.3.消息队列的缺点"></a>1.3.消息队列的缺点</h4><pre><code>1.系统增加了一个中间件,万一中间件崩溃了,无法服务,所有依赖系统都会崩溃.
+2.增加了系统复杂度,消息在集群里传播,要考虑消息可靠性(不丢),不重复消费,消息传递的顺序性.
+3.多系统有事务场景,发送消息完本地事务结束,如何保证生产者一定发送成功,消费者一定消费成功,全局事务数据一致.
+</code></pre><h3 id="2-选型的理由-需要的特性"><a href="#2-选型的理由-需要的特性" class="headerlink" title="2.选型的理由(需要的特性)"></a>2.选型的理由(需要的特性)</h3><pre><code>2.1 broker可用性高,支持分布式集群,避免单点故障
+2.2 消息消费的顺序性,比如活动参加,先抢先得.
+2.3 消息是否可堆积,持久化.高并发场景,早高峰期间服务高可用.
+2.4 消息可靠性至少一次,不丢. 数据最终一致性,幂等性去重.
+</code></pre><h3 id="3-备选产品Kafka、ActiveMQ、RabbitMQ、RocketMQ-有什么优缺点？"><a href="#3-备选产品Kafka、ActiveMQ、RabbitMQ、RocketMQ-有什么优缺点？" class="headerlink" title="3. 备选产品Kafka、ActiveMQ、RabbitMQ、RocketMQ 有什么优缺点？"></a>3. 备选产品Kafka、ActiveMQ、RabbitMQ、RocketMQ 有什么优缺点？</h3><p><img src="https://i.328888.xyz/2023/04/14/ixGGh3.png" alt=""></p>
+<h3 id="4-备选的产品的优缺点"><a href="#4-备选的产品的优缺点" class="headerlink" title="4.备选的产品的优缺点"></a>4.备选的产品的优缺点</h3><p>综合上述因素对比,结合公司的实际情况,我们选择了学习成本较低,社区活跃度高,有大量插件支持,还有监控管理工具的rabbitmq.<br>RabbitMQ是一款使用Erlang语言开发的，实现AMQP(高级消息队列协议)的开源消息中间件。首先要知道一些RabbitMQ的特点，官网可查：<br>可靠性。支持持久化，传输确认，发布确认等保证了MQ的可靠性。<br>灵活的分发消息策略。这应该是RabbitMQ的一大特点。在消息进入MQ前由Exchange(交换机)进行路由消息。分发消息策略有：简单模式、工作队列模式、发布订阅模式、路由模式、通配符模式。<br>支持集群。多台RabbitMQ服务器可以组成一个集群，形成一个逻辑Broker。<br>多种协议。RabbitMQ支持多种消息队列协议，比如 STOMP、MQTT 等等。<br>支持多种语言客户端。RabbitMQ几乎支持所有常用编程语言，包括 Java、.NET、Ruby 等等。<br>可视化管理界面。RabbitMQ提供了一个易用的用户界面，使得用户可以监控和管理消息 Broker。<br>插件机制。RabbitMQ提供了许多插件，可以通过插件进行扩展，也可以编写自己的插件。</p>
+<h4 id="5-rabbitmq的4种交换机类型"><a href="#5-rabbitmq的4种交换机类型" class="headerlink" title="5.rabbitmq的4种交换机类型"></a>5.rabbitmq的4种交换机类型</h4><p>Broker：消息队列服务进程。此进程包括两个部分：Exchange和Queue。<br>Exchange：消息队列交换机。按一定的规则将消息路由转发到某个队列。<br>Queue：消息队列，存储消息的队列。<br>Producer：消息生产者。生产方客户端将消息同交换机路由发送到队列中。<br>Consumer：消息消费者。消费队列中存储的消息。</p>
+<p>Exchange的四种类型以及用法<br>    1.Direct Exchange 一对一点对点发送接收<br>    2.Fanout exchange 一个发送到交换机的消息都会被转发到与该交换机绑定的所有队列上 广播模式.<br>    3.Topic Exchange 这种交换机是使用通配符去匹配，路由到对应的队列 广播模式</p>
+<p>比较常用的就是以上三种：直连(DirectExchange)，发布订阅(FanoutExchange)，通配符(TopicExchange)。熟练运用这三种交换机类型，基本上可以解决大部分的业务场景。</p>
+<p>4.Headers Exchange 它的路由不是用routingKey进行路由匹配，而是在匹配请求头中所带的键值进行路由。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2019/08/21/(Reactor)异步非阻塞多路IO复用模型/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1081,7 +1099,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/08/18/一次生产问题的排查解决/" itemprop="url">JAVA线上问题的解决思路</a></h1>
+                <a class="post-title-link" href="/2019/08/18/一次生产问题的排查解决/" itemprop="url">一次生产问题的排查解决</a></h1>
         
 
         <div class="post-meta">
@@ -1828,7 +1846,7 @@ The searched-for class definition existed when the currently executing class was
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">17</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

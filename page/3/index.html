@@ -917,132 +917,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2018/05/14/Java Exception Handling/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="盛富强">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="程序员shengfq">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/14/Java Exception Handling/" itemprop="url">java 异常处理</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-14T00:00:00+08:00">
-                2018-05-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>java 异常处理让你能轻松处理应用程序中的错误.异常处理在编写健壮的应用或组件的时候很容易被忽略的.当一个错误发生在一个Java程序通常会导致一个异常被抛出。你若能抛出,捕获,处理这些异常得当,将有很多方法来处理,但并不是所有的都有效并且安全失败(程序执行失败逻辑要安全处理).</p>
-<p>本次训练(文集)深度讲解java当中的异常处理.这次训练包含了各种应该的活不建议的异常处理,也包含了一些高效、不易出错的异常处理.希望你能从这些文字中受益.</p>
-<p>这个手册中使用的java版本是jdk6 或者jdk7.这些技术也能很好的适用于jdk5.jdk4.</p>
-<p>下面是一个快速介绍你能从异常处理中所见到的内容.<br>基本的java异常处理<br>头两篇文章包含基本的异常抛出和处理理论,异常层级:<br>基本的try..catch..finally<br>异常的结构层级</p>
-<p>检查异常和非检查异常的区别<br>java是一门支持检查\非检查异常的语言,在文章[检查或非检查异常]中我讨论了这两种方式的不同,最后我也推荐使用非检查异常少用检查异常.</p>
-<p>通用的异常处理建议<br>手册6片文章讲述 失败安全异常处理,异常日志写在哪里,建议在验证数据中抛出异常,在另一方面,建议如何设计你的应用程序抛出和处理异常.<br>高级异常处理建议<br>在下面2篇文章,异常处理的模板和异常丰富讨论更多高级异常处理的技术,让你的代码更简洁,异常模板把所有的try..catch代码重用到一个异常处理的模板方法里,帮助你避免很长的异常栈日志,应用程序获得真实的唯一异常代码.</p>
-<p>异常处理的策略<br>我写了很多建议如何把异常技术描述到这个手册进行浓缩了异常处理的策略,这通常很有效.</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2018/05/14/Try-with-resources in Java 7/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1128,6 +1002,132 @@
 <p>自定义可关闭资源的实现<br>使用try-with-resources结构不仅仅适用于java内建类.也能通过实现java.lang.autocloseable接口实现自己类使用.<br>下面是AutoCloseable接口:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">public interface AutoClosable &#123;</span><br><span class="line"></span><br><span class="line">    public void close() throws Exception;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public class MyAutoClosable implements AutoCloseable &#123;</span><br><span class="line"></span><br><span class="line">    public void doIt() &#123;</span><br><span class="line">        System.out.println(&quot;MyAutoClosable doing it!&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void close() throws Exception &#123;</span><br><span class="line">        System.out.println(&quot;MyAutoClosable closed!&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">private static void myAutoClosable() throws Exception &#123;</span><br><span class="line"></span><br><span class="line">    try(MyAutoClosable myAutoClosable = new MyAutoClosable())&#123;</span><br><span class="line">        myAutoClosable.doIt();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//console output</span><br><span class="line">MyAutoClosable doing it!</span><br><span class="line">MyAutoClosable closed!</span><br></pre></td></tr></table></figure>
 <p>你可以看到,try-with-resources是一个十分强大的方式确保使用在try-catch中的资源能正常关闭,不管这个资源时自己创建的还是java自带的组件.<br>译者:如果用户在使用一个类似于事务处理的业务时,可以通过实现该接口,完成一致性处理.</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2018/05/14/Java Exception Handling/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="盛富强">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员shengfq">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/14/Java Exception Handling/" itemprop="url">java 异常处理</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-14T00:00:00+08:00">
+                2018-05-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>java 异常处理让你能轻松处理应用程序中的错误.异常处理在编写健壮的应用或组件的时候很容易被忽略的.当一个错误发生在一个Java程序通常会导致一个异常被抛出。你若能抛出,捕获,处理这些异常得当,将有很多方法来处理,但并不是所有的都有效并且安全失败(程序执行失败逻辑要安全处理).</p>
+<p>本次训练(文集)深度讲解java当中的异常处理.这次训练包含了各种应该的活不建议的异常处理,也包含了一些高效、不易出错的异常处理.希望你能从这些文字中受益.</p>
+<p>这个手册中使用的java版本是jdk6 或者jdk7.这些技术也能很好的适用于jdk5.jdk4.</p>
+<p>下面是一个快速介绍你能从异常处理中所见到的内容.<br>基本的java异常处理<br>头两篇文章包含基本的异常抛出和处理理论,异常层级:<br>基本的try..catch..finally<br>异常的结构层级</p>
+<p>检查异常和非检查异常的区别<br>java是一门支持检查\非检查异常的语言,在文章[检查或非检查异常]中我讨论了这两种方式的不同,最后我也推荐使用非检查异常少用检查异常.</p>
+<p>通用的异常处理建议<br>手册6片文章讲述 失败安全异常处理,异常日志写在哪里,建议在验证数据中抛出异常,在另一方面,建议如何设计你的应用程序抛出和处理异常.<br>高级异常处理建议<br>在下面2篇文章,异常处理的模板和异常丰富讨论更多高级异常处理的技术,让你的代码更简洁,异常模板把所有的try..catch代码重用到一个异常处理的模板方法里,帮助你避免很长的异常栈日志,应用程序获得真实的唯一异常代码.</p>
+<p>异常处理的策略<br>我写了很多建议如何把异常技术描述到这个手册进行浓缩了异常处理的策略,这通常很有效.</p>
 
           
         
@@ -1365,7 +1365,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">17</span>
                   <span class="site-state-item-name">tags</span>
                 </a>
               </div>

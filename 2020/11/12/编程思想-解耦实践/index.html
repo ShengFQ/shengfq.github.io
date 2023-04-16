@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zn-han">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="编程思维," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="场景分类介绍 [TOC] 场景分类责任链模式解耦案例:当出现要用excel的规则逻辑来设计对同一个数据输入源进行处理时,发现规则而逻辑可以和线程控制分离,而这个分离器就是责任链模式,参考了汽车车轮和发动机直接用离合器的思想,再往下延伸离合器可以是手动挡,也可以是自动挡,自动挡离合器的原理是什么呢? 文件操作解耦案例 cms的发布流程:模板文件和数据集成生成静态文件推送到ftp后,如何清理本地的副本">
+<meta name="keywords" content="编程思维">
+<meta property="og:type" content="article">
+<meta property="og:title" content="编程思想-解耦实践">
+<meta property="og:url" content="https://www.shengfq.github.io/2020/11/12/编程思想-解耦实践/index.html">
+<meta property="og:site_name" content="程序员shengfq">
+<meta property="og:description" content="场景分类介绍 [TOC] 场景分类责任链模式解耦案例:当出现要用excel的规则逻辑来设计对同一个数据输入源进行处理时,发现规则而逻辑可以和线程控制分离,而这个分离器就是责任链模式,参考了汽车车轮和发动机直接用离合器的思想,再往下延伸离合器可以是手动挡,也可以是自动挡,自动挡离合器的原理是什么呢? 文件操作解耦案例 cms的发布流程:模板文件和数据集成生成静态文件推送到ftp后,如何清理本地的副本">
+<meta property="og:locale" content="zn-han">
+<meta property="og:updated_time" content="2023-03-21T10:51:29.308Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="编程思想-解耦实践">
+<meta name="twitter:description" content="场景分类介绍 [TOC] 场景分类责任链模式解耦案例:当出现要用excel的规则逻辑来设计对同一个数据输入源进行处理时,发现规则而逻辑可以和线程控制分离,而这个分离器就是责任链模式,参考了汽车车轮和发动机直接用离合器的思想,再往下延伸离合器可以是手动挡,也可以是自动挡,自动挡离合器的原理是什么呢? 文件操作解耦案例 cms的发布流程:模板文件和数据集成生成静态文件推送到ftp后,如何清理本地的副本">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.shengfq.github.io/2020/11/12/编程思想-解耦实践/"/>
+
+
+
+
+
+  <title>编程思想-解耦实践 | 程序员shengfq</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zn-han">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">程序员shengfq</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">技术博客</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.shengfq.github.io/2020/11/12/编程思想-解耦实践/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="盛富强">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员shengfq">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">编程思想-解耦实践</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-11-12T00:00:00+08:00">
+                2020-11-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>场景分类介绍</p>
+<p>[TOC]</p>
+<h1 id="场景分类"><a href="#场景分类" class="headerlink" title="场景分类"></a>场景分类</h1><h2 id="责任链模式解耦"><a href="#责任链模式解耦" class="headerlink" title="责任链模式解耦"></a>责任链模式解耦</h2><p>案例:当出现要用excel的规则逻辑来设计对同一个数据输入源进行处理时,发现规则而逻辑可以和线程控制分离,而这个分离器就是责任链模式,参考了汽车车轮和发动机直接用离合器的思想,再往下延伸离合器可以是手动挡,也可以是自动挡,自动挡离合器的原理是什么呢?</p>
+<h2 id="文件操作解耦"><a href="#文件操作解耦" class="headerlink" title="文件操作解耦"></a>文件操作解耦</h2><p>案例 cms的发布流程:模板文件和数据集成生成静态文件推送到ftp后,如何清理本地的副本文件.</p>
+<p>初级方案:将删除文件流程加入到程序流程中,实现创建-传输-删除一体的事务管理,缺点,文件量大,过程较长导致线程占用资源较长,不利于高性能扩展,如果程序没有清理该文件将被忽略.</p>
+<p>解耦方案:是将删除文件的操作交给定时任务执行shell,清除某个文件目录下的文件,直接批量删除,这样创建文件与删除文件就不用直接耦合到一起,清理文件批量高效,也不用占用IO资源.不会存在文件遗漏,而且在大批量文件操作性能更好.</p>
+<h2 id="mq实现解耦"><a href="#mq实现解耦" class="headerlink" title="mq实现解耦"></a>mq实现解耦</h2><p>案例:cms的失效页批量替换,也是涉及到批量文件的发布.</p>
+<p>初级方案:如果全部在主线程中处理,将导致线程阻塞,主线程池无法及时释放会导致线程池爆仓,影响用户体验.</p>
+<p>解耦方案:所以我采用了mq消息解耦,将批量文件替换的需求以消息形式发送,页面端请求线程快速返回.,用状态机来反馈处理结果.这样在处理大量的文件发布时,有消息队列堆积来完成消费,生产者只需要推消息.这种情况在电商系统中常用于秒杀,下单等高并发场景.</p>
+<h2 id="规则引擎-让控制和具体的业务逻辑解耦"><a href="#规则引擎-让控制和具体的业务逻辑解耦" class="headerlink" title="规则引擎,让控制和具体的业务逻辑解耦"></a>规则引擎,让控制和具体的业务逻辑解耦</h2><p>没有具体案例,规则引擎也是一把双刃剑,适应场景有.</p>
+<p>1、只有少量静态规则，并且不经常改变，不建议使用规则引擎；</p>
+<p>2、需要在运行时动态修改规则，可考虑使用规则引擎；</p>
+<p>3、在应用程序中需要通过可视化工具来修改规则，可考虑使用规则引擎；</p>
+<p>4、规则需要非技术人员维护的情况下，可考虑使用规则引擎；</p>
+<p>5、如果项目工期较紧，除非非常熟悉规则引擎，否则不建议使用；</p>
+<p>6、如果使用Excel来管理规则，可考虑使用规则引擎；</p>
+<h2 id="xxl-job定时任务解耦"><a href="#xxl-job定时任务解耦" class="headerlink" title="xxl-job定时任务解耦"></a>xxl-job定时任务解耦</h2><p>案例:将定时任务放入第三方中间件xxl-job中</p>
+<p>初级方案:在服务中开启schedule,定时执行,这样的优点是当定时任务数量较少,单服有优势.对于分布式微服务集群场景就会有重复执行的bug.</p>
+<p>解耦方案:避免了分布式集群下,任务重复执行的场景,job的生产端和执行端解耦,并发执行能力强.</p>
+<p>常用的任务(定时发布主页/定时发布模块/定时创建新闻ES索引和文档入库)</p>
+<h2 id="数据同步操作解耦"><a href="#数据同步操作解耦" class="headerlink" title="数据同步操作解耦"></a>数据同步操作解耦</h2><p>案例:cms是有新老系统迁移的场景,在新闻业务上,有数据同步到老系统的业务,</p>
+<p>初级方案:第一版本实现是将数据回写老系统直接耦合到业务逻辑,增加了业务复杂性.同步数据与业务逻辑耦合增加业务逻辑复杂性,而且不同的数据库操作保持一致性使用分布式事务非常麻烦.</p>
+<p>解耦方案:数据同步这种跟业务逻辑关联并不大,只是数据同步要看需求:实时性/一致性/并发性/</p>
+<p>同步操作会逐步退出业务逻辑,实时性要求并不高,只需要最终一致就行.就推荐使用streamset的dcd同步功能,使用易购系统,基于mysql的binlog日志实现数据的同步变更.</p>
+<p>其他解耦方案:</p>
+<p>在离线数据非实时同步场景,基于datax的离线数据同步</p>
+<p>在业务复杂非实时场景:基于dts的实时在线数据同步</p>
+<h2 id="状态机解耦"><a href="#状态机解耦" class="headerlink" title="状态机解耦"></a>状态机解耦</h2><p>案例:二手房贷款诈骗模型</p>
+<p>需求背景:一批数据经过 税务局,房管局,银保监,公安局各个节点的逻辑过滤,打分(自有逻辑/外部服务数据同步打分),将高分者建立线索,通过对线索人员的社会轨迹和关系进行串并成嫌疑团伙,最后获得高分团伙.</p>
+<p>初级方案:</p>
+<p>按需求过程式编程,所有业务逻辑耦合,会导致业务逻辑复杂庞大,对局部的修改影响到全局,一旦某个节点无法提供数据整个程序无法执行.</p>
+<p>解耦方案:</p>
+<p>抽象实体:税务局处理,房管局处理,银保监处理,公安局处理.(工厂模式)</p>
+<p>通用逻辑处理:获取数据列表-&gt;对数据进行评分-&gt;写入评分表.(模板模式)</p>
+<p>控制器:获取待处理状态的数据批次-&gt;在工厂中获取列表-&gt;处理-&gt;更新数据批次状态,管理批次的节点任务执行状态.</p>
+<p>这样一来,各个节点互相并不直接依赖,对单个的修改不会影响到其他工厂的变化(单一职责,开闭原则).</p>
+<p>增加了控制器这个表和节点状态管理,将各个节点状态存储,执行任务要对状态进行判断.这样就实现了业务逻辑与控制的分离,如果要修改控制,不会对节点内的业务逻辑有影响,例如要变更控制逻辑,不需要动原有的业务代码,只需要在抽象父类工厂对控制方法变更.(模板方法的优势)</p>
+<p>总结</p>
+<p>通过上述解耦思想的案例场景可以得到,解耦的目的是为了可扩展性,对代码复杂度要求其实更高了,这是模块封装的一种思想.</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/编程思维/" rel="tag"># 编程思维</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/07/Java8-Lambda表达式/" rel="next" title="java8Lambda详解">
+                <i class="fa fa-chevron-left"></i> java8Lambda详解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/03/18/程序员-如何提升实力/" rel="prev" title="">
+                 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">盛富强</p>
+              <p class="site-description motion-element" itemprop="description">blogs and research</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://www.github.com/shengfq" target="_blank" title="github">
+                      
+                        <i class="fa fa-fw fa-globe"></i>github</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#场景分类"><span class="nav-number">1.</span> <span class="nav-text">场景分类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#责任链模式解耦"><span class="nav-number">1.1.</span> <span class="nav-text">责任链模式解耦</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件操作解耦"><span class="nav-number">1.2.</span> <span class="nav-text">文件操作解耦</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mq实现解耦"><span class="nav-number">1.3.</span> <span class="nav-text">mq实现解耦</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#规则引擎-让控制和具体的业务逻辑解耦"><span class="nav-number">1.4.</span> <span class="nav-text">规则引擎,让控制和具体的业务逻辑解耦</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#xxl-job定时任务解耦"><span class="nav-number">1.5.</span> <span class="nav-text">xxl-job定时任务解耦</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据同步操作解耦"><span class="nav-number">1.6.</span> <span class="nav-text">数据同步操作解耦</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#状态机解耦"><span class="nav-number">1.7.</span> <span class="nav-text">状态机解耦</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">盛富强</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
